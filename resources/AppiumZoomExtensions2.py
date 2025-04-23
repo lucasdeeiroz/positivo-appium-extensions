@@ -27,7 +27,7 @@ class AppiumZoomExtensions2:
         """
         # Validação do scale
         if scale <= 1.0:
-            raise ValueError("O parâmetro scale deve ser maior que 1.0")
+            raise ValueError("Scale must be greater than 1.0")
         
         driver = self._driver
         
@@ -37,7 +37,7 @@ class AppiumZoomExtensions2:
         else:
             locator_parts = locator.split('=', 1)
             if len(locator_parts) != 2:
-                raise ValueError("Locator deve estar no formato 'estrategia=valor' ou ser um XPath completo")
+                raise ValueError("Must be on format strategy=locator")
             
             strategy, value = locator_parts
             strategy_mapping = {

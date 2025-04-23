@@ -21,7 +21,7 @@ class AppiumZoomExtensions3:
         return self._builtin.get_library_instance('AppiumLibrary')._current_application()
     
     @keyword('Verified Zoom On Element')
-    def verified_zoom_on_element(self, locator, scale=1.5, duration_ms=300, pause_s=0.3):
+    def verified_zoom_on_element(self, locator, scale=1.5, duration_ms=100, pause_s=0.5):
         """Realiza zoom e verifica se foi efetivo"""
         if scale <= 1.0:
             raise ValueError("Scale deve ser > 1.0")
