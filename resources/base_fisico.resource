@@ -13,11 +13,24 @@ Library     AppiumZoomExtensions4.py
 Library     AppiumZoomExtensions5.py
 Library     AppiumPinchExtensions.py
 Library     AppiumZoomExtensions2_4.py
+Library     AppiumZoomExtensions6.py
+
 
 *** Variables ***
 ${START}    QAX
 
 *** Keywords ***
+
+Start session Calculadora
+    Open Application
+    ...    http://localhost:4723
+    ...    platformName=Android
+    ...    deviceName=AndroidDevice
+    ...    automationName=UiAutomator2
+    ...    appPackage=com.miui.calculator
+    ...    appActivity=com.miui.calculator.cal.CalculatorActivity
+    ...    noReset=true
+
 Handle Backup if Prompt is Visible
 
     ${backup_prompt_visible}    Run Keyword And Return Status
@@ -28,11 +41,10 @@ Handle Backup if Prompt is Visible
 Start session Youtube
         Open Application    http://localhost:4723
     ...    platformName=Android
-    ...    appium:deviceName=Android Emulator
+    ...    appium:deviceName=AndroidDevice
     ...    appium:automationName=UIAutomator2
     ...    appium:appPackage=com.google.android.youtube
     ...    appium:appActivity=.HomeActivity
-    ...    appium:udid=emulator-5554
     ...    appium:autoGrantPermissions=true
     ...    appium:noReset=false
     ...    appium:ensureWebviewsHavePages=true
@@ -41,20 +53,19 @@ Start session Youtube
 Start session Camera
     Open Application    http://localhost:4723
     ...    platformName=Android
-    ...    deviceName=Android Emulator
+    ...    deviceName=AndroidDevice
     ...    automationName=UIAutomator2
     ...    appPackage=com.android.camera2
-    ...    appActivity=com.android.camera.CameraActivity  # Activity principal encontrada
-    ...    udid=emulator-5554
+    ...    appActivity=com.android.camera.CameraActivity
     ...    autoGrantPermissions=true
     ...    noReset=true
+
 Start session 
     Open Application                 http://localhost:4723
     ...                              platformName=Android
     ...                              deviceName=Android Emulator
     ...                              automationName=UIAutomator2
     ...                              app=${EXECDIR}/app/yodapp-beta.apk
-    ...                              uid=emulator-5554
     ...                              autoGrantPermissions=true
 
     
@@ -62,22 +73,20 @@ Start session Google Maps
 
     Open Application    http://localhost:4723    
     ...    platformName=Android    
-    ...    deviceName=Android Emulator    
+    ...    deviceName=AndroidDevice   
     ...    automationName=UIAutomator2
     ...    appPackage=com.google.android.apps.maps
     ...    appActivity=com.google.android.maps.MapsActivity
-    ...    udid=emulator-5554
     ...    autoGrantPermissions=true
 
 Start session Google Photos
 
     Open Application    http://localhost:4723    
     ...    platformName=Android    
-    ...    deviceName=Android Emulator    
+    ...    deviceName=AndroidDevice    
     ...    automationName=UIAutomator2
     ...    appPackage=com.google.android.apps.photos
     ...    appActivity=.home.HomeActivity
-    ...    udid=emulator-5554
     ...    autoGrantPermissions=true
 
 Get Started

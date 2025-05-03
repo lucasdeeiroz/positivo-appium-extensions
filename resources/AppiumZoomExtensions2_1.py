@@ -36,11 +36,11 @@ class AppiumZoomExtensions2_1:
                 raise ValueError(f"Estratégia '{strategy}' não suportada")
             element = driver.find_element(strategy_mapping[strategy], value)
 
-        # Verifica se o elemento está visível e habilitado
+        # --- Verifica se o elemento está visível e habilitado ---
         if not element.is_displayed() or not element.is_enabled():
             raise Exception("Elemento não está interativo")
 
-        # Pega centro do elemento
+        # --- Centro do elemento ---
         rect = element.rect
         center_x = rect['x'] + rect['width'] / 2
         center_y = rect['y'] + rect['height'] / 2
@@ -54,14 +54,14 @@ class AppiumZoomExtensions2_1:
         finger1 = actions.w3c_actions.add_pointer_input('touch', 'finger1')
         finger2 = actions.w3c_actions.add_pointer_input('touch', 'finger2')
 
-        # Primeiro dedo
+        # ----- Primeiro dedo -----
         finger1.create_pointer_move(duration=0, x=center_x - initial_offset, y=center_y - 30)
         finger1.create_pointer_down(button=0)
         finger1.create_pause(pause_s)
         finger1.create_pointer_move(duration=duration_ms, x=center_x - final_offset, y=center_y - 60)
         finger1.create_pointer_up(button=0)
 
-        # Segundo dedo
+        # ---- Segundo dedo -----
         finger2.create_pointer_move(duration=0, x=center_x + initial_offset, y=center_y + 30)
         finger2.create_pointer_down(button=0)
         finger2.create_pause(pause_s)
