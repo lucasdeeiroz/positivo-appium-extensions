@@ -2,49 +2,47 @@
 Documentation    Suite de testes do uso do clique em ponto específico
 
 Library     AppiumLibrary
-Library     ../click_point/click_point.py
+Library     ./click_a_point.py
 
 *** Test Cases ***
-Deve poder clicar em um ponto específico do Google Maps
-    [Tags]    click_point
+Deve poder fazer a conta 9+5 na calculadora com tap_with_positions
+    [Tags]    tap_with_positions
     Open Application    http://localhost:4723
     ...                 automationName=uiautomator2
     ...                 platformName=Android
     ...                 deviceName=Emulator
     ...                 udid=emulator-5554
     ...                 autoGrantPermissions=true
-    ...                 appPackage=com.google.android.apps.maps
-    ...                 appActivity=com.google.android.maps.MapsActivity
+    ...                 appPackage=com.google.android.calculator
+    ...                 appActivity=com.android.calculator2.Calculator
+    # ...                 noReset=true
+
+
+    Tap With Positions    100    ${670, 1350} 
+    Tap With Positions    100    ${920, 1900}
+    Tap With Positions    100    ${400, 1630}
     
-    # Obtém as dimensões da tela
-    ${width}=    Get Window Width
-    ${height}=   Get Window Height
-    
-    # Clica no centro da tela
-    ${center_x}=    Evaluate    ${width}/2
-    ${center_y}=    Evaluate    ${height}/2
-    Click A Point    ${center_x}    ${center_y}    200
-    Sleep    2
-    
-    # Clica em outro ponto (exemplo: topo direito)
-    ${top_right_x}=    Evaluate    ${width}-50
-    ${top_right_y}=    Evaluate    50
-    Click A Point    ${top_right_x}    ${top_right_y}    200
     Sleep    2
     
     Close Application
 
-Deve falhar ao usar coordenadas inválidas
-    [Tags]    error
+
+Deve poder fazer a conta 9+5 na calculadora com point_click
+    [Tags]    point_click
     Open Application    http://localhost:4723
     ...                 automationName=uiautomator2
     ...                 platformName=Android
     ...                 deviceName=Emulator
     ...                 udid=emulator-5554
     ...                 autoGrantPermissions=true
-    ...                 appPackage=com.google.android.apps.maps
-    ...                 appActivity=com.google.android.maps.MapsActivity
-    
-    Run Keyword And Expect Error    ValueError*    Click A Point    x=abc    y=100
+    ...                 appPackage=com.google.android.calculator
+    ...                 appActivity=com.android.calculator2.Calculator
+    # ...                 noReset=true
+
+    Point Click    ${670}    ${1350}    100
+    Point Click    ${920}    ${1900}    100
+    Point Click    ${400}    ${1630}    100
+ 
+    Sleep    2
     
     Close Application

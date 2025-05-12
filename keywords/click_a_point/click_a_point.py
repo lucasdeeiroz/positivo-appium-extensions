@@ -2,10 +2,10 @@ from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
 
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.common.actions.pointer_input import PointerInput
+from selenium.webdriver.common.actions.mouse_button import MouseButton
 import warnings
 
-@keyword("Click A Point")
+@keyword("Point Click")
 def click_a_point(x, y, duration=100):
     """
     Clicks at a specific point on the screen using absolute coordinates.
@@ -52,9 +52,9 @@ def click_a_point(x, y, duration=100):
 
         # Configure the click action
         touch.create_pointer_move(x=x, y=y)
-        touch.create_pointer_down()
+        touch.create_pointer_down(button=MouseButton.LEFT)
         touch.create_pause(duration / 1000)  # Convert to seconds
-        touch.create_pointer_up()
+        touch.create_pointer_up(button=MouseButton.LEFT)
 
         # Perform the actions
         actions.perform()
