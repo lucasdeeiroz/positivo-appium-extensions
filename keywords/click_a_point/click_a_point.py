@@ -40,7 +40,7 @@ def click_a_point(x, y, duration=100):
 
         # Check if coordinates are within screen bounds
         if x < 0 or x > screen_width or y < 0 or y > screen_height:
-            warnings.warn(f"Coordinates ({x}, {y}) are outside the screen bounds ({screen_width}x{screen_height}). Adjusting to fit.")
+            BuiltIn().log(f"Coordinates ({x}, {y}) are outside the screen bounds ({screen_width}x{screen_height}). Adjusting to fit.", level='WARN')
             x = max(0, min(x, screen_width))
             y = max(0, min(y, screen_height))
 
