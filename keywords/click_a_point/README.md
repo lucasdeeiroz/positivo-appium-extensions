@@ -5,7 +5,7 @@ Implementação de keyword para clicar em um ponto específico da tela usando co
 ## Uso
 
 ```robot
-Click A Point    x=100    y=200    duration=200
+Point Click    x=100    y=200    duration=200
 ```
 
 ## Parâmetros
