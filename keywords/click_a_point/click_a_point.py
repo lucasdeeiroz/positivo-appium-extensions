@@ -3,7 +3,6 @@ from robot.libraries.BuiltIn import BuiltIn
 
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.actions.mouse_button import MouseButton
-import warnings
 
 @keyword("Point Click")
 def click_a_point(x, y, duration=100):
