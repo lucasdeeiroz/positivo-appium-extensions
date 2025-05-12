@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.2.2 (Python 3.13.2 on win32)" generated="2025-05-01T20:49:11.581123" rpa="false" schemaversion="5">
+<suite id="s1" name="Teste Fisico" source="C:\QAx\projects\yodapp-robot\tests\teste_fisico.robot">
+<test id="s1-t1" name="Deve dar zoom no Google Maps" line="15">
+<kw name="Start session Google Maps" owner="base_fisico">
+<kw name="Open Application" owner="AppiumLibrary">
+<arg>http://localhost:4723</arg>
+<arg>platformName=Android</arg>
+<arg>deviceName=AndroidDevice</arg>
+<arg>automationName=UIAutomator2</arg>
+<arg>appPackage=com.google.android.apps.maps</arg>
+<arg>appActivity=com.google.android.maps.MapsActivity</arg>
+<arg>autoGrantPermissions=true</arg>
+<doc>Opens a new application to given Appium server.
+Capabilities of appium server, Android and iOS,
+Please check https://appium.io/docs/en/2.1/cli/args/
+| *Option*            | *Man.* | *Description*     |
+| remote_url          | Yes    | Appium server url |
+| alias               | no     | alias             |
+| strict_ssl          | No     | allows you to send commands to an invalid certificate host like a self-signed one. |</doc>
+<status status="PASS" start="2025-05-01T20:49:11.988540" elapsed="17.850281"/>
+</kw>
+<status status="PASS" start="2025-05-01T20:49:11.987472" elapsed="17.851499"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2025-05-01T20:49:39.840040" level="INFO">Slept 10 seconds.</msg>
+<arg>10</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2025-05-01T20:49:29.839354" elapsed="10.000795"/>
+</kw>
+<kw name="Zoom On Element" owner="AppiumZoomExtensions2">
+<arg>id=com.google.android.apps.maps:id/mainmap_container</arg>
+<arg>scale=2.5</arg>
+<doc>Realiza zoom IN no centro de um elemento específico usando fator de escala</doc>
+<status status="PASS" start="2025-05-01T20:49:39.840540" elapsed="1.431638"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2025-05-01T20:49:46.273507" level="INFO">Slept 5 seconds.</msg>
+<arg>5</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2025-05-01T20:49:41.272859" elapsed="5.000788"/>
+</kw>
+<kw name="Zoom On Element" owner="AppiumZoomExtensions2">
+<arg>id=com.google.android.apps.maps:id/mainmap_container</arg>
+<arg>scale=2.5</arg>
+<doc>Realiza zoom IN no centro de um elemento específico usando fator de escala</doc>
+<status status="PASS" start="2025-05-01T20:49:46.274036" elapsed="1.473785"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2025-05-01T20:49:52.749011" level="INFO">Slept 5 seconds.</msg>
+<arg>5</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2025-05-01T20:49:47.748709" elapsed="5.000402"/>
+</kw>
+<kw name="Zoom On Element" owner="AppiumZoomExtensions2">
+<arg>id=com.google.android.apps.maps:id/mainmap_container</arg>
+<arg>scale=2.5</arg>
+<doc>Realiza zoom IN no centro de um elemento específico usando fator de escala</doc>
+<status status="PASS" start="2025-05-01T20:49:52.749493" elapsed="1.470414"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2025-05-01T20:49:59.221204" level="INFO">Slept 5 seconds.</msg>
+<arg>5</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2025-05-01T20:49:54.220519" elapsed="5.000857"/>
+</kw>
+<kw name="Zoom On Element" owner="AppiumZoomExtensions2">
+<arg>id=com.google.android.apps.maps:id/mainmap_container</arg>
+<arg>scale=2.5</arg>
+<doc>Realiza zoom IN no centro de um elemento específico usando fator de escala</doc>
+<status status="PASS" start="2025-05-01T20:49:59.222010" elapsed="1.459997"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2025-05-01T20:50:05.684345" level="INFO">Slept 5 seconds.</msg>
+<arg>5</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2025-05-01T20:50:00.683238" elapsed="5.001296"/>
+</kw>
+<kw name="Zoom On Element" owner="AppiumZoomExtensions2">
+<arg>id=com.google.android.apps.maps:id/mainmap_container</arg>
+<arg>scale=2.5</arg>
+<doc>Realiza zoom IN no centro de um elemento específico usando fator de escala</doc>
+<status status="PASS" start="2025-05-01T20:50:05.685157" elapsed="1.442311"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2025-05-01T20:50:12.128464" level="INFO">Slept 5 seconds.</msg>
+<arg>5</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2025-05-01T20:50:07.128048" elapsed="5.000519"/>
+</kw>
+<kw name="Zoom On Element" owner="AppiumZoomExtensions2">
+<arg>id=com.google.android.apps.maps:id/mainmap_container</arg>
+<arg>scale=2.5</arg>
+<doc>Realiza zoom IN no centro de um elemento específico usando fator de escala</doc>
+<status status="PASS" start="2025-05-01T20:50:12.128952" elapsed="1.409061"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2025-05-01T20:50:18.539409" level="INFO">Slept 5 seconds.</msg>
+<arg>5</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2025-05-01T20:50:13.538708" elapsed="5.000806"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2025-05-01T20:50:23.540145" level="INFO">Slept 5 seconds.</msg>
+<arg>5</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2025-05-01T20:50:18.539859" elapsed="5.000393"/>
+</kw>
+<tag>maps</tag>
+<status status="PASS" start="2025-05-01T20:49:11.986577" elapsed="71.554016"/>
+</test>
+<status status="PASS" start="2025-05-01T20:49:11.582769" elapsed="71.958765"/>
+</suite>
+<statistics>
+<total>
+<stat pass="1" fail="0" skip="0">All Tests</stat>
+</total>
+<tag>
+<stat pass="1" fail="0" skip="0">maps</stat>
+</tag>
+<suite>
+<stat name="Teste Fisico" id="s1" pass="1" fail="0" skip="0">Teste Fisico</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>
