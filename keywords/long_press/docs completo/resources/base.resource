@@ -2,7 +2,7 @@
 
 Library     AppiumLibrary
 Library     ./AppiumLongPressExtensions.py
-Library     ./Appiumclick.py
+
 
 
 
