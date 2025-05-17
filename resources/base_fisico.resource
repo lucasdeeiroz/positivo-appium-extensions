@@ -14,7 +14,12 @@ Library     AppiumZoomExtensions5.py
 Library     AppiumPinchExtensions.py
 Library     AppiumZoomExtensions2_4.py
 Library     AppiumZoomExtensions6.py
-
+Library     AppiumZoomExtensions6_1.py
+Library     AppiumZoomExtensions6_2.py
+Library     AppiumZoomExtensions6_3.py
+Library     AppiumZoomExtensions7.py
+Library     OperatingSystem
+Library     DateTime
 
 *** Variables ***
 ${START}    QAX
