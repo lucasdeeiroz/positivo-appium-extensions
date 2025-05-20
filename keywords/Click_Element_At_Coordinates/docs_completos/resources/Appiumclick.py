@@ -33,9 +33,25 @@ class Appiumclick:
         size = element.size
         self._builtin.log(f"Localização do elemento: {location}, Tamanho: {size}", level='INFO')
 
-        x = location['x'] + int(xoffset)
-        y = location['y'] + int(yoffset)
-        self._builtin.log(f"Coordenadas calculadas para clique: ({x}, {y})", level='INFO')
+        try:
+            xoffset = float(xoffset)
+            yoffset = float(yoffset)
+        except Exception:
+            raise ValueError("xoffset e yoffset devem ser números (pixels ou fração de 0 a 1 para porcentagem)")
+
+        # Se o offset for <= 1, considera como porcentagem do tamanho do elemento
+        if 0 <= xoffset <= 1:
+            xoffset_px = int(size['width'] * xoffset)
+        else:
+            xoffset_px = int(xoffset)
+        if 0 <= yoffset <= 1:
+            yoffset_px = int(size['height'] * yoffset)
+        else:
+            yoffset_px = int(yoffset)
+
+        x = location['x'] + xoffset_px
+        y = location['y'] + yoffset_px
+        self._builtin.log(f"Coordenadas calculadas para clique: ({x}, {y}) (offsets: {xoffset_px}, {yoffset_px})", level='INFO')
 
         window_size = driver.get_window_size()
         self._builtin.log(f"Tamanho da tela: {window_size}", level='INFO')
