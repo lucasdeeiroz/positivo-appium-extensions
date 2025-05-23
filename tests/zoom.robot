@@ -131,3 +131,49 @@ Deve realizar um zoom no Youtube
     # Click Element    //android.view.ViewGroup[@content-desc="Entenda os 7 princípios do Teste de Software que todo engenheiro de software deve saber"]
     # Sleep    30
     # Universal Zoom On Area_2    id=com.google.android.youtube:id/watch_player    scale=2.0    duration_ms=100
+
+
+Click Element At Specific Coordinates
+    [tags]   android
+    Start session Camera
+    
+    Wait Until Element Is Visible    xpath=//android.widget.ImageView[@content-desc="Shutter"]    5s
+
+    ClickC     xpath=//android.widget.FrameLayout[@resource-id="com.android.camera2:id/mode_options_overlay"]     40    100
+    Close session
+
+Teste de clique longo
+    [Tags]                      long
+
+    Start session 
+    Get started
+    Navigate to                 Clique em Botões
+    Go to item                  Clique longo                               Botão clique longo
+
+    Clique longo                     id=com.qaxperience.yodapp:id/long_click    
+
+    Wait Until Page Contains    Isso é um clique longo
+    Capture Page Screenshot
+
+    Close session
+
+
+Deve poder fazer a conta 9+5 na calculadora com point_click
+    [Tags]    addition
+    Open Application    http://localhost:4723
+    ...                 automationName=uiautomator2
+    ...                 platformName=Android
+    ...                 deviceName=Emulator
+    ...                 udid=emulator-5554
+    ...                 autoGrantPermissions=true
+    ...                 appPackage=com.google.android.calculator
+    ...                 appActivity=com.android.calculator2.Calculator
+    ...                 noReset=true
+
+    Point Click    ${670}    ${1350}    100
+    Point Click    ${920}    ${1800}    100
+    Point Click    ${420}    ${1500}    100
+ 
+    Sleep    2
+    
+    Close Application

@@ -7,6 +7,22 @@ ${SCREENSHOT_FOLDER}    ./screenshots
 ${DURATION}      500
 *** Test Cases ***
 
+Deve executar pinch no Google Maps
+    [Tags]    pinch
+    Start session Google Maps
+    Sleep    10
+
+    Wait Until Element Is Visible    //android.widget.Button[@content-desc="Entrar no modo de bússola"]
+    Click Element    //android.widget.Button[@content-desc="Entrar no modo de bússola"]
+    # --- Pinch ---
+    # Observação: Problemas com o scale e dependência de duração para execução. 
+    #             Resultados inconsistentes para a mesma configuração
+
+    Perform Pinch Gesture    scale=0.5    duration=500     locator=id=com.google.android.apps.maps:id/mainmap_container    #direction=horizontal
+    # ------------
+    Sleep    5
+    Close Application
+
 Deve dar zoom no Google Maps 1.5
     [Tags]    maps2
     Start session Google Maps
@@ -14,6 +30,7 @@ Deve dar zoom no Google Maps 1.5
 
     Wait Until Element Is Visible    //android.widget.Button[@content-desc="Entrar no modo de bússola"]
     Click Element    //android.widget.Button[@content-desc="Entrar no modo de bússola"]
+    Sleep    2
     # --- Pinch ---
     # Observação: Problemas com o scale e dependência de duração para execução. 
     #             Resultados inconsistentes para a mesma configuração
@@ -62,6 +79,7 @@ Deve dar zoom no Google Maps 1.7
 
     Wait Until Element Is Visible    //android.widget.Button[@content-desc="Entrar no modo de bússola"]
     Click Element    //android.widget.Button[@content-desc="Entrar no modo de bússola"]
+    Sleep    2
     # --- Pinch ---
     # Observação: Problemas com o scale e dependência de duração para execução. 
     #             Resultados inconsistentes para a mesma configuração
@@ -110,7 +128,7 @@ Deve dar zoom no Google Maps 1.1
 
     Wait Until Element Is Visible    //android.widget.Button[@content-desc="Entrar no modo de bússola"]
     Click Element    //android.widget.Button[@content-desc="Entrar no modo de bússola"]
-    
+    Sleep    2
     # --- Pinch ---
     # Observação: Problemas com o scale e dependência de duração para execução. 
     #             Resultados inconsistentes para a mesma configuração
@@ -249,3 +267,17 @@ Deve realizar um Zoom no Google Fotos 1.1
     Sleep     5
 
     Close Application
+
+Deve realizar um Zoom e Pinch no Google Maps
+
+    Start session Google Maps
+    Sleep    10
+
+    Wait Until Element Is Visible    //android.widget.Button[@content-desc="Entrar no modo de bússola"]
+    Click Element    //android.widget.Button[@content-desc="Entrar no modo de bússola"]
+    Sleep    2
+
+    Perform Zoom_4    id=com.google.android.apps.maps:id/mainmap_container    scale=1.5    duration=${DURATION}    steps=50    direction=horizontal
+    Sleep    5
+    Perform Pinch_4   id=com.google.android.apps.maps:id/mainmap_container    scale=1.5    duration=${DURATION}    steps=50    direction=horizontal
+    Sleep    5     

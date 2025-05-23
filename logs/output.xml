@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<robot generator="Robot 7.2.2 (Python 3.13.2 on win32)" generated="2025-04-03T22:08:01.625457" rpa="false" schemaversion="5">
-<suite id="s1" name="Click" source="C:\QAx\projects\yodapp-robot\tests\click.robot">
-<test id="s1-t1" name="Deve realizar um clique longo" line="18">
-<kw name="Start session" owner="base">
+<robot generator="Robot 7.2.2 (Python 3.13.2 on win32)" generated="2025-05-17T10:05:55.018980" rpa="false" schemaversion="5">
+<suite id="s1" name="Teste Fisico" source="C:\QAx\projects\yodapp-robot\tests\teste_fisico.robot">
+<test id="s1-t1" name="Deve dar zoom no Google Maps 1.5" line="26">
+<kw name="Start session Google Maps" owner="base_fisico">
 <kw name="Open Application" owner="AppiumLibrary">
 <arg>http://localhost:4723</arg>
 <arg>platformName=Android</arg>
-<arg>deviceName=Android Emulator</arg>
+<arg>deviceName=AndroidDevice</arg>
 <arg>automationName=UIAutomator2</arg>
-<arg>app=${EXECDIR}/app/yodapp-beta.apk</arg>
-<arg>uid=emulator-5554</arg>
+<arg>appPackage=com.google.android.apps.maps</arg>
+<arg>appActivity=com.google.android.maps.MapsActivity</arg>
 <arg>autoGrantPermissions=true</arg>
 <doc>Opens a new application to given Appium server.
 Capabilities of appium server, Android and iOS,
@@ -18,135 +18,285 @@ Please check https://appium.io/docs/en/2.1/cli/args/
 | remote_url          | Yes    | Appium server url |
 | alias               | no     | alias             |
 | strict_ssl          | No     | allows you to send commands to an invalid certificate host like a self-signed one. |</doc>
-<status status="PASS" start="2025-04-03T22:08:01.903355" elapsed="13.183694"/>
+<status status="PASS" start="2025-05-17T10:05:55.488521" elapsed="15.038854"/>
 </kw>
-<status status="PASS" start="2025-04-03T22:08:01.902366" elapsed="13.185223"/>
+<status status="PASS" start="2025-05-17T10:05:55.487368" elapsed="15.040160"/>
 </kw>
-<kw name="Get Started" owner="base">
-<kw name="Wait Until Page Contains" owner="AppiumLibrary">
-<arg>${START}</arg>
-<doc>Waits until `text` appears on current page.</doc>
-<status status="PASS" start="2025-04-03T22:08:15.089945" elapsed="4.122456"/>
-</kw>
-<kw name="Click Text" owner="AppiumLibrary">
-<msg time="2025-04-03T22:08:21.367178" level="INFO">xpath criteria: //*[contains(@text,"QAX")]</msg>
-<arg>${START}</arg>
-<doc>Click text identified by ``text``.</doc>
-<status status="PASS" start="2025-04-03T22:08:19.212783" elapsed="2.154720"/>
-</kw>
-<status status="PASS" start="2025-04-03T22:08:15.088660" elapsed="6.279166"/>
-</kw>
-<kw name="Navigate to" owner="base">
-<kw name="Set Variable" owner="BuiltIn">
-<msg time="2025-04-03T22:08:21.369898" level="INFO">${hamburguer} = xpath=//android.widget.ImageButton[@content-desc="Open navigation drawer"]</msg>
-<var>${hamburguer}</var>
-<arg>xpath=//android.widget.ImageButton[@content-desc="Open navigation drawer"]</arg>
-<doc>Returns the given values which can then be assigned to a variables.</doc>
-<status status="PASS" start="2025-04-03T22:08:21.369543" elapsed="0.000426"/>
-</kw>
-<kw name="Wait Until Element Is Visible" owner="AppiumLibrary">
-<msg time="2025-04-03T22:08:22.690959" level="INFO">xpath criteria: //android.widget.ImageButton[@content-desc="Open navigation drawer"]
-xpath criteria: //android.widget.ImageButton[@content-desc="Open navigation drawer"]</msg>
-<arg>${hamburguer}</arg>
-<doc>Waits until element specified with `locator` is visible.</doc>
-<status status="PASS" start="2025-04-03T22:08:21.370189" elapsed="1.320857"/>
-</kw>
-<kw name="Click Element" owner="AppiumLibrary">
-<msg time="2025-04-03T22:08:22.692135" level="INFO">Clicking element 'xpath=//android.widget.ImageButton[@content-desc="Open navigation drawer"]'.</msg>
-<msg time="2025-04-03T22:08:22.852017" level="INFO">xpath criteria: //android.widget.ImageButton[@content-desc="Open navigation drawer"]</msg>
-<arg>${hamburguer}</arg>
-<doc>Click element identified by `locator`.</doc>
-<status status="PASS" start="2025-04-03T22:08:22.691186" elapsed="0.161156"/>
-</kw>
-<kw name="Set Variable" owner="BuiltIn">
-<msg time="2025-04-03T22:08:22.852966" level="INFO">${menu_item} = xpath=//*[@resource-id="com.qaxperience.yodapp:id/navView"]//*[@text="Clique em Botões"]</msg>
-<var>${menu_item}</var>
-<arg>xpath=//*[@resource-id="com.qaxperience.yodapp:id/navView"]//*[@text="${item_text}"]</arg>
-<doc>Returns the given values which can then be assigned to a variables.</doc>
-<status status="PASS" start="2025-04-03T22:08:22.852649" elapsed="0.000352"/>
-</kw>
-<kw name="Wait Until Element Is Visible" owner="AppiumLibrary">
-<msg time="2025-04-03T22:08:23.935097" level="INFO">xpath criteria: //*[@resource-id="com.qaxperience.yodapp:id/navView"]//*[@text="Clique em Botões"]</msg>
-<arg>${menu_item}</arg>
-<doc>Waits until element specified with `locator` is visible.</doc>
-<status status="PASS" start="2025-04-03T22:08:22.853136" elapsed="1.082070"/>
-</kw>
-<kw name="Click Element" owner="AppiumLibrary">
-<msg time="2025-04-03T22:08:23.936286" level="INFO">Clicking element 'xpath=//*[@resource-id="com.qaxperience.yodapp:id/navView"]//*[@text="Clique em Botões"]'.</msg>
-<msg time="2025-04-03T22:08:24.199135" level="INFO">xpath criteria: //*[@resource-id="com.qaxperience.yodapp:id/navView"]//*[@text="Clique em Botões"]</msg>
-<arg>${menu_item}</arg>
-<doc>Click element identified by `locator`.</doc>
-<status status="PASS" start="2025-04-03T22:08:23.935346" elapsed="0.264194"/>
-</kw>
-<arg>Clique em Botões</arg>
-<status status="PASS" start="2025-04-03T22:08:21.368596" elapsed="2.831236"/>
-</kw>
-<kw name="Go to item" owner="base">
-<kw name="Wait Until Page Contains" owner="AppiumLibrary">
-<arg>${item}</arg>
-<doc>Waits until `text` appears on current page.</doc>
-<status status="PASS" start="2025-04-03T22:08:24.201524" elapsed="0.935699"/>
-</kw>
-<kw name="Click Text" owner="AppiumLibrary">
-<msg time="2025-04-03T22:08:27.032047" level="INFO">xpath criteria: //*[contains(@text,"Clique longo")]</msg>
-<arg>${item}</arg>
-<doc>Click text identified by ``text``.</doc>
-<status status="PASS" start="2025-04-03T22:08:25.137437" elapsed="1.894774"/>
-</kw>
-<kw name="Wait Until Page Contains" owner="AppiumLibrary">
-<arg>${checkpoint}</arg>
-<doc>Waits until `text` appears on current page.</doc>
-<status status="PASS" start="2025-04-03T22:08:27.032536" elapsed="0.085984"/>
-</kw>
-<arg>Clique longo</arg>
-<arg>Botão clique longo</arg>
-<status status="PASS" start="2025-04-03T22:08:24.200677" elapsed="2.918080"/>
-</kw>
-<kw name="Set Variable" owner="BuiltIn">
-<msg time="2025-04-03T22:08:27.119827" level="INFO">${locator} = id=com.qaxperience.yodapp:id/long_click</msg>
-<var>${locator}</var>
-<arg>id=com.qaxperience.yodapp:id/long_click</arg>
-<doc>Returns the given values which can then be assigned to a variables.</doc>
-<status status="PASS" start="2025-04-03T22:08:27.119403" elapsed="0.000508"/>
-</kw>
-<kw name="Clique longo" owner="AppiumLongPressExtensions">
-<arg>${locator}</arg>
-<arg>duration=1000</arg>
-<doc>Realiza um clique longo no elemento especificado</doc>
-<status status="PASS" start="2025-04-03T22:08:27.120502" elapsed="1.441768"/>
-</kw>
-<kw name="Wait Until Page Contains" owner="AppiumLibrary">
-<arg>Isso é um clique longo</arg>
-<doc>Waits until `text` appears on current page.</doc>
-<status status="PASS" start="2025-04-03T22:08:28.563106" elapsed="0.150628"/>
-</kw>
-<kw name="Close session" owner="base">
 <kw name="Sleep" owner="BuiltIn">
-<msg time="2025-04-03T22:08:33.716598" level="INFO">Slept 5 seconds.</msg>
+<msg time="2025-05-17T10:06:20.528699" level="INFO">Slept 10 seconds.</msg>
+<arg>10</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2025-05-17T10:06:10.527947" elapsed="10.000861"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="AppiumLibrary">
+<msg time="2025-05-17T10:06:22.076770" level="INFO">xpath criteria: //android.widget.Button[@content-desc="Entrar no modo de bússola"]</msg>
+<arg>//android.widget.Button[@content-desc="Entrar no modo de bússola"]</arg>
+<doc>Waits until element specified with `locator` is visible.</doc>
+<status status="PASS" start="2025-05-17T10:06:20.529191" elapsed="1.547794"/>
+</kw>
+<kw name="Click Element" owner="AppiumLibrary">
+<msg time="2025-05-17T10:06:22.079273" level="INFO">Clicking element '//android.widget.Button[@content-desc="Entrar no modo de bússola"]'.</msg>
+<msg time="2025-05-17T10:06:23.268951" level="INFO">xpath criteria: //android.widget.Button[@content-desc="Entrar no modo de bússola"]</msg>
+<arg>//android.widget.Button[@content-desc="Entrar no modo de bússola"]</arg>
+<doc>Click element identified by `locator`.</doc>
+<status status="PASS" start="2025-05-17T10:06:22.077839" elapsed="1.191361"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2025-05-17T10:06:25.270390" level="INFO">Slept 2 seconds.</msg>
+<arg>2</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2025-05-17T10:06:23.269908" elapsed="2.000602"/>
+</kw>
+<kw name="Perform Zoom_4" owner="AppiumZoomExtensions6_3">
+<msg time="2025-05-17T10:06:27.608069" level="INFO">criteria is com.google.android.apps.maps:id/mainmap_container</msg>
+<arg>id=com.google.android.apps.maps:id/mainmap_container</arg>
+<arg>scale=1.5</arg>
+<arg>duration=${DURATION}</arg>
+<arg>steps=50</arg>
+<arg>direction=horizontal</arg>
+<doc>Performs a zoom in gesture on an Android application with movement perturbation.</doc>
+<status status="PASS" start="2025-05-17T10:06:25.270947" elapsed="2.337278"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2025-05-17T10:06:32.609559" level="INFO">Slept 5 seconds.</msg>
 <arg>5</arg>
 <doc>Pauses the test executed for the given time.</doc>
-<status status="PASS" start="2025-04-03T22:08:28.715048" elapsed="5.001672"/>
+<status status="PASS" start="2025-05-17T10:06:27.608906" elapsed="5.000758"/>
+</kw>
+<kw name="Get Time" owner="BuiltIn">
+<msg time="2025-05-17T10:06:32.610322" level="INFO">${timestamp} = 1747487192</msg>
+<var>${timestamp}</var>
+<arg>epoch</arg>
+<doc>Returns the given time in the requested format.</doc>
+<status status="PASS" start="2025-05-17T10:06:32.610072" elapsed="0.000279"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2025-05-17T10:06:32.611379" level="INFO">${safe_name} = pert_scale1.5_after_zoom_1747487192</msg>
+<var>${safe_name}</var>
+<arg>pert_scale1.5_after_zoom_${timestamp}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2025-05-17T10:06:32.610809" elapsed="0.000643"/>
+</kw>
+<kw name="Create Directory" owner="OperatingSystem">
+<msg time="2025-05-17T10:06:32.612396" level="INFO" html="true">Directory '&lt;a href="file://C:\QAx\projects\yodapp-robot\logs\screenshots\maps\pert_scale1.5"&gt;C:\QAx\projects\yodapp-robot\logs\screenshots\maps\pert_scale1.5&lt;/a&gt;' already exists.</msg>
+<arg>${OUTPUT_DIR}${/}screenshots${/}maps${/}pert_scale1.5</arg>
+<doc>Creates the specified directory.</doc>
+<status status="PASS" start="2025-05-17T10:06:32.611977" elapsed="0.000529"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="AppiumLibrary">
+<msg time="2025-05-17T10:06:34.115779" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="screenshots/maps/pert_scale1.5/pert_scale1.5_after_zoom_1747487192.png"&gt;&lt;img src="screenshots/maps/pert_scale1.5/pert_scale1.5_after_zoom_1747487192.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>${OUTPUT_DIR}${/}screenshots${/}maps${/}pert_scale1.5${/}${safe_name}.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into the log.</doc>
+<status status="PASS" start="2025-05-17T10:06:32.614171" elapsed="1.501728"/>
 </kw>
 <kw name="Close Application" owner="AppiumLibrary">
 <doc>Closes the current application and also close webdriver session.</doc>
-<status status="PASS" start="2025-04-03T22:08:33.716889" elapsed="0.504635"/>
+<status status="PASS" start="2025-05-17T10:06:34.116348" elapsed="0.739982"/>
 </kw>
-<status status="PASS" start="2025-04-03T22:08:28.714524" elapsed="5.507117"/>
-</kw>
-<tag>long</tag>
-<status status="PASS" start="2025-04-03T22:08:01.901016" elapsed="32.320892"/>
+<tag>maps2</tag>
+<status status="PASS" start="2025-05-17T10:05:55.486313" elapsed="39.370345"/>
 </test>
-<status status="PASS" start="2025-04-03T22:08:01.626971" elapsed="32.595801"/>
+<test id="s1-t2" name="Deve dar zoom no Google Maps 1.7" line="75">
+<kw name="Start session Google Maps" owner="base_fisico">
+<kw name="Open Application" owner="AppiumLibrary">
+<arg>http://localhost:4723</arg>
+<arg>platformName=Android</arg>
+<arg>deviceName=AndroidDevice</arg>
+<arg>automationName=UIAutomator2</arg>
+<arg>appPackage=com.google.android.apps.maps</arg>
+<arg>appActivity=com.google.android.maps.MapsActivity</arg>
+<arg>autoGrantPermissions=true</arg>
+<doc>Opens a new application to given Appium server.
+Capabilities of appium server, Android and iOS,
+Please check https://appium.io/docs/en/2.1/cli/args/
+| *Option*            | *Man.* | *Description*     |
+| remote_url          | Yes    | Appium server url |
+| alias               | no     | alias             |
+| strict_ssl          | No     | allows you to send commands to an invalid certificate host like a self-signed one. |</doc>
+<status status="PASS" start="2025-05-17T10:06:34.858509" elapsed="14.206599"/>
+</kw>
+<status status="PASS" start="2025-05-17T10:06:34.858093" elapsed="14.207140"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2025-05-17T10:06:59.066841" level="INFO">Slept 10 seconds.</msg>
+<arg>10</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2025-05-17T10:06:49.065611" elapsed="10.001362"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="AppiumLibrary">
+<msg time="2025-05-17T10:07:00.329698" level="INFO">xpath criteria: //android.widget.Button[@content-desc="Entrar no modo de bússola"]</msg>
+<arg>//android.widget.Button[@content-desc="Entrar no modo de bússola"]</arg>
+<doc>Waits until element specified with `locator` is visible.</doc>
+<status status="PASS" start="2025-05-17T10:06:59.067522" elapsed="1.262293"/>
+</kw>
+<kw name="Click Element" owner="AppiumLibrary">
+<msg time="2025-05-17T10:07:00.332596" level="INFO">Clicking element '//android.widget.Button[@content-desc="Entrar no modo de bússola"]'.</msg>
+<msg time="2025-05-17T10:07:01.774202" level="INFO">xpath criteria: //android.widget.Button[@content-desc="Entrar no modo de bússola"]</msg>
+<arg>//android.widget.Button[@content-desc="Entrar no modo de bússola"]</arg>
+<doc>Click element identified by `locator`.</doc>
+<status status="PASS" start="2025-05-17T10:07:00.330202" elapsed="1.444283"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2025-05-17T10:07:03.776780" level="INFO">Slept 2 seconds.</msg>
+<arg>2</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2025-05-17T10:07:01.775562" elapsed="2.001360"/>
+</kw>
+<kw name="Perform Zoom_4" owner="AppiumZoomExtensions6_3">
+<msg time="2025-05-17T10:07:05.971622" level="INFO">criteria is com.google.android.apps.maps:id/mainmap_container</msg>
+<arg>id=com.google.android.apps.maps:id/mainmap_container</arg>
+<arg>scale=1.7</arg>
+<arg>duration=${DURATION}</arg>
+<arg>steps=50</arg>
+<arg>direction=horizontal</arg>
+<doc>Performs a zoom in gesture on an Android application with movement perturbation.</doc>
+<status status="PASS" start="2025-05-17T10:07:03.777437" elapsed="2.194396"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2025-05-17T10:07:10.973038" level="INFO">Slept 5 seconds.</msg>
+<arg>5</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2025-05-17T10:07:05.972570" elapsed="5.000620"/>
+</kw>
+<kw name="Get Time" owner="BuiltIn">
+<msg time="2025-05-17T10:07:10.974115" level="INFO">${timestamp} = 1747487230</msg>
+<var>${timestamp}</var>
+<arg>epoch</arg>
+<doc>Returns the given time in the requested format.</doc>
+<status status="PASS" start="2025-05-17T10:07:10.973767" elapsed="0.000385"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2025-05-17T10:07:10.974929" level="INFO">${safe_name} = pert_scale1.7_after_zoom_1747487230</msg>
+<var>${safe_name}</var>
+<arg>pert_scale1.7_after_zoom_${timestamp}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2025-05-17T10:07:10.974606" elapsed="0.000354"/>
+</kw>
+<kw name="Create Directory" owner="OperatingSystem">
+<msg time="2025-05-17T10:07:10.975940" level="INFO" html="true">Directory '&lt;a href="file://C:\QAx\projects\yodapp-robot\logs\screenshots\maps\pert_scale1.7"&gt;C:\QAx\projects\yodapp-robot\logs\screenshots\maps\pert_scale1.7&lt;/a&gt;' already exists.</msg>
+<arg>${OUTPUT_DIR}${/}screenshots${/}maps${/}pert_scale1.7</arg>
+<doc>Creates the specified directory.</doc>
+<status status="PASS" start="2025-05-17T10:07:10.975530" elapsed="0.000481"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="AppiumLibrary">
+<msg time="2025-05-17T10:07:12.429824" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="screenshots/maps/pert_scale1.7/pert_scale1.7_after_zoom_1747487230.png"&gt;&lt;img src="screenshots/maps/pert_scale1.7/pert_scale1.7_after_zoom_1747487230.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>${OUTPUT_DIR}${/}screenshots${/}maps${/}pert_scale1.7${/}${safe_name}.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into the log.</doc>
+<status status="PASS" start="2025-05-17T10:07:10.976367" elapsed="1.453619"/>
+</kw>
+<kw name="Close Application" owner="AppiumLibrary">
+<doc>Closes the current application and also close webdriver session.</doc>
+<status status="PASS" start="2025-05-17T10:07:12.430794" elapsed="0.713306"/>
+</kw>
+<tag>maps2</tag>
+<status status="PASS" start="2025-05-17T10:06:34.857318" elapsed="38.287357"/>
+</test>
+<test id="s1-t3" name="Deve dar zoom no Google Maps 1.1" line="124">
+<kw name="Start session Google Maps" owner="base_fisico">
+<kw name="Open Application" owner="AppiumLibrary">
+<arg>http://localhost:4723</arg>
+<arg>platformName=Android</arg>
+<arg>deviceName=AndroidDevice</arg>
+<arg>automationName=UIAutomator2</arg>
+<arg>appPackage=com.google.android.apps.maps</arg>
+<arg>appActivity=com.google.android.maps.MapsActivity</arg>
+<arg>autoGrantPermissions=true</arg>
+<doc>Opens a new application to given Appium server.
+Capabilities of appium server, Android and iOS,
+Please check https://appium.io/docs/en/2.1/cli/args/
+| *Option*            | *Man.* | *Description*     |
+| remote_url          | Yes    | Appium server url |
+| alias               | no     | alias             |
+| strict_ssl          | No     | allows you to send commands to an invalid certificate host like a self-signed one. |</doc>
+<status status="PASS" start="2025-05-17T10:07:13.147723" elapsed="14.233721"/>
+</kw>
+<status status="PASS" start="2025-05-17T10:07:13.147078" elapsed="14.234582"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2025-05-17T10:07:37.382307" level="INFO">Slept 10 seconds.</msg>
+<arg>10</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2025-05-17T10:07:27.382017" elapsed="10.000426"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="AppiumLibrary">
+<msg time="2025-05-17T10:07:38.421642" level="INFO">xpath criteria: //android.widget.Button[@content-desc="Entrar no modo de bússola"]</msg>
+<arg>//android.widget.Button[@content-desc="Entrar no modo de bússola"]</arg>
+<doc>Waits until element specified with `locator` is visible.</doc>
+<status status="PASS" start="2025-05-17T10:07:37.382905" elapsed="1.038905"/>
+</kw>
+<kw name="Click Element" owner="AppiumLibrary">
+<msg time="2025-05-17T10:07:38.423854" level="INFO">Clicking element '//android.widget.Button[@content-desc="Entrar no modo de bússola"]'.</msg>
+<msg time="2025-05-17T10:07:39.659357" level="INFO">xpath criteria: //android.widget.Button[@content-desc="Entrar no modo de bússola"]</msg>
+<arg>//android.widget.Button[@content-desc="Entrar no modo de bússola"]</arg>
+<doc>Click element identified by `locator`.</doc>
+<status status="PASS" start="2025-05-17T10:07:38.422550" elapsed="1.237009"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2025-05-17T10:07:41.661205" level="INFO">Slept 2 seconds.</msg>
+<arg>2</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2025-05-17T10:07:39.660546" elapsed="2.000776"/>
+</kw>
+<kw name="Perform Zoom_4" owner="AppiumZoomExtensions6_3">
+<msg time="2025-05-17T10:07:43.001756" level="INFO">criteria is com.google.android.apps.maps:id/mainmap_container</msg>
+<arg>id=com.google.android.apps.maps:id/mainmap_container</arg>
+<arg>scale=1.1</arg>
+<arg>duration=100</arg>
+<arg>steps=20</arg>
+<arg>direction=horizontal</arg>
+<doc>Performs a zoom in gesture on an Android application with movement perturbation.</doc>
+<status status="PASS" start="2025-05-17T10:07:41.661743" elapsed="1.340180"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2025-05-17T10:07:48.003680" level="INFO">Slept 5 seconds.</msg>
+<arg>5</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2025-05-17T10:07:43.002689" elapsed="5.001096"/>
+</kw>
+<kw name="Get Time" owner="BuiltIn">
+<msg time="2025-05-17T10:07:48.004585" level="INFO">${timestamp} = 1747487268</msg>
+<var>${timestamp}</var>
+<arg>epoch</arg>
+<doc>Returns the given time in the requested format.</doc>
+<status status="PASS" start="2025-05-17T10:07:48.004281" elapsed="0.000336"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2025-05-17T10:07:48.005197" level="INFO">${safe_name} = pert_scale1.1_after_zoom_1747487268</msg>
+<var>${safe_name}</var>
+<arg>pert_scale1.1_after_zoom_${timestamp}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2025-05-17T10:07:48.004994" elapsed="0.000232"/>
+</kw>
+<kw name="Create Directory" owner="OperatingSystem">
+<msg time="2025-05-17T10:07:48.006183" level="INFO" html="true">Directory '&lt;a href="file://C:\QAx\projects\yodapp-robot\logs\screenshots\maps\pert_scale1.1"&gt;C:\QAx\projects\yodapp-robot\logs\screenshots\maps\pert_scale1.1&lt;/a&gt;' already exists.</msg>
+<arg>${OUTPUT_DIR}${/}screenshots${/}maps${/}pert_scale1.1</arg>
+<doc>Creates the specified directory.</doc>
+<status status="PASS" start="2025-05-17T10:07:48.005837" elapsed="0.000412"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="AppiumLibrary">
+<msg time="2025-05-17T10:07:49.608874" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="screenshots/maps/pert_scale1.1/pert_scale1.1_after_zoom_1747487268.png"&gt;&lt;img src="screenshots/maps/pert_scale1.1/pert_scale1.1_after_zoom_1747487268.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>${OUTPUT_DIR}${/}screenshots${/}maps${/}pert_scale1.1${/}${safe_name}.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into the log.</doc>
+<status status="PASS" start="2025-05-17T10:07:48.006636" elapsed="1.602678"/>
+</kw>
+<kw name="Close Application" owner="AppiumLibrary">
+<doc>Closes the current application and also close webdriver session.</doc>
+<status status="PASS" start="2025-05-17T10:07:49.610430" elapsed="0.711357"/>
+</kw>
+<tag>maps2</tag>
+<status status="PASS" start="2025-05-17T10:07:13.146122" elapsed="37.176062"/>
+</test>
+<status status="PASS" start="2025-05-17T10:05:55.020468" elapsed="115.302747"/>
 </suite>
 <statistics>
 <total>
-<stat pass="1" fail="0" skip="0">All Tests</stat>
+<stat pass="3" fail="0" skip="0">All Tests</stat>
 </total>
 <tag>
-<stat pass="1" fail="0" skip="0">long</stat>
+<stat pass="3" fail="0" skip="0">maps2</stat>
 </tag>
 <suite>
-<stat name="Click" id="s1" pass="1" fail="0" skip="0">Click</stat>
+<stat name="Teste Fisico" id="s1" pass="3" fail="0" skip="0">Teste Fisico</stat>
 </suite>
 </statistics>
 <errors>
