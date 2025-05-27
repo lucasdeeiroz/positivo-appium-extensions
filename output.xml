@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<robot generator="Robot 7.2.2 (Python 3.13.2 on win32)" generated="2025-05-17T10:48:55.676647" rpa="false" schemaversion="5">
-<suite id="s1" name="Zoom" source="C:\QAx\projects\yodapp-robot\tests\zoom.robot">
-<test id="s1-t1" name="Deve poder fazer a conta 9+5 na calculadora com point_click" line="161">
+<robot generator="Robot 7.2.2 (Python 3.13.2 on win32)" generated="2025-05-27T14:20:21.074651" rpa="false" schemaversion="5">
+<suite id="s1" name="Teste Fisico" source="C:\QAx\projects\yodapp-robot\tests\teste_fisico.robot">
+<test id="s1-t1" name="Deve realizar um Zoom e Pinch no Google Fotos" line="300">
+<kw name="Start session Google Photos" owner="base_fisico">
 <kw name="Open Application" owner="AppiumLibrary">
 <arg>http://localhost:4723</arg>
-<arg>automationName=uiautomator2</arg>
 <arg>platformName=Android</arg>
-<arg>deviceName=Emulator</arg>
-<arg>udid=emulator-5554</arg>
+<arg>deviceName=AndroidDevice</arg>
+<arg>automationName=UIAutomator2</arg>
+<arg>appPackage=com.google.android.apps.photos</arg>
+<arg>appActivity=.home.HomeActivity</arg>
 <arg>autoGrantPermissions=true</arg>
-<arg>appPackage=com.google.android.calculator</arg>
-<arg>appActivity=com.android.calculator2.Calculator</arg>
-<arg>noReset=true</arg>
 <doc>Opens a new application to given Appium server.
 Capabilities of appium server, Android and iOS,
 Please check https://appium.io/docs/en/2.1/cli/args/
@@ -19,53 +18,169 @@ Please check https://appium.io/docs/en/2.1/cli/args/
 | remote_url          | Yes    | Appium server url |
 | alias               | no     | alias             |
 | strict_ssl          | No     | allows you to send commands to an invalid certificate host like a self-signed one. |</doc>
-<status status="PASS" start="2025-05-17T10:48:56.114549" elapsed="8.304642"/>
+<status status="PASS" start="2025-05-27T14:20:21.465742" elapsed="18.042107"/>
 </kw>
-<kw name="Point Click" owner="click_point">
-<arg>${670}</arg>
-<arg>${1350}</arg>
-<arg>100</arg>
-<doc>Clicks at a specific point on the screen using absolute coordinates.</doc>
-<status status="PASS" start="2025-05-17T10:49:04.419648" elapsed="0.423383"/>
+<status status="PASS" start="2025-05-27T14:20:21.464107" elapsed="18.043885"/>
 </kw>
-<kw name="Point Click" owner="click_point">
-<arg>${920}</arg>
-<arg>${1800}</arg>
-<arg>100</arg>
-<doc>Clicks at a specific point on the screen using absolute coordinates.</doc>
-<status status="PASS" start="2025-05-17T10:49:04.843639" elapsed="0.427419"/>
+<kw name="Wait Until Page Contains Element" owner="AppiumLibrary">
+<msg time="2025-05-27T14:20:43.383450" level="INFO">xpath criteria: //*[contains(@text, "Use o backup do Google Fotos")]
+xpath criteria: //*[contains(@text, "Use o backup do Google Fotos")]</msg>
+<arg>//*[contains(@text, "Use o backup do Google Fotos")]</arg>
+<doc>Waits until element specified with `locator` appears on current page.</doc>
+<status status="PASS" start="2025-05-27T14:20:39.508392" elapsed="3.875210"/>
 </kw>
-<kw name="Point Click" owner="click_point">
-<arg>${420}</arg>
-<arg>${1500}</arg>
-<arg>100</arg>
-<doc>Clicks at a specific point on the screen using absolute coordinates.</doc>
-<status status="PASS" start="2025-05-17T10:49:05.271769" elapsed="0.422599"/>
+<kw name="Click Element" owner="AppiumLibrary">
+<msg time="2025-05-27T14:20:43.385423" level="INFO">Clicking element '//android.widget.Switch[@resource-id="com.google.android.apps.photos:id/onboarding_toggle"]'.</msg>
+<msg time="2025-05-27T14:20:43.573921" level="INFO">xpath criteria: //android.widget.Switch[@resource-id="com.google.android.apps.photos:id/onboarding_toggle"]</msg>
+<arg>//android.widget.Switch[@resource-id="com.google.android.apps.photos:id/onboarding_toggle"]</arg>
+<doc>Click element identified by `locator`.</doc>
+<status status="PASS" start="2025-05-27T14:20:43.384381" elapsed="0.189654"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="AppiumLibrary">
+<msg time="2025-05-27T14:20:44.332090" level="INFO">xpath criteria: //*[contains(@text, "Continuar sem fazer backup")]</msg>
+<arg>//*[contains(@text, "Continuar sem fazer backup")]</arg>
+<doc>Waits until element specified with `locator` appears on current page.</doc>
+<status status="PASS" start="2025-05-27T14:20:43.574990" elapsed="0.757303"/>
+</kw>
+<kw name="Click Element" owner="AppiumLibrary">
+<msg time="2025-05-27T14:20:44.334091" level="INFO">Clicking element '//*[contains(@text, "Continuar sem fazer backup")]'.</msg>
+<msg time="2025-05-27T14:20:44.599073" level="INFO">xpath criteria: //*[contains(@text, "Continuar sem fazer backup")]</msg>
+<arg>//*[contains(@text, "Continuar sem fazer backup")]</arg>
+<doc>Click element identified by `locator`.</doc>
+<status status="PASS" start="2025-05-27T14:20:44.332927" elapsed="0.266221"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="AppiumLibrary">
+<msg time="2025-05-27T14:21:32.626719" level="INFO">xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]</msg>
+<arg>//android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]</arg>
+<arg>timeout=200</arg>
+<doc>Waits until element specified with `locator` appears on current page.</doc>
+<status status="PASS" start="2025-05-27T14:20:44.600014" elapsed="48.027111"/>
+</kw>
+<kw name="Click Element" owner="AppiumLibrary">
+<msg time="2025-05-27T14:21:32.629213" level="INFO">Clicking element '//android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]'.</msg>
+<msg time="2025-05-27T14:21:33.590058" level="INFO">xpath criteria: //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]</msg>
+<arg>//android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]</arg>
+<doc>Click element identified by `locator`.</doc>
+<status status="PASS" start="2025-05-27T14:21:32.627778" elapsed="0.962397"/>
 </kw>
 <kw name="Sleep" owner="BuiltIn">
-<msg time="2025-05-17T10:49:07.695746" level="INFO">Slept 2 seconds.</msg>
-<arg>2</arg>
+<msg time="2025-05-27T14:21:43.591778" level="INFO">Slept 10 seconds.</msg>
+<arg>10</arg>
 <doc>Pauses the test executed for the given time.</doc>
-<status status="PASS" start="2025-05-17T10:49:05.695127" elapsed="2.000752"/>
+<status status="PASS" start="2025-05-27T14:21:33.590741" elapsed="10.001134"/>
 </kw>
-<kw name="Close Application" owner="AppiumLibrary">
-<doc>Closes the current application and also close webdriver session.</doc>
-<status status="PASS" start="2025-05-17T10:49:07.696324" elapsed="0.177015"/>
+<kw name="Perform Zoom_4" owner="AppiumZoomExtensions6_3">
+<msg time="2025-05-27T14:21:45.925581" level="INFO">criteria is com.google.android.apps.photos:id/photos_photofragment_components_background_photo_view</msg>
+<arg>id=com.google.android.apps.photos:id/photos_photofragment_components_background_photo_view</arg>
+<arg>scale=1.4</arg>
+<arg>duration=${DURATION}</arg>
+<arg>steps=50</arg>
+<arg>direction=horizontal</arg>
+<doc>Performs a zoom in gesture on an Android application with movement perturbation.</doc>
+<status status="PASS" start="2025-05-27T14:21:43.592289" elapsed="2.333386"/>
 </kw>
-<tag>addition</tag>
-<status status="PASS" start="2025-05-17T10:48:56.112463" elapsed="11.761377"/>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2025-05-27T14:21:50.927217" level="INFO">Slept 5 seconds.</msg>
+<arg>5</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2025-05-27T14:21:45.926361" elapsed="5.000964"/>
+</kw>
+<kw name="Perform Pinch_4" owner="AppiumPinchExtensions6_3">
+<msg time="2025-05-27T14:21:52.526045" level="INFO">criteria is com.google.android.apps.photos:id/photos_photofragment_components_background_photo_view</msg>
+<arg>id=com.google.android.apps.photos:id/photos_photofragment_components_background_photo_view</arg>
+<arg>scale=0.7</arg>
+<arg>duration=${DURATION}</arg>
+<arg>steps=20</arg>
+<arg>direction=horizontal</arg>
+<doc>Performs a zoom out (pinch) gesture on an Android application with movement perturbation.</doc>
+<status status="PASS" start="2025-05-27T14:21:50.927811" elapsed="1.598340"/>
+</kw>
+<tag>pinchzoomfotos</tag>
+<status status="PASS" start="2025-05-27T14:20:21.462829" elapsed="91.063832"/>
 </test>
-<status status="PASS" start="2025-05-17T10:48:55.678210" elapsed="12.196805"/>
+<status status="PASS" start="2025-05-27T14:20:21.076104" elapsed="91.452410"/>
 </suite>
 <statistics>
 <total>
 <stat pass="1" fail="0" skip="0">All Tests</stat>
 </total>
 <tag>
-<stat pass="1" fail="0" skip="0">addition</stat>
+<stat pass="1" fail="0" skip="0">pinchzoomfotos</stat>
 </tag>
 <suite>
-<stat name="Zoom" id="s1" pass="1" fail="0" skip="0">Zoom</stat>
+<stat name="Teste Fisico" id="s1" pass="1" fail="0" skip="0">Teste Fisico</stat>
 </suite>
 </statistics>
 <errors>

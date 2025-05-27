@@ -1,6 +1,15 @@
 *** Settings ***
 
 Resource     ../resources/base_fisico.resource
+*** Keywords ***
+Executar Login Completo Google
+    Wait Until Page Contains Element    //android.widget.ImageView[@content-desc="Entrar com Google"]
+    Click Element    //android.widget.ImageView[@content-desc="Entrar com Google"]
+    Wait Until Page Contains Element    //android.widget.Button[@content-desc="Concordar e continuar"]
+    Click Element    //android.widget.Button[@content-desc="Concordar e continuar"]
+    Wait Until Page Contains Element    //*[contains(@text, "Geovane Lima")]
+    Click Element    //*[contains(@text, "Geovane Lima")]
+
 *** Variables ***
 
 ${SCREENSHOT_FOLDER}    ./screenshots
@@ -269,7 +278,7 @@ Deve realizar um Zoom no Google Fotos 1.1
     Close Application
 
 Deve realizar um Zoom e Pinch no Google Maps
-
+    [Tags]    pinchzoommaps
     Start session Google Maps
     Sleep    10
 
@@ -277,7 +286,50 @@ Deve realizar um Zoom e Pinch no Google Maps
     Click Element    //android.widget.Button[@content-desc="Entrar no modo de bússola"]
     Sleep    2
 
+    Perform Pinch_4   id=com.google.android.apps.maps:id/mainmap_container    scale=0.7    duration=${DURATION}    steps=20    direction=horizontal
+    Sleep    5 
     Perform Zoom_4    id=com.google.android.apps.maps:id/mainmap_container    scale=1.5    duration=${DURATION}    steps=50    direction=horizontal
     Sleep    5
-    Perform Pinch_4   id=com.google.android.apps.maps:id/mainmap_container    scale=1.5    duration=${DURATION}    steps=50    direction=horizontal
+    Perform Pinch_4   id=com.google.android.apps.maps:id/mainmap_container    scale=0.3    duration=${DURATION}    steps=20   direction=horizontal
     Sleep    5     
+    Perform Zoom_4    id=com.google.android.apps.maps:id/mainmap_container    scale=1.9    duration=${DURATION}    steps=50    direction=horizontal
+    Sleep    5
+    Perform Zoom_4    id=com.google.android.apps.maps:id/mainmap_container    scale=1.6    duration=${DURATION}    steps=50    direction=horizontal
+    Sleep    5
+
+Deve realizar um Zoom e Pinch no Google Fotos
+    [Tags]    pinchzoomfotos
+    Start session Google Photos
+    Wait Until Page Contains Element      //*[contains(@text, "Use o backup do Google Fotos")]
+    Click Element     //android.widget.Switch[@resource-id="com.google.android.apps.photos:id/onboarding_toggle"]
+
+    Wait Until Page Contains Element   //*[contains(@text, "Continuar sem fazer backup")]
+    Click Element    //*[contains(@text, "Continuar sem fazer backup")]
+
+    Wait Until Page Contains Element      //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]        timeout=200
+    Click Element    //android.widget.ImageView[@content-desc="Item Foto criado em 21 de set. de 2024 11:04"]
+    Sleep    10
+    Perform Zoom_4    id=com.google.android.apps.photos:id/photos_photofragment_components_background_photo_view    scale=1.4    duration=${DURATION}    steps=50    direction=horizontal
+    Sleep    5
+    Perform Pinch_4    id=com.google.android.apps.photos:id/photos_photofragment_components_background_photo_view    scale=0.7    duration=${DURATION}    steps=20    direction=horizontal
+
+Deve realizar o Zoom e o Pinch no 99
+    [Tags]    99
+    Start session 99
+    Wait Until Page Contains Element    //*[contains(@text, "Concordo")]
+    Click Element    //android.widget.TextView[@resource-id="com.taxis99:id/okButton"]
+
+    Wait Until Page Contains Element    //*[contains(@text, "Permitir")]    10
+    Click Element    //android.widget.TextView[@resource-id="com.taxis99:id/btn_positive"]
+    Sleep    10
+    ${tem_opcao_direta}=    Run Keyword And Return Status    Page Should Contain Element    //*[contains(@text, "Continuar como Geovane")]    10
+    Run Keyword If    ${tem_opcao_direta}    Click Element    //*[contains(@text, "Continuar como Geovane")]
+    Run Keyword If    not ${tem_opcao_direta}    Executar Login Completo Google
+
+    Wait Until Page Contains Element    //android.view.View[@resource-id="com.taxis99:id/xp_bg_view_top"]    15
+
+    Sleep    5
+    Perform Zoom_4    //android.widget.LinearLayout[@resource-id="com.taxis99:id/xp_cell_container"]/android.widget.FrameLayout    scale=1.9    duration=${DURATION}    steps=50    direction=horizontal    
+    Sleep    5
+    Perform Pinch_4    //android.widget.LinearLayout[@resource-id="com.taxis99:id/xp_cell_container"]/android.widget.FrameLayout    scale=0.2    duration=${DURATION}    steps=20    direction=horizontal
+    Sleep    10

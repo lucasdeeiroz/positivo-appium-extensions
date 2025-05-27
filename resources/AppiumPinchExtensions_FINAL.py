@@ -3,7 +3,7 @@ from robot.libraries.BuiltIn import BuiltIn
 from selenium.webdriver.common.action_chains import ActionChains
 import random
 
-class AppiumPinchExtensions6_3:
+class AppiumPinchExtensions_FINAL:
     """Classe para executar gestos de zoom out (pinch) com Appium, com perturbação no movimento."""
 
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'

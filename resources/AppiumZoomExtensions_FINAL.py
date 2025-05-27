@@ -3,7 +3,7 @@ from robot.libraries.BuiltIn import BuiltIn
 from selenium.webdriver.common.action_chains import ActionChains
 import random
 
-class AppiumZoomExtensions6_3:
+class AppiumZoomExtensions_FINAL:
     """Classe para executar gestos de zoom in com Appium, com perturbação no movimento."""
 
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
@@ -94,10 +94,10 @@ class AppiumZoomExtensions6_3:
             finger1.create_pause(pause_s)
             finger2.create_pause(pause_s)
 
-            # Estratégia de induzir pertubações no movimento para que se assemelhe ao movimento real
+           
             for i in range(1, steps + 1):
-                t = i / steps
-                #Variação de -1 e 1 pixels na linha do eixo
+                t = i / steps #Steps define o quanto o movimento será dividido. Para movimentos curtos (scale baixo), recomenda-se steps de 10 a 20
+                #Para movimentos longos (scale alto), recomenda-se steps de 50
                 interp_f1_x = f1_start[0] + t * (f1_end[0] - f1_start[0]) + random.uniform(-0, 0)
                 interp_f1_y = f1_start[1] + t * (f1_end[1] - f1_start[1]) + random.uniform(-0, 0)
                 interp_f2_x = f2_start[0] + t * (f2_end[0] - f2_start[0]) + random.uniform(-0, 0)
