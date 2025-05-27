@@ -45,12 +45,12 @@ Teste de Estresse com Tap With Positions
     ...    ${plus}    ${minus}    ${times}    ${division}
 
     # Número de iterações para o teste de estresse
-    ${repeticoes}=    Set Variable    100
+    ${iterations}=    Set Variable    100
     
     # Loop de estresse
-    FOR    ${i}    IN RANGE    1    ${repeticoes}
+    FOR    ${i}    IN RANGE    1    ${iterations}
         # Registra o progresso
-        Log    Executando iteração ${i} de ${repeticoes}
+        Log    Executando iteração ${i} de ${iterations}
         
         # Seleciona 4 botões aleatórios para clicar (fórmula aleatória)
         ${random_number1}=    Evaluate    random.choice($all_numbers)    random
@@ -68,11 +68,7 @@ Teste de Estresse com Tap With Positions
         
         # Limpa o resultado
         Tap With Positions    50    ${AC}
-        
-        # Verifica se o aplicativo ainda está respondendo a cada 10 iterações
-        ${mod}=    Evaluate    ${i} % 10
-        Run Keyword If    ${mod} == 0    Wait Until Page Contains Element    xpath=//*    timeout=2s
     END
     
-    Log    Teste de estresse concluído com sucesso: ${repeticoes} iterações com cliques aleatórios
+    Log    Teste de estresse concluído com sucesso: ${iterations} iterações com cliques aleatórios
     Close Application
