@@ -19,7 +19,6 @@ Teste de Estresse com Tap With Positions
     # ...                 noReset=true
 
     ${num0}=    Create List    ${150}    ${2170}
-    ${dot}=    Create List    ${400}    ${2170}
     ${num1}=    Create List    ${150}    ${1900}
     ${num2}=    Create List    ${400}    ${1900}
     ${num3}=    Create List    ${670}    ${1900}
@@ -29,11 +28,13 @@ Teste de Estresse com Tap With Positions
     ${num7}=    Create List    ${150}    ${1350}
     ${num8}=    Create List    ${400}    ${1350}
     ${num9}=    Create List    ${670}    ${1350}
-    ${equals}=    Create List    ${920}    ${2170}
-    ${plus}=    Create List    ${920}    ${1900}
-    ${minus}=    Create List    ${920}    ${1630}
-    ${times}=    Create List    ${920}    ${1350}
+
     ${division}=    Create List    ${920}    ${1100}
+    ${times}=    Create List    ${920}    ${1350}
+    ${minus}=    Create List    ${920}    ${1630}
+    ${plus}=    Create List    ${920}    ${1900}
+
+    ${equals}=    Create List    ${920}    ${2170}
     ${AC}=    Create List    ${150}    ${1100}
 
     # Criando lista de todos os botões para seleção aleatória
