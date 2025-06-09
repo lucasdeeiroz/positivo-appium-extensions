@@ -1,5 +1,6 @@
 *** Settings ***
 
+Library     click_point.py
 Library     AppiumLibrary
 Library     AppiumZoomExtensions.py
 Library     AppiumLongPressExtensions.py
@@ -13,6 +14,7 @@ Library     AppiumZoomExtensions4.py
 Library     AppiumZoomExtensions5.py
 Library     AppiumPinchExtensions.py
 Library     AppiumZoomExtensions2_4.py
+Library     Appiumclick.py
 
 *** Variables ***
 ${START}    QAX
@@ -48,6 +50,7 @@ Start session Camera
     ...    udid=emulator-5554
     ...    autoGrantPermissions=true
     ...    noReset=true
+    
 Start session 
     Open Application                 http://localhost:4723
     ...                              platformName=Android
