@@ -333,3 +333,27 @@ Deve realizar o Zoom e o Pinch no 99
     Sleep    5
     Perform Pinch_4    //android.widget.LinearLayout[@resource-id="com.taxis99:id/xp_cell_container"]/android.widget.FrameLayout    scale=0.2    duration=${DURATION}    steps=20    direction=horizontal
     Sleep    10
+
+Deve clicar no elemento da calculadora
+    [Tags]    calculadora
+    Start session Calculadora
+
+    ClickC    id=//android.widget.FrameLayout[@resource-id="android:id/content"]    xoffset=30    yoffset=30
+
+Deve realizar multiplos cliques no Samsung Notes
+    [Tags]    notes
+    Start session Samsung Notes
+    Wait Until Page Contains Element    //android.widget.TextView[@resource-id="com.samsung.android.app.notes:id/title" and @text="‎teste"]
+    Click Element    //android.widget.TextView[@resource-id="com.samsung.android.app.notes:id/title" and @text="‎teste"]
+    Wait Until Page Contains Element   //*[contains(@text, "teste")]    
+    Wait Until Page Contains Element    //android.widget.ImageView[@resource-id="com.samsung.android.app.notes:id/hw_toolbar_pen_type"]
+    #Click Element    //android.widget.ImageView[@resource-id="com.samsung.android.app.notes:id/hw_toolbar_pen_type"]
+
+    FOR    ${yoffset}    IN RANGE    0.1    1.0    0.1
+        FOR    ${xoffset}    IN RANGE    0.1    1.0    0.1
+            ClickC    locator=//android.widget.RelativeLayout[@resource-id="com.samsung.android.app.notes:id/main_layout_container"]/android.widget.ScrollView/android.view.View[1]    
+            ...    xoffset=${xoffset}    yoffset=${yoffset}
+        END
+    END
+
+    Close Application

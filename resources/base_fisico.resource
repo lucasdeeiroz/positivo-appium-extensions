@@ -19,6 +19,7 @@ Library     AppiumZoomExtensions6_2.py
 Library     AppiumZoomExtensions_FINAL.py
 Library     AppiumPinchExtensions_FINAL.py
 Library     AppiumZoomExtensions7.py
+Library     Appiumclick.py
 Library     OperatingSystem
 Library     DateTime
 
@@ -27,14 +28,22 @@ ${START}    QAX
 
 *** Keywords ***
 
+Start session Samsung Notes
+    Open Application    http://localhost:4723
+...    platformName=Android
+...    deviceName=RQ8N30B6H2T     #AndroidDevice
+...    automationName=UiAutomator2
+...    appPackage=com.samsung.android.app.notes
+...    appActivity=com.samsung.android.app.notes.memolist.MemoListActivity
+...    noReset=true
+
 Start session Calculadora
     Open Application
     ...    http://localhost:4723
     ...    platformName=Android
     ...    deviceName=AndroidDevice
     ...    automationName=UiAutomator2
-    ...    appPackage=com.miui.calculator
-    ...    appActivity=com.miui.calculator.cal.CalculatorActivity
+    ...    app=${EXECDIR}/app/Calculator2.apk
     ...    noReset=true
 
 Handle Backup if Prompt is Visible

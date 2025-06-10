@@ -1,6 +1,9 @@
 *** Settings ***
 Resource     ../resources/base.resource
 
+*** Variables ***
+${DURATION}      500
+
 *** Keywords ***
 Handle Backup Prompt If Visible
     Sleep    5
@@ -177,3 +180,24 @@ Deve poder fazer a conta 9+5 na calculadora com point_click
     Sleep    2
     
     Close Application
+
+
+Deve realizar um Zoom e Pinch no Google Maps
+    [Tags]    pinchzoommaps
+    Start session Google Maps
+    Sleep    10
+
+    #Wait Until Element Is Visible    //android.widget.Button[@content-desc="Entrar no modo de bússola"]
+    #Click Element    //android.widget.Button[@content-desc="Entrar no modo de bússola"]
+    Sleep    2
+
+    Perform Pinch_4   id=com.google.android.apps.maps:id/mainmap_container    scale=0.7    duration=${DURATION}    steps=20    direction=horizontal
+    Sleep    5 
+    Perform Zoom_4    id=com.google.android.apps.maps:id/mainmap_container    scale=1.5    duration=${DURATION}    steps=50    direction=horizontal
+    Sleep    5
+    Perform Pinch_4   id=com.google.android.apps.maps:id/mainmap_container    scale=0.3    duration=${DURATION}    steps=20   direction=horizontal
+    Sleep    5     
+    Perform Zoom_4    id=com.google.android.apps.maps:id/mainmap_container    scale=1.9    duration=${DURATION}    steps=50    direction=horizontal
+    Sleep    5
+    Perform Zoom_4    id=com.google.android.apps.maps:id/mainmap_container    scale=1.6    duration=${DURATION}    steps=50    direction=horizontal
+    Sleep    5
