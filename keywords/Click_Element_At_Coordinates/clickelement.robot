@@ -1,7 +1,7 @@
 *** Settings ***
 Library           AppiumLibrary
 
-Resource          ../resources/base.resource
+Resource          ./base.resource
 
 *** Test Cases ***
 Click Element At Center

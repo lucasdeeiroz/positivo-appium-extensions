@@ -2,7 +2,7 @@
 
 Library     AppiumLibrary
 
-Resource    ../resources/base.resource
+Resource    ./base.resource
 
 
 
