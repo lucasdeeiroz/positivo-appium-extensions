@@ -19,27 +19,26 @@ class Appiumclick:
         driver = self._driver
         appium_lib = self._builtin.get_library_instance('AppiumLibrary')
 
-        self._builtin.log("Verificando se o driver está ativo", level='INFO')
+        self._builtin.log("Checking if the driver is active", level='INFO')
         if not driver:
-            raise RuntimeError("Driver não está inicializado ou conectado ao dispositivo.")
+            raise RuntimeError("Driver is not initialized or not connected to the device.")
 
-        self._builtin.log(f"Procurando elemento com locator: {locator}", level='INFO')
+        self._builtin.log(f"Searching for element with locator: {locator}", level='INFO')
         try:
             element = appium_lib.get_webelement(locator)
         except Exception as e:
-            raise ValueError(f"Elemento com locator '{locator}' não encontrado: {e}")
+            raise ValueError(f"Element with locator '{locator}' not found: {e}")
 
         location = element.location
         size = element.size
-        self._builtin.log(f"Localização do elemento: {location}, Tamanho: {size}", level='INFO')
+        self._builtin.log(f"Element location: {location}, Size: {size}", level='INFO')
 
         try:
             xoffset = float(xoffset)
             yoffset = float(yoffset)
         except Exception:
-            raise ValueError("xoffset e yoffset devem ser números (pixels ou fração de 0 a 1 para porcentagem)")
+            raise ValueError("xoffset and yoffset must be numbers (pixels or fractions from 0 to 1 for percentage)")
 
-        # Se o offset for <= 1, considera como porcentagem do tamanho do elemento
         if 0 <= xoffset <= 1:
             xoffset_px = int(size['width'] * xoffset)
         else:
@@ -51,35 +50,28 @@ class Appiumclick:
 
         x = location['x'] + xoffset_px
         y = location['y'] + yoffset_px
-        self._builtin.log(f"Coordenadas calculadas para clique: ({x}, {y}) (offsets: {xoffset_px}, {yoffset_px})", level='INFO')
+        self._builtin.log(f"Calculated click coordinates: ({x}, {y}) (offsets: {xoffset_px}, {yoffset_px})", level='INFO')
 
         window_size = driver.get_window_size()
-        self._builtin.log(f"Tamanho da tela: {window_size}", level='INFO')
+        self._builtin.log(f"Screen size: {window_size}", level='INFO')
 
         if not (0 <= x <= window_size['width'] and 0 <= y <= window_size['height']):
-            raise ValueError(f"Coordenadas ({x}, {y}) estão fora da tela do dispositivo.")
+            raise ValueError(f"Coordinates ({x}, {y}) are outside the device screen.")
 
         try:
-            self._builtin.log("Executando clique usando W3C Actions", level='INFO')
-            # Definindo 'touch' corretamente com a string "touch"
+            self._builtin.log("Performing click using W3C Actions", level='INFO')
+
             touch = PointerInput("touch", "finger")
             actions = ActionBuilder(driver, mouse=touch)
 
-            # Ação de movimento para as coordenadas calculadas
             actions.pointer_action.move_to_location(x, y)
-
-            # Realizando o pointer_down (pressionando o dedo na tela)
             actions.pointer_action.pointer_down()
-
-            # Aguarde um momento para simular o toque de forma mais visível
             time.sleep(0.2)
-
-            # Realizando o pointer_up (levantando o dedo da tela)
             actions.pointer_action.pointer_up()
 
             actions.perform()
 
-            self._builtin.log("Clique realizado com sucesso via W3C Actions", level='INFO')
+            self._builtin.log("Click successfully performed via W3C Actions", level='INFO')
         except Exception as e:
-            self._builtin.log(f"Erro ao executar W3C Actions: {e}", level='ERROR')
+            self._builtin.log(f"Error performing W3C Actions: {e}", level='ERROR')
             raise
