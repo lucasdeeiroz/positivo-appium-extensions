@@ -1,7 +1,7 @@
 *** Settings ***
 
 Library     AppiumLibrary
-Library     ./MultipleElementsClick.py
+Library     ./ClickElements.py
 
 *** Variables ***
 

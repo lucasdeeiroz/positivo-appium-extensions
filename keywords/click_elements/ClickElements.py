@@ -4,7 +4,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.actions.mouse_button import MouseButton
 import time
 
-class MultipleElementsClick:
+class ClickElements:
     """Class to execute sequential clicks on multiple elements."""
 
     def __init__(self):
