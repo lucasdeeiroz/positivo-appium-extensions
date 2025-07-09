@@ -3,10 +3,6 @@
 Library     AppiumLibrary
 Library     ./ClickElements.py
 
-*** Variables ***
-
-${start}    QAX
-
 *** Keywords ***
 Start session Calculator
     Open Application            http://localhost:4723
@@ -19,10 +15,6 @@ Start session Calculator
     ...                         appActivity=com.android.calculator2.Calculator
     ...                         noReset=true
 
-
-Get started
-    Wait Until Page Contains         ${start}                              7
-    Click Text                       ${start}
 
 Close session
     Close Application
