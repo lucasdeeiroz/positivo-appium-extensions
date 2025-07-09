@@ -7,6 +7,8 @@ import time
 class ClickElements:
     """Class to execute sequential clicks on multiple elements."""
 
+    ROBOT_LIBRARY_SCOPE = 'GLOBAL'
+
     def __init__(self):
         self._builtin = BuiltIn()
 
