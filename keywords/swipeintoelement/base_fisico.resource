@@ -10,6 +10,17 @@ ${START}    QAX
 ${DEVICE_NAME}    RX2N7004Y2T
 *** Keywords ***
 
+Start session Google Docs
+    Open Application    http://localhost:4723
+...    platformName=Android 
+...    deviceName=${DEVICE_NAME}     #AndroidDevice
+...    automationName=UiAutomator2
+...    appPackage=com.google.android.apps.docs.editors.docs
+...    appActivity=com.google.android.apps.docs.editors.kix.KixEditorActivity
+...    noReset=true
+
+
+
 Start session Tela Inicial
     Open Application    http://localhost:4723
 ...    platformName=Android 

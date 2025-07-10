@@ -33,3 +33,21 @@ Deve encontrar o ano selecionado
     ...    locator=//android.widget.TextView[@content-desc="2025, Toque duas vezes para alterar o ano."]
     ...    max_swipes=5    direction=right    swipe_distance_ratio=0.8
 
+
+Deve encontrar a fonte informada no Google Docs partindo da Tela Inicial
+    [Tags]    docs
+    
+    Start session Tela Inicial
+    Press Keycode    3
+    Swipe Into Element    locator=//android.widget.TextView[@content-desc="Teste SwipeIntoElement"]
+    ...    max_swipes=5    swipe_distance_ratio=0.8    direction=right
+    
+    Click Element    //android.widget.TextView[@content-desc="Teste SwipeIntoElement"]
+    
+    Wait Until Element Is Visible    //android.widget.Button[@content-desc="Formatar"]
+    Click Element    //android.widget.Button[@content-desc="Formatar"]
+    
+    Wait Until Element Is Visible    //android.widget.LinearLayout[@resource-id="com.google.android.apps.docs.editors.docs:id/btn_show_font_family"]
+    Click Element    //android.widget.LinearLayout[@resource-id="com.google.android.apps.docs.editors.docs:id/btn_show_font_family"]
+
+    

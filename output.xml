@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<robot generator="Robot 7.2.2 (Python 3.13.2 on win32)" generated="2025-07-09T12:00:28.719499" rpa="false" schemaversion="5">
+<robot generator="Robot 7.2.2 (Python 3.13.2 on win32)" generated="2025-07-10T09:52:34.649723" rpa="false" schemaversion="5">
 <suite id="s1" name="Teste" source="C:\QAx\projects\yodapp-robot\keywords\swipeintoelement\teste.robot">
-<test id="s1-t1" name="Deve encontrar o ano selecionado" line="21">
-<kw name="Start session Calendario" owner="base_fisico">
+<test id="s1-t1" name="Deve encontrar a fonte informada no Google Docs partindo da Tela Inicial" line="37">
+<kw name="Start session Tela Inicial" owner="base_fisico">
 <kw name="Open Application" owner="AppiumLibrary">
 <arg>http://localhost:4723</arg>
 <arg>platformName=Android</arg>
 <arg>deviceName=${DEVICE_NAME}</arg>
 <arg>automationName=UiAutomator2</arg>
-<arg>appPackage=com.samsung.android.calendar</arg>
-<arg>appActivity=com.samsung.android.app.calendar.activity.MainActivity</arg>
+<arg>appPackage=com.sec.android.app.launcher</arg>
+<arg>appActivity=com.sec.android.app.launcher.activities.LauncherActivity</arg>
 <arg>noReset=true</arg>
 <doc>Opens a new application to given Appium server.
 Capabilities of appium server, Android and iOS,
@@ -18,68 +18,26 @@ Please check https://appium.io/docs/en/2.1/cli/args/
 | remote_url          | Yes    | Appium server url |
 | alias               | no     | alias             |
 | strict_ssl          | No     | allows you to send commands to an invalid certificate host like a self-signed one. |</doc>
-<status status="PASS" start="2025-07-09T12:00:29.029220" elapsed="10.935822"/>
+<status status="PASS" start="2025-07-10T09:52:35.178374" elapsed="7.815836"/>
 </kw>
-<status status="PASS" start="2025-07-09T12:00:29.028270" elapsed="10.937148"/>
+<status status="PASS" start="2025-07-10T09:52:35.177663" elapsed="7.816702"/>
 </kw>
-<kw name="Wait Until Page Contains Element" owner="AppiumLibrary">
-<msg time="2025-07-09T12:00:40.644662" level="INFO">xpath criteria: //android.widget.RelativeLayout[@content-desc="Exibição anual, Botão"]</msg>
-<arg>//android.widget.RelativeLayout[@content-desc="Exibição anual, Botão"]</arg>
-<doc>Waits until element specified with `locator` appears on current page.</doc>
-<status status="PASS" start="2025-07-09T12:00:39.966454" elapsed="0.678501"/>
+<kw name="Press Keycode" owner="AppiumLibrary">
+<arg>3</arg>
+<doc>Sends a press of keycode to the device.</doc>
+<status status="PASS" start="2025-07-10T09:52:42.994736" elapsed="0.075195"/>
 </kw>
-<kw name="Click Element" owner="AppiumLibrary">
-<msg time="2025-07-09T12:00:40.651173" level="INFO">Clicking element '//android.widget.RelativeLayout[@content-desc="Exibição anual, Botão"]'.</msg>
-<msg time="2025-07-09T12:00:41.704935" level="INFO">xpath criteria: //android.widget.RelativeLayout[@content-desc="Exibição anual, Botão"]</msg>
-<arg>//android.widget.RelativeLayout[@content-desc="Exibição anual, Botão"]</arg>
-<doc>Click element identified by `locator`.</doc>
-<status status="PASS" start="2025-07-09T12:00:40.646015" elapsed="1.059203"/>
-</kw>
-<kw name="Swipe Into Element" owner="SwipeIntoElement">
-<msg time="2025-07-09T12:00:41.728848" level="INFO">Using swipe area from container: com.samsung.android.calendar:id/year_pager</msg>
-<msg time="2025-07-09T12:00:58.354743" level="INFO">Element '//android.widget.TextView[@content-desc="2029, Toque duas vezes para alterar o ano."]' found on attempt 5</msg>
-<msg time="2025-07-09T12:00:58.355041" level="INFO">criteria is com.samsung.android.calendar:id/year_pager
-xpath criteria: //android.widget.TextView[@content-desc="2029, Toque duas vezes para alterar o ano."]
-xpath criteria: //android.widget.TextView[@content-desc="2029, Toque duas vezes para alterar o ano."]
-xpath criteria: //android.widget.TextView[@content-desc="2029, Toque duas vezes para alterar o ano."]
-xpath criteria: //android.widget.TextView[@content-desc="2029, Toque duas vezes para alterar o ano."]
-xpath criteria: //android.widget.TextView[@content-desc="2029, Toque duas vezes para alterar o ano."]</msg>
-<arg>container_locator=com.samsung.android.calendar:id/year_pager</arg>
-<arg>locator=//android.widget.TextView[@content-desc="2029, Toque duas vezes para alterar o ano."]</arg>
-<arg>max_swipes=10</arg>
-<arg>direction=left</arg>
-<arg>swipe_distance_ratio=0.8</arg>
-<doc>Swipes vertically or horizontally (optionally within a container element) until the target element is visible.</doc>
-<status status="PASS" start="2025-07-09T12:00:41.706177" elapsed="16.649084"/>
-</kw>
-<kw name="Swipe Into Element" owner="SwipeIntoElement">
-<msg time="2025-07-09T12:00:58.381667" level="INFO">Using swipe area from container: com.samsung.android.calendar:id/year_pager</msg>
-<msg time="2025-07-09T12:01:14.413131" level="INFO">Element '//android.widget.TextView[@content-desc="2025, Toque duas vezes para alterar o ano."]' found on attempt 5</msg>
-<msg time="2025-07-09T12:01:14.413439" level="INFO">criteria is com.samsung.android.calendar:id/year_pager
-xpath criteria: //android.widget.TextView[@content-desc="2025, Toque duas vezes para alterar o ano."]
-xpath criteria: //android.widget.TextView[@content-desc="2025, Toque duas vezes para alterar o ano."]
-xpath criteria: //android.widget.TextView[@content-desc="2025, Toque duas vezes para alterar o ano."]
-xpath criteria: //android.widget.TextView[@content-desc="2025, Toque duas vezes para alterar o ano."]
-xpath criteria: //android.widget.TextView[@content-desc="2025, Toque duas vezes para alterar o ano."]</msg>
-<arg>container_locator=com.samsung.android.calendar:id/year_pager</arg>
-<arg>locator=//android.widget.TextView[@content-desc="2025, Toque duas vezes para alterar o ano."]</arg>
-<arg>max_swipes=5</arg>
-<arg>direction=right</arg>
-<arg>swipe_distance_ratio=0.8</arg>
-<doc>Swipes vertically or horizontally (optionally within a container element) until the target element is visible.</doc>
-<status status="PASS" start="2025-07-09T12:00:58.356455" elapsed="16.057243"/>
-</kw>
-<tag>calendario</tag>
-<status status="PASS" start="2025-07-09T12:00:29.027161" elapsed="45.387684"/>
+<tag>docs</tag>
+<status status="PASS" start="2025-07-10T09:52:35.176648" elapsed="7.893655"/>
 </test>
-<status status="PASS" start="2025-07-09T12:00:28.721152" elapsed="45.696957"/>
+<status status="PASS" start="2025-07-10T09:52:34.651808" elapsed="8.419767"/>
 </suite>
 <statistics>
 <total>
 <stat pass="1" fail="0" skip="0">All Tests</stat>
 </total>
 <tag>
-<stat pass="1" fail="0" skip="0">calendario</stat>
+<stat pass="1" fail="0" skip="0">docs</stat>
 </tag>
 <suite>
 <stat name="Teste" id="s1" pass="1" fail="0" skip="0">Teste</stat>
