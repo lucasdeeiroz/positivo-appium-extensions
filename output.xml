@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<robot generator="Robot 7.2.2 (Python 3.13.2 on win32)" generated="2025-07-10T09:52:34.649723" rpa="false" schemaversion="5">
+<robot generator="Robot 7.2.2 (Python 3.13.2 on win32)" generated="2025-07-10T15:16:53.808045" rpa="false" schemaversion="5">
 <suite id="s1" name="Teste" source="C:\QAx\projects\yodapp-robot\keywords\swipeintoelement\teste.robot">
-<test id="s1-t1" name="Deve encontrar a fonte informada no Google Docs partindo da Tela Inicial" line="37">
+<test id="s1-t1" name="Deve encontrar o elemento de formatação no Google Docs partindo da Tela Inicial" line="38">
 <kw name="Start session Tela Inicial" owner="base_fisico">
 <kw name="Open Application" owner="AppiumLibrary">
 <arg>http://localhost:4723</arg>
@@ -18,19 +18,78 @@ Please check https://appium.io/docs/en/2.1/cli/args/
 | remote_url          | Yes    | Appium server url |
 | alias               | no     | alias             |
 | strict_ssl          | No     | allows you to send commands to an invalid certificate host like a self-signed one. |</doc>
-<status status="PASS" start="2025-07-10T09:52:35.178374" elapsed="7.815836"/>
+<status status="PASS" start="2025-07-10T15:16:54.127339" elapsed="8.781678"/>
 </kw>
-<status status="PASS" start="2025-07-10T09:52:35.177663" elapsed="7.816702"/>
+<status status="PASS" start="2025-07-10T15:16:54.126390" elapsed="8.782888"/>
 </kw>
 <kw name="Press Keycode" owner="AppiumLibrary">
 <arg>3</arg>
 <doc>Sends a press of keycode to the device.</doc>
-<status status="PASS" start="2025-07-10T09:52:42.994736" elapsed="0.075195"/>
+<status status="PASS" start="2025-07-10T15:17:02.909741" elapsed="0.070993"/>
+</kw>
+<kw name="Swipe Into Element" owner="SwipeIntoElement">
+<msg time="2025-07-10T15:17:03.010668" level="INFO">Using entire screen for swipe</msg>
+<msg time="2025-07-10T15:17:06.859404" level="INFO">Element '//android.widget.TextView[@content-desc="Teste SwipeIntoElement"]' found on attempt 2</msg>
+<msg time="2025-07-10T15:17:06.859488" level="INFO">xpath criteria: //android.widget.TextView[@content-desc="Teste SwipeIntoElement"]
+xpath criteria: //android.widget.TextView[@content-desc="Teste SwipeIntoElement"]</msg>
+<arg>locator=//android.widget.TextView[@content-desc="Teste SwipeIntoElement"]</arg>
+<arg>max_swipes=5</arg>
+<arg>swipe_distance_ratio=0.8</arg>
+<arg>direction=right</arg>
+<doc>Swipes vertically or horizontally (optionally within a container element) until the target element is visible.</doc>
+<status status="PASS" start="2025-07-10T15:17:02.981846" elapsed="3.877695"/>
+</kw>
+<kw name="Click Element" owner="AppiumLibrary">
+<msg time="2025-07-10T15:17:06.861439" level="INFO">Clicking element '//android.widget.TextView[@content-desc="Teste SwipeIntoElement"]'.</msg>
+<msg time="2025-07-10T15:17:07.649063" level="INFO">xpath criteria: //android.widget.TextView[@content-desc="Teste SwipeIntoElement"]</msg>
+<arg>//android.widget.TextView[@content-desc="Teste SwipeIntoElement"]</arg>
+<doc>Click element identified by `locator`.</doc>
+<status status="PASS" start="2025-07-10T15:17:06.859877" elapsed="0.789517"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="AppiumLibrary">
+<msg time="2025-07-10T15:17:14.564392" level="INFO">xpath criteria: //android.widget.CompoundButton[@content-desc="Formatar"]
+xpath criteria: //android.widget.CompoundButton[@content-desc="Formatar"]
+xpath criteria: //android.widget.CompoundButton[@content-desc="Formatar"]
+xpath criteria: //android.widget.CompoundButton[@content-desc="Formatar"]
+xpath criteria: //android.widget.CompoundButton[@content-desc="Formatar"]</msg>
+<arg>//android.widget.CompoundButton[@content-desc="Formatar"]</arg>
+<arg>5</arg>
+<doc>Waits until element specified with `locator` is visible.</doc>
+<status status="PASS" start="2025-07-10T15:17:07.650437" elapsed="6.914205"/>
+</kw>
+<kw name="Click Element" owner="AppiumLibrary">
+<msg time="2025-07-10T15:17:14.567593" level="INFO">Clicking element '//android.widget.CompoundButton[@content-desc="Formatar"]'.</msg>
+<msg time="2025-07-10T15:17:15.704793" level="INFO">xpath criteria: //android.widget.CompoundButton[@content-desc="Formatar"]</msg>
+<arg>//android.widget.CompoundButton[@content-desc="Formatar"]</arg>
+<doc>Click element identified by `locator`.</doc>
+<status status="PASS" start="2025-07-10T15:17:14.565587" elapsed="1.139339"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="AppiumLibrary">
+<msg time="2025-07-10T15:17:18.572035" level="INFO">xpath criteria: //android.widget.LinearLayout[@resource-id="com.google.android.apps.docs.editors.docs:id/btn_show_font_family"]</msg>
+<arg>//android.widget.LinearLayout[@resource-id="com.google.android.apps.docs.editors.docs:id/btn_show_font_family"]</arg>
+<doc>Waits until element specified with `locator` is visible.</doc>
+<status status="PASS" start="2025-07-10T15:17:15.705766" elapsed="2.866773"/>
+</kw>
+<kw name="Swipe Into Element" owner="SwipeIntoElement">
+<msg time="2025-07-10T15:17:18.607986" level="INFO">Using swipe area from container: //android.widget.LinearLayout[@resource-id="com.google.android.apps.docs.editors.docs:id/formatting_fragment_sections_view"]</msg>
+<msg time="2025-07-10T15:17:29.024104" level="INFO">Element '//android.widget.Button[@resource-id="com.google.android.apps.docs.editors.docs:id/btn_clear_formatting"]' found on attempt 4</msg>
+<msg time="2025-07-10T15:17:29.024184" level="INFO">xpath criteria: //android.widget.LinearLayout[@resource-id="com.google.android.apps.docs.editors.docs:id/formatting_fragment_sections_view"]
+xpath criteria: //android.widget.Button[@resource-id="com.google.android.apps.docs.editors.docs:id/btn_clear_formatting"]
+xpath criteria: //android.widget.Button[@resource-id="com.google.android.apps.docs.editors.docs:id/btn_clear_formatting"]
+xpath criteria: //android.widget.Button[@resource-id="com.google.android.apps.docs.editors.docs:id/btn_clear_formatting"]
+xpath criteria: //android.widget.Button[@resource-id="com.google.android.apps.docs.editors.docs:id/btn_clear_formatting"]</msg>
+<arg>locator=//android.widget.Button[@resource-id="com.google.android.apps.docs.editors.docs:id/btn_clear_formatting"]</arg>
+<arg>container_locator=//android.widget.LinearLayout[@resource-id="com.google.android.apps.docs.editors.docs:id/formatting_fragment_sections_view"]</arg>
+<arg>max_swipes=5</arg>
+<arg>swipe_distance_ratio=0.2</arg>
+<arg>direction=up</arg>
+<doc>Swipes vertically or horizontally (optionally within a container element) until the target element is visible.</doc>
+<status status="PASS" start="2025-07-10T15:17:18.573099" elapsed="10.451139"/>
 </kw>
 <tag>docs</tag>
-<status status="PASS" start="2025-07-10T09:52:35.176648" elapsed="7.893655"/>
+<status status="PASS" start="2025-07-10T15:16:54.124525" elapsed="34.900091"/>
 </test>
-<status status="PASS" start="2025-07-10T09:52:34.651808" elapsed="8.419767"/>
+<status status="PASS" start="2025-07-10T15:16:53.809672" elapsed="35.216191"/>
 </suite>
 <statistics>
 <total>

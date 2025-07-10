@@ -1,7 +1,7 @@
 *** Settings ***
 
 Library     AppiumLibrary
-Library     SwipeIntoElement.py
+Library     SwipeToElement.py
 Library     OperatingSystem
 Library     DateTime
 

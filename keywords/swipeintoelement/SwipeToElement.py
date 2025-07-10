@@ -7,7 +7,7 @@ import time
 import random
 
 
-class SwipeIntoElement:
+class SwipeToElement:
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
 
     def __init__(self):
@@ -66,7 +66,7 @@ class SwipeIntoElement:
         finger.create_pointer_up(button=MouseButton.LEFT)
         actions.perform()
 
-    @keyword("Swipe Into Element")
+    @keyword("Swipe To Element")
     def swipe_into_element(self, locator, max_swipes=5, direction="down", swipe_distance_ratio=0.4,
                            duration=500, container_locator=None):
         """
