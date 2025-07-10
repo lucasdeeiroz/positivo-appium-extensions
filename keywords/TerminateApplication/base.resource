@@ -38,4 +38,5 @@ Go to Iten
     Wait Until Page Contains    ${checkpoint}   5
 
 Close session
+    Terminate Application    app_id=com.qaxperience.yodapp
     Close Application
