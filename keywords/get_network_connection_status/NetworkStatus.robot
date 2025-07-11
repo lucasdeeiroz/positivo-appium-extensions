@@ -2,9 +2,7 @@
 Library    AppiumLibrary
 Library    ../keywords/NetworkStatus.py
 
-
 Suite Setup       Inicializar Conexao Appium
-Suite Teardown    Finalizar Conexao Appium
 
 *** Variables ***
 ${REMOTE_URL}           http://localhost:4723
@@ -23,11 +21,6 @@ Inicializar Conexao Appium
     ...                 skipServerInstallation=true
     ...                 skipDeviceInitialization=true
     ...                 newCommandTimeout=300
-    Log    Conexão Appium iniciada com sucesso
-
-Finalizar Conexao Appium
-    Close Application
-    Log    Conexão Appium finalizada com sucesso
     
 *** Test Cases ***
 # caso de teste mockado com bitmask desconhecido pra testar o retorno UNKNOWN no teste manual
