@@ -1,11 +1,11 @@
-from keywords.get_network_connection_status.NetworkStatus import NetworkStatus
+from NetworkStatus import NetworkStatus
 
-# Mock do driver do Appium
+# Mock for the Appium driver
 class MockDriver:
     def __init__(self, network_status):
         self.network_connection = network_status
 
-# Mock da biblioteca AppiumLibrary
+# Mock for the AppiumLibrary
 class MockAppiumLibrary:
     def __init__(self, network_status):
         self.driver = MockDriver(network_status)
@@ -13,7 +13,7 @@ class MockAppiumLibrary:
     def _current_application(self):
         return self.driver
 
-# Mock do BuiltIn do Robot Framework
+# Mock for Robot Framework's BuiltIn library
 class MockBuiltIn:
     def get_library_instance(self, name):
         return self.mock_appium
@@ -21,48 +21,48 @@ class MockBuiltIn:
     def log(self, message, level):
         print(f"[{level}] {message}")
 
-# Mock genérico para subprocess.run
-def criar_mock_subprocess(modo_aviao_ativo):
+# Generic mock for subprocess.run
+def create_mock_subprocess(airplane_mode_enabled):
     def mock_subprocess_run(args, capture_output=True, text=True, timeout=2, stdout=None, stderr=None):
-        class Resultado:
+        class Result:
             def __init__(self, stdout_text):
                 self.stdout = stdout_text
 
         if 'airplane_mode_on' in args:
-            return Resultado('1\n' if modo_aviao_ativo else '0\n')
+            return Result('1\n' if airplane_mode_enabled else '0\n')
         
-        return Resultado('')
+        return Result('')
 
     return mock_subprocess_run
 
 
-# === EXECUÇÃO ===
+# === EXECUTION ===
 if __name__ == "__main__":
     import subprocess
 
-    # Lista de testes com bitmask e modo avião
-    casos_de_teste = [
-        {"bitmask": 0, "desc": "Sem rede (NONE)", "modo_aviao": False},
-        {"bitmask": 1, "desc": "Modo avião ativado (AIRPLANE_MODE)", "modo_aviao": True},
-        {"bitmask": 2, "desc": "Wi-Fi ativo", "modo_aviao": False},
-        {"bitmask": 4, "desc": "Dados móveis ativos", "modo_aviao": False},
-        {"bitmask": 6, "desc": "Wi-Fi e dados ativos", "modo_aviao": False},
-        {"bitmask": 8, "desc": "Bitmask desconhecido (UNKNOWN)", "modo_aviao": False},
+    # List of test cases with bitmask and airplane mode status
+    test_cases = [
+        {"bitmask": 0, "desc": "No network (NONE)", "airplane_mode": False},
+        {"bitmask": 1, "desc": "Airplane mode enabled (AIRPLANE_MODE)", "airplane_mode": True},
+        {"bitmask": 2, "desc": "Wi-Fi only", "airplane_mode": False},
+        {"bitmask": 4, "desc": "Mobile data only", "airplane_mode": False},
+        {"bitmask": 6, "desc": "Wi-Fi and mobile data", "airplane_mode": False},
+        {"bitmask": 8, "desc": "Unknown bitmask (UNKNOWN)", "airplane_mode": False},
     ]
 
-    for caso in casos_de_teste:
-        print(f"\n--- Teste: {caso['desc']} ---")
+    for case in test_cases:
+        print(f"\n--- Test: {case['desc']} ---")
 
-        # Substitui o subprocess.run por um mock personalizado
-        subprocess.run = criar_mock_subprocess(caso["modo_aviao"])
+        # Override subprocess.run with a custom mock
+        subprocess.run = create_mock_subprocess(case["airplane_mode"])
 
-        # Instancia o mock BuiltIn e AppiumLibrary
+        # Instantiate the mock BuiltIn and AppiumLibrary
         builtin = MockBuiltIn()
-        builtin.mock_appium = MockAppiumLibrary(caso["bitmask"])
+        builtin.mock_appium = MockAppiumLibrary(case["bitmask"])
 
-        # Instancia a keyword e injeta o BuiltIn mockado
+        # Instantiate the keyword and inject the mocked BuiltIn
         net = NetworkStatus()
         net._builtin = builtin
 
-        status = net.obter_status_de_rede_legivel()
-        print(f"Status final retornado: {status}")
+        status = net.get_readable_network_status()
+        print(f"Returned network status: {status}")
