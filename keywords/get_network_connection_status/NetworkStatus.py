@@ -4,84 +4,70 @@ import subprocess
 
 class NetworkStatus:
     """
-    Keyword que interpreta a bitmask de conexão retornada pelo Appium e identifica o status da rede do dispositivo Android.
-    Considera também o modo avião via ADB.
+    Keyword that interprets the connection bitmask returned by Appium and identifies the network status of the Android device.
+    Also considers airplane mode via ADB.
     """
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
-
-# a info sobre o tipo de conexão é entregue em bits (binário, então: 0 e 1)
-# os numeros inteiros que a gente usa no dia a dia (nesse caso 0, 1, 2, 4 e 6) são armazenados como combinações de bits 
-# quando a gente usa o bitmask, a gente faz um combinação de múltiplos significados dentro de um mesmo número
-# por isso, a gente usa o bitwise AND pra comparar cada bit na mesma posição dos dois numeros e retornar 1 (caso ambos sejam 1) ou 0
-# dessa forma, a gente interpreta esses bits e compara com o retorno encontrado
 
     def __init__(self):
         self._builtin = BuiltIn()
 
-    def _obter_driver_appium(self):
-    # Pega o driver atual conectado com o Appium
+    def _get_appium_driver(self):
+    # Gets the current Appium driver instance
         appium_lib = self._builtin.get_library_instance("AppiumLibrary")
         return appium_lib._current_application()
     
-    def _interpretar_bitmask(self, status): # Interpreta os bits:
-    # usando bitwise AND pra interpretar o numero retornado
-    # ele so verifica se dados/wifi estão ligados, não se estão realmente funcionando
-        """
-        Retorna os flags interpretados a partir do bitmask:
-        (tem_wifi, tem_dados, sem_rede)
-        """
-        tem_wifi = (status & 2) != 0
-        tem_dados = (status & 4) != 0
-        sem_rede = status == 0
-        return tem_wifi, tem_dados, sem_rede
+    def _interpret_bitmask(self, status):
+    # Bitwise AND is used to compare the bitmask and identify which connections are active.
+    # Interprets the meaning behind the combined bits and returns: wifi, data, no_network
+        wifi = (status & 2) != 0
+        data = (status & 4) != 0
+        no_network = status == 0
+        return wifi, data, no_network
     
-    def _modo_aviao_ativo(self):
-        """
-        Retorna True se o modo avião estiver ativado via settings, False caso contrário.
-        """
+    def _airplane_mode_enabled(self):
+    # Returns True if airplane mode is enabled via ADB settings, False otherwise.
         try:
-            resultado = subprocess.run(
+            result = subprocess.run(
                 ['adb', 'shell', 'settings', 'get', 'global', 'airplane_mode_on'],
                 capture_output=True,
                 text=True,
                 timeout=2
             )
-            return resultado.stdout.strip() == '1'
+            return result.stdout.strip() == '1'
         except Exception as e:
-            self._builtin.log(f"Erro ao verificar modo avião: {e}", level='WARN')
+            self._builtin.log(f"Error checking airplane mode: {e}", level='WARN')
             return False
         
-     # Retorna a string adequada com base nos bits e (opcionalmente) na conectividade
-    def _definir_status_rede(self, tem_wifi, tem_dados, em_modo_aviao, sem_rede):
-    # usa if/elif pra construir a lógica e retornar uma string clara com o status
-        """
-        Com base nos bits ativos e na verificação de conexão, retorna o status final da rede em string.
-        """
-        if em_modo_aviao:
+    def _get_network_status(self, wifi, data, airplane_mode, no_network):
+    # Returns a readable string representing the final network status, based on the bitmask and airplane mode
+        if airplane_mode:
             return 'AIRPLANE_MODE'
-        elif sem_rede: #-> pro caso de nenhum bit ativo (dados, wifi e modo avião desligados) -> NÃO HÁ CONEXÃO ATIVA
+        # In case where no bits are active (Wi-Fi, data, and airplane mode are off)
+        elif no_network: 
             return 'NONE'
-        elif tem_wifi and tem_dados:
+        elif wifi and data:
             return 'WIFI_AND_DATA'
-        elif tem_wifi:
+        elif wifi:
             return 'WIFI_ONLY'           
-        elif tem_dados:
+        elif data:
             return 'DATA_ONLY'
-        # tem um fallback final pro caso de nenhuma das condições anteriores ser atendida (oq não deveria acontecer em condições normais)
-        else: #-> serve pra cobrir possíveis anomalias no valor de "status" ou erro de leitura do bitmask
+        # Fallback case: if none of the above conditions match (this shouldn't occur under normal conditions)
+        # Handles possible anomalies in the bitmask or unexpected status values
+        else: 
             return 'UNKNOWN'
 
-    @keyword('Obter Status de Rede Legível')
-    def obter_status_de_rede_legivel(self):
-    # default de validar_conectividade é false. nesse caso, ele so analisa o bitmask, sem testar a conexão com a internet
+    @keyword('Get Readable Network Status')
+    def get_readable_network_status(self):
         """
-        Retorna uma string legível representando o tipo de conexão de rede atual.
+        Coordinates the full process by combining all internal steps
+        and returns a readable string representing the current network connection type.
 
-        Usa:
-        - `driver.network_connection` para identificar tipo de rede (Wi-Fi, dados)
-        - `adb shell settings get global airplane_mode_on` para detectar modo avião
+        Uses:
+        - `driver.network_connection` to check Wi-Fi and mobile data bits
+        - `adb shell settings get global airplane_mode_on` to detect airplane mode
 
-        Retornos possíveis:
+        Possible return values:
         - WIFI_AND_DATA
         - WIFI_ONLY
         - DATA_ONLY
@@ -90,24 +76,24 @@ class NetworkStatus:
         - UNKNOWN
         """
 
-        driver = self._obter_driver_appium()
-        status = driver.network_connection # Obtém o status da rede como inteiro (bitmask)
+        # Retrieves the network status as an integer (bitmask)
+        driver = self._get_appium_driver()
+        status = driver.network_connection 
 
-        # Exibe bitmask e binário lidos para debug
-        # pra facilitar o entendimento e tornar o script transparente e fácil de depurar
-        self._builtin.log(f"Bitmask lido: {status} (binário: {bin(status)})", level='INFO')
+        # Logs the read bitmask and its binary representation for debugging
+        self._builtin.log(f"Read bitmask: {status} (binary: {bin(status)})", level='INFO')
 
-        tem_wifi, tem_dados, sem_rede = self._interpretar_bitmask(status)
-        em_modo_aviao = self._modo_aviao_ativo()
+        wifi, data, no_network = self._interpret_bitmask(status)
+        airplane_mode = self._airplane_mode_enabled()
 
-        # Exibe interpretação dos bits (ou seja: mostra se os bits tão ativos com True e False)
-        self._builtin.log(f"Wi-Fi ativo: {tem_wifi}", level='INFO')
-        self._builtin.log(f"Dados móveis ativos: {tem_dados}", level='INFO')
-        self._builtin.log(f"Modo avião ativo: {em_modo_aviao}", level='INFO')
-        self._builtin.log(f"Sem rede ativa: {sem_rede}", level='INFO')
+        # Logs the interpreted bits (whether each network type is active using True or False)
+        self._builtin.log(f"Wi-Fi enabled: {wifi}", level='INFO')
+        self._builtin.log(f"Mobile data enabled: {data}", level='INFO')
+        self._builtin.log(f"Airplane mode: {airplane_mode}", level='INFO')
+        self._builtin.log(f"No network active: {no_network}", level='INFO')
 
-        # Define o status final com base nos bits e, se aplicável, na conectividade
-        status_final = self._definir_status_rede(tem_wifi, tem_dados, em_modo_aviao, sem_rede)
-        self._builtin.log(f"Status final interpretado: {status_final}", level='INFO')
+        # Determines the final network status based on the interpreted bits
+        final_status = self._get_network_status(wifi, data, airplane_mode, no_network)
+        self._builtin.log(f"Final interpreted status: {final_status}", level='INFO')
 
-        return status_final
+        return final_status
