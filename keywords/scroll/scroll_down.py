@@ -1,64 +1,75 @@
-# Importa o decorator 'keyword' para registrar funções como keywords no Robot Framework
+# Importa o AppiumBy, usado para localizar elementos (por XPath, ID, etc.) via Appium
+from appium.webdriver.common.appiumby import AppiumBy
+
+# Importa o decorador @keyword, que transforma o método em uma keyword acessível no Robot Framework
 from robot.api.deco import keyword
 
-# Importa a biblioteca BuiltIn do Robot Framework para acessar funções internas e outras bibliotecas
+# Importa BuiltIn, permitindo interagir com funções do próprio Robot Framework (log, chamadas de outras keywords, etc.)
 from robot.libraries.BuiltIn import BuiltIn
 
-# Define a classe da biblioteca customizada. 
-# OBS: O nome da classe deve ser igual ao nome do arquivo (.py), em minúsculas e sem underline extra.
+# Define a classe customizada da biblioteca
+# Por convenção, usa-se o mesmo nome do arquivo .py como nome da classe (em snake_case ou PascalCase)
 class scroll_down:
-    # Define o escopo da biblioteca como GLOBAL, assim ela é compartilhada entre todos os testes
+    # Define o escopo da biblioteca como GLOBAL — ou seja, uma única instância será usada por todos os testes
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
 
     def __init__(self):
-        # Instancia a biblioteca BuiltIn, permitindo acessar funções e bibliotecas do Robot Framework
+        # Inicializa a instância da biblioteca BuiltIn
         self._builtin = BuiltIn()
 
     @property
     def driver(self):
-        # Obtém a instância do driver atual da AppiumLibrary para manipular a aplicação em teste
+        # Acessa a instância do driver Appium ativo (controlado pela AppiumLibrary do Robot Framework)
         return self._builtin.get_library_instance("AppiumLibrary")._current_application()
 
-    # Registra o método como uma keyword chamada "Scroll Down Custom" no Robot Framework
-    @keyword("Scroll Down Custom")
-    def Scroll_Down_Custom(self, start_ratio=0.8, end_ratio=0.2, duration=500):
+    # Transforma o método em uma keyword utilizável nos testes .robot com o nome "Scroll Inside Element"
+    @keyword("Scroll Inside Element")
+    def scroll_inside_element(self, xpath, direction="down", percent=0.75, speed=800):
         """
-        Realiza um gesto de scroll para baixo (deslizando de baixo para cima na tela)
-        - start_ratio: Posição inicial do swipe como proporção da altura da tela (padrão: 0.8, ou 80%)
-        - end_ratio: Posição final do swipe como proporção da altura da tela (padrão: 0.2, ou 20%)
-        - duration: Duração do swipe em milissegundos (padrão: 500ms)
+        Executa um gesto de swipe (arrasto) dentro de um elemento específico da tela, simulando o toque do dedo.
+
+        Parâmetros:
+        - xpath (str): Caminho XPath do elemento no qual o swipe será aplicado.
+        - direction (str): Direção do movimento — pode ser 'up', 'down', 'left' ou 'right'. Padrão: 'down'.
+        - percent (float): Proporção do elemento que será usada no gesto (entre 0.01 e 1.0). Padrão: 0.75.
+        - speed (int): Velocidade do swipe em pixels por segundo. Padrão: 800.
         """
 
-        # Valida que os valores de start_ratio e end_ratio estão entre 0 e 1 (exclusivo)
-        if not (0 < start_ratio < 1):
-            raise ValueError("start_ratio deve estar entre 0 e 1 (exclusivo).")
-        if not (0 < end_ratio < 1):
-            raise ValueError("end_ratio deve estar entre 0 e 1 (exclusivo).")
-        # Valida que a duração é positiva
-        if duration <= 0:
-            raise ValueError("duration deve ser um inteiro positivo.")
+        # Validação dos parâmetros antes de tentar o gesto
+        if direction not in ["up", "down", "left", "right"]:
+            raise ValueError("O parâmetro 'direction' deve ser: 'up', 'down', 'left' ou 'right'.")
+        if not (0.01 <= percent <= 1.0):
+            raise ValueError("O parâmetro 'percent' deve estar entre 0.01 e 1.0.")
+        if speed <= 0:
+            raise ValueError("O parâmetro 'speed' deve ser um número positivo.")
 
-        # Obtém o driver do Appium para executar ações na tela
-        driver = self.driver
-        # Obtém o tamanho da tela do dispositivo (dicionário com 'width' e 'height')
-        size = driver.get_window_size()
-        width = size['width']    # largura da tela
-        height = size['height']  # altura da tela
+        try:
+            # Obtém o driver Appium ativo
+            driver = self.driver
 
-        # Define o eixo x como o centro da tela
-        x = width // 2
-        # Calcula o ponto de início (y_start) e fim (y_end) do swipe, baseado nas proporções informadas
-        y_start = int(height * start_ratio)
-        y_end = int(height * end_ratio)
+            # Localiza o elemento de destino através do XPath fornecido
+            element = driver.find_element(AppiumBy.XPATH, xpath)
 
-        # Realiza o swipe (gesto de deslizar) na tela usando o driver do Appium:
-        # - Começa no centro horizontal (x), na posição vertical y_start
-        # - Termina no mesmo x, na posição y_end
-        # - Duração do gesto definida por 'duration'
-        driver.swipe(x, y_start, x, y_end, duration)
+            # Executa o gesto de swipe dentro do elemento utilizando o comando do Appium 2.x
+            driver.execute_script("mobile: swipeGesture", {
+                "elementId": element.id,   # ID interno do elemento localizado
+                "direction": direction,    # Direção do swipe
+                "percent": percent,        # Porcentagem da área usada para deslizar
+                "speed": speed             # Velocidade em pixels por segundo
+            })
 
-        # Registra no log do Robot Framework os detalhes do swipe realizado (para facilitar debug)
-        self._builtin.log(
-            f"Scroll Down de ({x}, {y_start}) para ({x}, {y_end})", 
-            "INFO"
-        )
+            # Registra no log do Robot Framework os detalhes do gesto (útil para debug e relatórios)
+            self._builtin.log(
+                f"[SUCESSO] Scroll dentro do elemento '{xpath}' com direction='{direction}', percent={percent}, speed={speed}.",
+                "INFO"
+            )
+
+        except Exception as e:
+            # Em caso de erro, registra a falha com detalhes no log
+            self._builtin.log(
+                f"[ERRO] Falha ao executar scroll no elemento '{xpath}': {str(e)}",
+                "ERROR"
+            )
+
+            # Lança a exceção novamente para interromper o teste (comportamento padrão de falha)
+            raise
