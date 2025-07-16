@@ -1,6 +1,9 @@
 *** Settings ***
 
 Library     AppiumLibrary
+# Library     ./TerminateApplication.py
+# Library     ./TerminateApplicationV2.py
+Library     TerminateApplicationExtension.py
 
 *** Variables ***
 ${REMOTE_URL}           http://localhost:4723
@@ -25,7 +28,7 @@ Waiting Time
     Sleep    ${TIMEOUT}
 
 Encerrar Aplicativo
-    Terminate Application    ${APP_PACKAGE}
+    Terminate Application Extension    ${APP_PACKAGE}
 
 Fechar Sessao
     Close Application
