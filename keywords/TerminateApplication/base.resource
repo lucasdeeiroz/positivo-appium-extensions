@@ -12,7 +12,7 @@ ${APP_ACTIVITY}         com.google.android.youtube.HomeActivity
 ${TIMEOUT}              5
 
 *** Keywords ***
-Conectar Ao Emulador
+Start Session Youtube
     Open Application    ${REMOTE_URL}
     ...    platformName=${PLATFORM_NAME}
     ...    deviceName=${DEVICE_NAME}
@@ -21,10 +21,7 @@ Conectar Ao Emulador
     ...    appActivity=${APP_ACTIVITY}
     ...    automationName=UiAutomator2
 
-Abrir Aplicativo YouTube
-    Log    Iniciando o aplicativo YouTube
-
-Esperar 5 Segundos
+Waiting Time
     Sleep    ${TIMEOUT}
 
 Encerrar Aplicativo
