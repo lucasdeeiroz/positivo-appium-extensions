@@ -1,42 +1,34 @@
 *** Settings ***
 
-Library    AppiumLibrary
+Library     AppiumLibrary
 
 *** Variables ***
-${START}    QAX
-
+${REMOTE_URL}           http://localhost:4723
+${PLATFORM_NAME}        Android
+${PLATFORM_VERSION}     15
+${DEVICE_NAME}          emulator-5554
+${APP_PACKAGE}          com.google.android.youtube
+${APP_ACTIVITY}         com.google.android.youtube.HomeActivity
+${TIMEOUT}              5
 
 *** Keywords ***
- 
-Start session
-    Open Application    http://localhost:4723
-    ...                 platformName=Android
-    ...                 deviceName=Android Emulator
-    ...                 automationName=UIAutomator2
-    ...                 app=${EXECDIR}/TerminateApplication/app/yodapp-beta.apk
-    ...                 udid=emulator-5554
-    ...                 autoGrantPermissions=true
-    
-Get started
-    Wait Until Page Contains    ${START}    100
-    Click Text                  ${START}
+Conectar Ao Emulador
+    Open Application    ${REMOTE_URL}
+    ...    platformName=${PLATFORM_NAME}
+    ...    deviceName=${DEVICE_NAME}
+    ...    platformVersion=${PLATFORM_VERSION}
+    ...    appPackage=${APP_PACKAGE}
+    ...    appActivity=${APP_ACTIVITY}
+    ...    automationName=UiAutomator2
 
-Navigate to
-    [Arguments]    ${item_text}
-    ${hamburguer}    Set Variable    //android.widget.ImageButton[@content-desc="Open navigation drawer"]
-    Wait Until Element Is Visible    ${hamburguer}    10
-    Click Element    ${hamburguer}
+Abrir Aplicativo YouTube
+    Log    Iniciando o aplicativo YouTube
 
-    ${menu_item}    Set Variable    //*[@resource-id="com.qaxperience.yodapp:id/navView"]//*[@text="${item_text}"]
-    Wait Until Element Is Visible    ${menu_item}    5
-    Click Element    ${menu_item}
+Esperar 5 Segundos
+    Sleep    ${TIMEOUT}
 
-Go to Iten
-    [Arguments]    ${item}    ${checkpoint}
-    Wait Until Page Contains    ${item}    10
-    Click Text                  ${item}
-    Wait Until Page Contains    ${checkpoint}   5
+Encerrar Aplicativo
+    Terminate Application    ${APP_PACKAGE}
 
-Close session
-    Terminate Application    app_id=com.qaxperience.yodapp
+Fechar Sessao
     Close Application
