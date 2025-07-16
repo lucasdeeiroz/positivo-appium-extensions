@@ -2,8 +2,6 @@
 Library    AppiumLibrary
 Library    NetworkStatus.py
 
-Suite Setup       Initialize Appium Connection
-
 *** Variables ***
 ${REMOTE_URL}           http://localhost:4723
 ${PLATFORM_NAME}        Android

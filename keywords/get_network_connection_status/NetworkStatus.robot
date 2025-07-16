@@ -1,6 +1,8 @@
 *** Settings ***
 Resource    NetworkStatusResource.robot
 
+Suite Setup       Initialize Appium Connection
+
 *** Test Cases ***
 
 # Mocked test case using an unknown bitmask to trigger the UNKNOWN status return
