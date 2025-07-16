@@ -1,110 +1,98 @@
 # Network Status — AppiumLibrary Extension
 
-`NetworkStatus` é uma keyword personalizada desenvolvida para facilitar a leitura do status de rede em dispositivos Android durante testes com Appium + Robot Framework. Ela utiliza a propriedade `driver.network_connection` para identificar o tipo de conexão de rede de um dispositivo Android e retornar uma string legível.
+`NetworkStatus` is a custom keyword designed to simplify and standardize network status detection in Android devices during tests using Appium and Robot Framework. It leverages the `driver.network_connection` property to interpret the device's network status and return a readable, meaningful result.
 
 ---
 
-## Objetivo
+## Purpose
 
-- Interpretar de forma clara e confiável as informações recebidas através de `bitmasks`
-- Entregar uma resposta legível do tipo de conexão de rede ativa (Wi‑Fi, dados móveis, modo avião ou nenhum)
-- Validar se o dispositivo está com rede antes de executar testes que exigem conexão
-- Garantir que um cenário offline está devidamente configurado
-- Diferenciar se a conexão está vindo de dados móveis ou Wi-Fi
-- Tornar os testes mais robustos em diferentes dispositivos e emuladores
+- Clearly and reliably interpret network status using Appium’s `bitmasks` values
+- Return a human-readable string for the current network type (Wi-Fi, mobile data, airplane mode, or no connection)
+- Validate that the device is online before running tests that require connectivity
+- Confirm that offline scenarios are properly configured
+- Differentiate between Wi-Fi and mobile data connections
+- Ensure robust behavior across real devices and emulators
 
 ---
 
-## Como Funciona
+## How It Works
 
-O método `driver.network_connection` do Appium retorna um número inteiro com bits ativados conforme o tipo de conexão:
+The Appium method `driver.network_connection` returns an integer bitmask based on the active connection:
 
-| Valor | Tipo de Conexão          |
+| Value | Network Type             |
 |-------|--------------------------|
-| 0     | Nenhuma conexão          |
-| 1     | Modo avião               |
-| 2     | Apenas Wi‑Fi             |
-| 4     | Apenas dados móveis      |
-| 6     | Wi‑Fi + dados móveis     |
+| 0     | No connection            |
+| 1     | Airplane mode            |
+| 2     | Wi-Fi only               |
+| 4     | Mobile data only         |
+| 6     | Wi-Fi + mobile data      |
 
-A keyword consulta o modo avião via ADB (`adb shell settings get global airplane_mode_on`) e dá prioridade a ele quando ativado, mesmo com Wi-Fi e dados ativados.
-Além disso, também tem um fallback final (retornando `UNKNOWN`) que serve para cobrir erro de leitura do bitmask ou possíveis anomalias no valor do status obtido.
-Dessa forma, interpreta esses valores e retorna uma string legível como:
+The keyword also checks airplane mode using ADB (`adb shell settings get global airplane_mode_on`) and gives it priority when active, even if Wi-Fi or data are enabled.
+If none of the known cases match, a final fallback returns `UNKNOWN`, which covers unusual bitmask values or unexpected status read failures.
+Result mapping:
 
-[nenhuma conexão?] → `NONE`
-[modo avião?] → `AIRPLANE_MODE`
-[apenas Wi-Fi?] → `WIFI_ONLY`
-[apenas dados móveis?] → `DATA_ONLY`
-[Wi-Fi + dados móveis?] → `WIFI_AND_DATA`
-[não caiu em nada?] → `UNKNOWN`
+- [No active connection?] → `NONE`
+- [Airplane mode is on?] → `AIRPLANE_MODE`
+- [Wi-Fi only?] → `WIFI_ONLY`
+- [Mobile data only?] → `DATA_ONLY`
+- [Both Wi-Fi and mobile data?] → `WIFI_AND_DATA`
+- [Unrecognized or inconsistent status?] → `UNKNOWN`
 
 ---
 
-## Como Executar
+## How To Execute
 
-Para executar os testes:
+To execute all test cases:  
 
 ```bash
 robot NetworkStatus.robot
 ```
 
-Caso queira executar testes de tags específicas:
-
-```bash
-robot -i tag NetworkStatus.robot
-```
-
-Certifique-se de que:
-- O `AppiumLibrary` e a keyword `NetworkStatus`estão importadas corretamente
-- O emulador/dispositivo está online
+Make sure that:
+- `AppiumLibrary` and the `NetworkStatus`keyword are correctly imported
+- The emulator or physical device is connected and online
 
 ---
 
-## Detalhes Técnicos
+## Technical Details
 
-- Compatível com AppiumLibrary para Robot Framework
-- Usa `driver.network_connection`
-- A keyword foi projetada para ser simples, confiável e fácil de manter
-
----
-
-## Estrutura do Código
-
-- Escrita como uma classe (NetworkStatus) com ROBOT_LIBRARY_SCOPE = GLOBAL
-- Modularizada com subfunções auxiliares (`interpretar_bitmask`, `definir_status_rede`, etc.)
-- Não exige parâmetros e não realiza validações complexas
-- A leitura de modo avião é feita por ADB, garantindo maior precisão
+- Built to work with AppiumLibrary and Robot Framework
+- Uses Appium's `driver.network_connection`
+- Designed for simplicity, reliability, and maintainability
 
 ---
 
-## Estrutura dos Testes
+## Code Structure
 
-A keyword já foi testada nos seguintes cenários:
+- Implemented as a class (`NetworkStatusitmask`) with `ROBOT_LIBRARY_SCOPE = GLOBAL`
+- Modular architecture with helper methods  (`interpretar_bitmask`, `definir_status_rede`, etc.)
+- Requires no input arguments and contains no complex validation logic
+- Leverages ADB to detect airplane mode for more accurate status
 
-### Testes mockados
+---
 
-- **Sem rede (NONE) - bitmask: 0**
-- **Modo avião ativado (AIRPLANE_MODE) - bitmask: 1**
-- **Wi-Fi ativo - bitmask: 2**
-- **Dados móveis ativos - bitmask: 4**
-- **Wi-Fi e dados ativos - bitmask: 6**
-- **Bitmask desconhecido (UNKNOWN) - bitmask: 8**
+## Test Structure
 
-### Testes em emulador
+The keyword has been validated through:
 
-- **Status Com Apenas Wi-Fi Ativo**
-- **Status Com Apenas Dados Móveis Ativos**
-- **Status Com Wi-Fi E Dados Ativos**
-- **Status Em Modo Avião (com wi-fi e dados desativados)**
-- **Status Sem Conexão Ativa**
-- **Status Modo Avião com WI-Fi Ligado**
+### Mocked Tests
 
-### Testes em dispositivo físico (ainda não realizados)
+- **No connection (NONE) – bitmask: 0**
+- **Airplane mode enabled (AIRPLANE_MODE) – bitmask: 1**
+- **Wi-Fi only – bitmask: 2**
+- **Mobile data only – bitmask: 4**
+- **Wi-Fi and mobile data – bitmask: 6**
+- **Unknown bitmask (UNKNOWN) – bitmask: 8**
 
-- **Status Com Apenas Wi-Fi Ativo**
-- **Status Com Apenas Dados Móveis Ativos**
-- **Status Com Wi-Fi E Dados Ativos**
-- **Status Em Modo Avião (com wi-fi e dados desativados)**
-- **Status Sem Conexão Ativa**
-- **Status Modo Avião com WI-Fi Ligado**
-- **Status Modo avião com Dados Ligados**
+### Emulator Tests
+
+- **Wi-Fi only active**
+- **Mobile data only active**
+- **Wi-Fi and mobile data active**
+- **Airplane mode enabled (Wi-Fi and data disabled)**
+- **No network active**
+- **Airplane mode with Wi-Fi enabled**
+
+### Physical Device Tests *(Pending)*
+
+_Not yet validated in physical devices. Will be tested and updated soon._
