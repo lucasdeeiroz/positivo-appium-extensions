@@ -1,41 +1,50 @@
-# Importa o AppiumBy, usado para localizar elementos (por XPath, ID, etc.) via Appium
+# Importa o AppiumBy — enumeração que permite localizar elementos por diferentes estratégias (xpath, id, etc.)
 from appium.webdriver.common.appiumby import AppiumBy
 
-# Importa o decorador @keyword, que transforma o método em uma keyword acessível no Robot Framework
+# Importa o decorador @keyword, que permite transformar a função Python em uma keyword do Robot Framework
 from robot.api.deco import keyword
 
-# Importa BuiltIn, permitindo interagir com funções do próprio Robot Framework (log, chamadas de outras keywords, etc.)
+# Importa a biblioteca interna BuiltIn do Robot Framework — usada para logar mensagens e acessar outras bibliotecas
 from robot.libraries.BuiltIn import BuiltIn
 
-# Define a classe customizada da biblioteca
-# Por convenção, usa-se o mesmo nome do arquivo .py como nome da classe (em snake_case ou PascalCase)
+# Cria a classe que define sua biblioteca customizada de scroll
 class scroll:
-    # Define o escopo da biblioteca como GLOBAL — ou seja, uma única instância será usada por todos os testes
+    # Define o escopo como GLOBAL — ou seja, a mesma instância será usada em todos os testes
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
 
     def __init__(self):
-        # Inicializa a instância da biblioteca BuiltIn
+        # Instancia o BuiltIn para usar funções do Robot, como log()
         self._builtin = BuiltIn()
 
     @property
     def driver(self):
-        # Acessa a instância do driver Appium ativo (controlado pela AppiumLibrary do Robot Framework)
+        # Retorna o driver Appium atualmente em uso, via AppiumLibrary
         return self._builtin.get_library_instance("AppiumLibrary")._current_application()
 
-    # Transforma o método em uma keyword utilizável nos testes .robot com o nome "Scroll Element"
-    @keyword("Scroll Element")
-    def scroll_element(self, xpath, direction="down", percent=0.75, speed=800):
+    # Define a keyword "Scroll Element", agora com argumentos nomeados via **kwargs
+    @keyword("Scroll Inside")
+    def scroll_element(self, **kwargs):
         """
-        Executa um gesto de swipe (arrasto) dentro de um elemento específico da tela, simulando o toque do dedo.
+        Executa um gesto de swipe (arrasto) dentro de um elemento localizado por qualquer estratégia.
 
-        Parâmetros:
-        - xpath (str): Caminho XPath do elemento no qual o swipe será aplicado.
-        - direction (str): Direção do movimento — pode ser 'up', 'down', 'left' ou 'right'. Padrão: 'down'.
-        - percent (float): Proporção do elemento que será usada no gesto (entre 0.01 e 1.0). Padrão: 0.75.
-        - speed (int): Velocidade do swipe em pixels por segundo. Padrão: 800.
+        Os parâmetros devem ser passados como argumentos nomeados no .robot:
+        - locator_type: tipo de localizador (ex: 'xpath', 'id', 'accessibility_id', etc.). Padrão: 'xpath'
+        - locator_value: valor do seletor (XPath, ID, etc.) — obrigatório!
+        - direction: direção do swipe — 'up', 'down', 'left' ou 'right'. Padrão: 'down'
+        - percent: proporção do gesto (entre 0.01 e 1.0). Padrão: 0.75
+        - speed: velocidade do swipe em pixels por segundo. Padrão: 800
         """
 
-        # Validação dos parâmetros antes de tentar o gesto
+        # Lê os argumentos nomeados com valores padrão
+        locator_type = kwargs.get("locator_type", "xpath")
+        locator_value = kwargs.get("locator_value", None)
+        direction = kwargs.get("direction", "down")
+        percent = float(kwargs.get("percent", 0.75))
+        speed = int(kwargs.get("speed", 800))
+
+        # Valida se os argumentos estão corretos
+        if not locator_value:
+            raise ValueError("O parâmetro 'locator_value' é obrigatório.")
         if direction not in ["up", "down", "left", "right"]:
             raise ValueError("O parâmetro 'direction' deve ser: 'up', 'down', 'left' ou 'right'.")
         if not (0.01 <= percent <= 1.0):
@@ -43,33 +52,49 @@ class scroll:
         if speed <= 0:
             raise ValueError("O parâmetro 'speed' deve ser um número positivo.")
 
+        # Mapeia o tipo do localizador para o AppiumBy
+        locator_strategies = {
+            "id": AppiumBy.ID,
+            "xpath": AppiumBy.XPATH,
+            "accessibility_id": AppiumBy.ACCESSIBILITY_ID,
+            "class_name": AppiumBy.CLASS_NAME,
+            "android_uiautomator": AppiumBy.ANDROID_UIAUTOMATOR,
+            "ios_predicate": AppiumBy.IOS_PREDICATE,
+            "ios_class_chain": AppiumBy.IOS_CLASS_CHAIN,
+            "name": AppiumBy.NAME
+        }
+
+        # Converte o locator_type em uma estratégia válida
+        strategy = locator_strategies.get(locator_type.lower())
+        if not strategy:
+            raise ValueError(f"Tipo de localizador inválido: '{locator_type}'")
+
         try:
-            # Obtém o driver Appium ativo
+            # Acessa o driver do Appium
             driver = self.driver
 
-            # Localiza o elemento de destino através do XPath fornecido
-            element = driver.find_element(AppiumBy.XPATH, xpath)
+            # Localiza o elemento na tela usando o tipo e valor informados
+            element = driver.find_element(strategy, locator_value)
 
-            # Executa o gesto de swipe dentro do elemento utilizando o comando do Appium 2.x
+            # Executa o gesto de swipe dentro do elemento localizado
             driver.execute_script("mobile: swipeGesture", {
-                "elementId": element.id,   # ID interno do elemento localizado
-                "direction": direction,    # Direção do swipe
-                "percent": percent,        # Porcentagem da área usada para deslizar
-                "speed": speed             # Velocidade em pixels por segundo
+                "elementId": element.id,
+                "direction": direction,
+                "percent": percent,
+                "speed": speed
             })
 
-            # Registra no log do Robot Framework os detalhes do gesto (útil para debug e relatórios)
+            # Registra no log do Robot Framework que a operação foi bem-sucedida
             self._builtin.log(
-                f"[SUCESSO] Scroll dentro do elemento '{xpath}' com direction='{direction}', percent={percent}, speed={speed}.",
+                f"[SUCESSO] Scroll no elemento localizado por {locator_type}='{locator_value}' com direction='{direction}', percent={percent}, speed={speed}.",
                 "INFO"
             )
 
         except Exception as e:
-            # Em caso de erro, registra a falha com detalhes no log
+            # Se ocorrer algum erro, registra no log como erro
             self._builtin.log(
-                f"[ERRO] Falha ao executar scroll no elemento '{xpath}': {str(e)}",
+                f"[ERRO] Falha ao executar scroll: {str(e)}",
                 "ERROR"
             )
-
-            # Lança a exceção novamente para interromper o teste (comportamento padrão de falha)
+            # E interrompe a execução do teste
             raise

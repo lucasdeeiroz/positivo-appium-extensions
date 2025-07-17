@@ -3,13 +3,13 @@ Library    AppiumLibrary
 Library    scroll.py
 
 *** Keywords ***
-Start session Google Maps
+Start session Play Store
     Open Application    http://localhost:4723
     ...    platformName=Android
     ...    deviceName=Android Emulator
     ...    automationName=UIAutomator2
-    ...    appPackage=com.google.android.apps.maps
-    ...    appActivity=com.google.android.maps.MapsActivity
+    ...    appPackage=com.android.vending
+    ...    appActivity=com.android.vending.AssetBrowserActivity
     ...    udid=emulator-5554
     ...    autoGrantPermissions=true
 

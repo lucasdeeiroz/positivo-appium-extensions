@@ -2,17 +2,18 @@
 Resource    base_scroll.resource
 
 *** Test Cases ***
-Deve realizar scroll down no Google Maps
+Deve realizar scroll no Play Store
     [Tags]    scroll
-    Start session Google Maps
+    Start session Play Store
     Sleep    10
-    Wait Until Element Is Visible    //android.widget.TextView[@resource-id="com.google.android.apps.maps:id/navigation_bar_item_large_label_view"]
+    Wait Until Element Is Visible    //androidx.compose.ui.platform.ComposeView[@resource-id="com.android.vending:id/0_resource_name_obfuscated"]/android.view.View/android.view.View[2]/android.view.View/android.view.View[2]/android.view.View[2]
     Sleep    5
-    Scroll Element
-    ...    xpath=//android.widget.FrameLayout[@resource-id="com.google.android.apps.maps:id/home_bottom_sheet_container"]
+    Scroll Inside
+    ...    locator_type=xpath
+    ...    locator_value=//androidx.compose.ui.platform.ComposeView[@resource-id="com.android.vending:id/0_resource_name_obfuscated"]/android.view.View/android.view.View[1]/android.view.View/android.view.View/android.view.View[1]/android.view.View/android.view.View[3]
     ...    direction=left
-    ...    percent=0.8
-    ...    speed=300
+    ...    percent=0.70
+    ...    speed=500
     Sleep    2
 
 Deve realizar scroll down no Timer
@@ -21,9 +22,10 @@ Deve realizar scroll down no Timer
     Sleep    10
     Wait Until Element Is Visible    //android.widget.TextView[@text="Timer"]
     Sleep    5
-    Scroll Element
-    ...    xpath=//android.view.View[@resource-id="com.digitalchemy.timerplus:id/second_picker"]
-    ...    direction=down
-    ...    percent=0.8
+    Scroll Inside
+    ...    locator_type=xpath
+    ...    locator_value=//android.view.View[@resource-id="com.digitalchemy.timerplus:id/second_picker"]
+    ...    direction=up
+    ...    percent=0.6
     ...    speed=300
     Sleep    2
