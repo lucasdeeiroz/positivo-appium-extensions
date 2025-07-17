@@ -9,7 +9,7 @@ from robot.libraries.BuiltIn import BuiltIn
 
 # Define a classe customizada da biblioteca
 # Por convenção, usa-se o mesmo nome do arquivo .py como nome da classe (em snake_case ou PascalCase)
-class scroll_down:
+class scroll:
     # Define o escopo da biblioteca como GLOBAL — ou seja, uma única instância será usada por todos os testes
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
 
@@ -22,9 +22,9 @@ class scroll_down:
         # Acessa a instância do driver Appium ativo (controlado pela AppiumLibrary do Robot Framework)
         return self._builtin.get_library_instance("AppiumLibrary")._current_application()
 
-    # Transforma o método em uma keyword utilizável nos testes .robot com o nome "Scroll Inside Element"
-    @keyword("Scroll Inside Element")
-    def scroll_inside_element(self, xpath, direction="down", percent=0.75, speed=800):
+    # Transforma o método em uma keyword utilizável nos testes .robot com o nome "Scroll Element"
+    @keyword("Scroll Element")
+    def scroll_element(self, xpath, direction="down", percent=0.75, speed=800):
         """
         Executa um gesto de swipe (arrasto) dentro de um elemento específico da tela, simulando o toque do dedo.
 
