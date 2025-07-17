@@ -16,7 +16,7 @@ Should click multiple calculator buttons using ID locators
     ...    id=com.google.android.calculator:id/digit_2
     ...    id=com.google.android.calculator:id/digit_3
     
-    Click Multiple Elements    ${elements}    click_duration=200    interval_between_clicks=0.5
+    Click Elements    ${elements}    click_duration=200    interval_between_clicks=0.5
     
     Sleep    2
     Capture Page Screenshot
@@ -31,9 +31,9 @@ Should click multiple calculator buttons using XPath locators
     ...    xpath=//android.widget.ImageButton[@content-desc="4"]
     ...    xpath=//android.widget.ImageButton[@content-desc="5"]
     ...    xpath=//android.widget.ImageButton[@content-desc="6"]
-    
-    Click Multiple Elements    ${elements}    click_duration=250    interval_between_clicks=0.6
-    
+
+    Click Elements    ${elements}    click_duration=250    interval_between_clicks=0.6
+
     Sleep    2
     Capture Page Screenshot
     Close session
@@ -48,7 +48,7 @@ Should click multiple calculator buttons using accessibility IDs
     ...    accessibility_id=8
     ...    accessibility_id=9
     
-    Click Multiple Elements    ${elements}    click_duration=300    interval_between_clicks=0.4
+    Click Elements    ${elements}    click_duration=300    interval_between_clicks=0.4
     
     Sleep    2
     Capture Page Screenshot
@@ -65,7 +65,7 @@ Should perform calculation using mixed locator types
     ...    accessibility_id=3
     ...    id=com.google.android.calculator:id/eq
     
-    Click Multiple Elements    ${elements}    click_duration=200    interval_between_clicks=0.5
+    Click Elements    ${elements}    click_duration=200    interval_between_clicks=0.5
     
     Sleep    3
     Capture Page Screenshot

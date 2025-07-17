@@ -16,8 +16,8 @@ class ClickElements:
     def _driver(self):
         return self._builtin.get_library_instance("AppiumLibrary")._current_application()
 
-    @keyword("Click Multiple Elements")
-    def click_multiple_elements(self, elements_list, click_duration=100, interval_between_clicks=0.5):
+    @keyword("Click Elements")
+    def click_elements(self, elements_list, click_duration=100, interval_between_clicks=0.5):
         """
         Clicks sequentially on multiple elements.
 
