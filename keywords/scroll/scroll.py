@@ -1,58 +1,39 @@
-# Importa o AppiumBy — enumeração que permite localizar elementos por diferentes estratégias (xpath, id, etc.)
 from appium.webdriver.common.appiumby import AppiumBy
-
-# Importa o decorador @keyword, que permite transformar a função Python em uma keyword do Robot Framework
 from robot.api.deco import keyword
-
-# Importa a biblioteca interna BuiltIn do Robot Framework — usada para logar mensagens e acessar outras bibliotecas
 from robot.libraries.BuiltIn import BuiltIn
 
-# Cria a classe que define sua biblioteca customizada de scroll
 class scroll:
-    # Define o escopo como GLOBAL — ou seja, a mesma instância será usada em todos os testes
+    # Defines the scope of the library as GLOBAL, making it shared across all tests
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
 
     def __init__(self):
-        # Instancia o BuiltIn para usar funções do Robot, como log()
+        # Initializes BuiltIn to allow access to Robot Framework core functions
         self._builtin = BuiltIn()
 
     @property
     def driver(self):
-        # Retorna o driver Appium atualmente em uso, via AppiumLibrary
+        """
+        Returns the current Appium driver instance managed by AppiumLibrary.
+        This is necessary to interact directly with the mobile device.
+        """
         return self._builtin.get_library_instance("AppiumLibrary")._current_application()
 
-    # Define a keyword "Scroll Element", agora com argumentos nomeados via **kwargs
     @keyword("Scroll Inside")
     def scroll_element(self, **kwargs):
         """
-        Executa um gesto de swipe (arrasto) dentro de um elemento localizado por qualquer estratégia.
+        Performs a swipe gesture inside a given element located by any supported Appium strategy.
 
-        Os parâmetros devem ser passados como argumentos nomeados no .robot:
-        - locator_type: tipo de localizador (ex: 'xpath', 'id', 'accessibility_id', etc.). Padrão: 'xpath'
-        - locator_value: valor do seletor (XPath, ID, etc.) — obrigatório!
-        - direction: direção do swipe — 'up', 'down', 'left' ou 'right'. Padrão: 'down'
-        - percent: proporção do gesto (entre 0.01 e 1.0). Padrão: 0.75
-        - speed: velocidade do swipe em pixels por segundo. Padrão: 800
+        Accepts the following keyword arguments (Robot Framework style):
+        - A locator key-value pair (e.g., xpath=..., id=..., accessibility_id=...)
+        - direction (str): 'up', 'down', 'left', or 'right'. Default: 'down'
+        - percent (float): Proportional distance of the swipe (0.01 to 1.0). Default: 0.75
+        - speed (int): Swipe speed in pixels per second. Default: 800
+
+        Example usage in Robot Framework:
+            Scroll Inside    xpath=//android.widget.TextView[@text="Scroll Here"]    direction=down    percent=0.6
         """
 
-        # Lê os argumentos nomeados com valores padrão
-        locator_type = kwargs.get("locator_type", "xpath")
-        locator_value = kwargs.get("locator_value", None)
-        direction = kwargs.get("direction", "down")
-        percent = float(kwargs.get("percent", 0.75))
-        speed = int(kwargs.get("speed", 800))
-
-        # Valida se os argumentos estão corretos
-        if not locator_value:
-            raise ValueError("O parâmetro 'locator_value' é obrigatório.")
-        if direction not in ["up", "down", "left", "right"]:
-            raise ValueError("O parâmetro 'direction' deve ser: 'up', 'down', 'left' ou 'right'.")
-        if not (0.01 <= percent <= 1.0):
-            raise ValueError("O parâmetro 'percent' deve estar entre 0.01 e 1.0.")
-        if speed <= 0:
-            raise ValueError("O parâmetro 'speed' deve ser um número positivo.")
-
-        # Mapeia o tipo do localizador para o AppiumBy
+        # Mapping of supported locator strategies to AppiumBy constants
         locator_strategies = {
             "id": AppiumBy.ID,
             "xpath": AppiumBy.XPATH,
@@ -64,19 +45,38 @@ class scroll:
             "name": AppiumBy.NAME
         }
 
-        # Converte o locator_type em uma estratégia válida
-        strategy = locator_strategies.get(locator_type.lower())
-        if not strategy:
-            raise ValueError(f"Tipo de localizador inválido: '{locator_type}'")
+        # Determine locator type and value from keyword arguments
+        locator_type = None
+        locator_value = None
+        for key in kwargs:
+            if key.lower() in locator_strategies:
+                locator_type = key.lower()
+                locator_value = kwargs[key]
+                break
+
+        if not locator_type or not locator_value:
+            raise ValueError("You must specify a valid locator as a named argument (e.g., xpath=..., id=...).")
+
+        # Read additional parameters with default values
+        direction = kwargs.get("direction", "down")
+        percent = float(kwargs.get("percent", 0.75))
+        speed = int(kwargs.get("speed", 800))
+
+        # Validate inputs
+        if direction not in ["up", "down", "left", "right"]:
+            raise ValueError("The 'direction' argument must be one of: 'up', 'down', 'left', 'right'.")
+        if not (0.01 <= percent <= 1.0):
+            raise ValueError("The 'percent' argument must be between 0.01 and 1.0.")
+        if speed <= 0:
+            raise ValueError("The 'speed' argument must be a positive integer.")
 
         try:
-            # Acessa o driver do Appium
+            # Get the Appium driver instance and locate the element
             driver = self.driver
-
-            # Localiza o elemento na tela usando o tipo e valor informados
+            strategy = locator_strategies[locator_type]
             element = driver.find_element(strategy, locator_value)
 
-            # Executa o gesto de swipe dentro do elemento localizado
+            # Execute swipe gesture inside the located element
             driver.execute_script("mobile: swipeGesture", {
                 "elementId": element.id,
                 "direction": direction,
@@ -84,17 +84,13 @@ class scroll:
                 "speed": speed
             })
 
-            # Registra no log do Robot Framework que a operação foi bem-sucedida
+            # Log success in Robot Framework
             self._builtin.log(
-                f"[SUCESSO] Scroll no elemento localizado por {locator_type}='{locator_value}' com direction='{direction}', percent={percent}, speed={speed}.",
+                f"[SUCCESS] Scroll performed using {locator_type}='{locator_value}' with direction='{direction}', percent={percent}, speed={speed}.",
                 "INFO"
             )
 
         except Exception as e:
-            # Se ocorrer algum erro, registra no log como erro
-            self._builtin.log(
-                f"[ERRO] Falha ao executar scroll: {str(e)}",
-                "ERROR"
-            )
-            # E interrompe a execução do teste
+            # Log and raise error in case of failure
+            self._builtin.log(f"[ERROR] Failed to perform scroll: {str(e)}", "ERROR")
             raise

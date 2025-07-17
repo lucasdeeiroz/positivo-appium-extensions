@@ -9,12 +9,11 @@ Deve realizar scroll no Play Store
     Wait Until Element Is Visible    //androidx.compose.ui.platform.ComposeView[@resource-id="com.android.vending:id/0_resource_name_obfuscated"]/android.view.View/android.view.View[2]/android.view.View/android.view.View[2]/android.view.View[2]
     Sleep    5
     Scroll Inside
-    ...    locator_type=xpath
-    ...    locator_value=//androidx.compose.ui.platform.ComposeView[@resource-id="com.android.vending:id/0_resource_name_obfuscated"]/android.view.View/android.view.View[1]/android.view.View/android.view.View/android.view.View[1]/android.view.View/android.view.View[3]
+    ...    xpath=//androidx.compose.ui.platform.ComposeView[@resource-id="com.android.vending:id/0_resource_name_obfuscated"]/android.view.View/android.view.View[1]/android.view.View/android.view.View/android.view.View[1]/android.view.View/android.view.View[3]
     ...    direction=left
     ...    percent=0.70
     ...    speed=500
-    Sleep    2
+    Sleep    2 
 
 Deve realizar scroll down no Timer
     [Tags]    scroll
@@ -23,8 +22,7 @@ Deve realizar scroll down no Timer
     Wait Until Element Is Visible    //android.widget.TextView[@text="Timer"]
     Sleep    5
     Scroll Inside
-    ...    locator_type=id
-    ...    locator_value=com.digitalchemy.timerplus:id/second_picker
+    ...    id=com.digitalchemy.timerplus:id/second_picker
     ...    direction=up
     ...    percent=0.6
     ...    speed=300
