@@ -1,58 +1,65 @@
-# Importa o AppiumBy — enumeração que permite localizar elementos por diferentes estratégias (xpath, id, etc.)
+# Import locator strategies supported by Appium (like ID, XPATH, etc.)
 from appium.webdriver.common.appiumby import AppiumBy
 
-# Importa o decorador @keyword, que permite transformar a função Python em uma keyword do Robot Framework
+# Enables using Python functions as Robot Framework keywords
 from robot.api.deco import keyword
 
-# Importa a biblioteca interna BuiltIn do Robot Framework — usada para logar mensagens e acessar outras bibliotecas
+# Provides access to Robot Framework's internal functionalities (e.g., logging, library access)
 from robot.libraries.BuiltIn import BuiltIn
 
-# Cria a classe que define sua biblioteca customizada de scroll
+
+# Main class that defines the custom Robot Framework library
 class scroll:
-    # Define o escopo como GLOBAL — ou seja, a mesma instância será usada em todos os testes
+    # GLOBAL scope: the same instance is reused across all test cases
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
 
     def __init__(self):
-        # Instancia o BuiltIn para usar funções do Robot, como log()
+        # Initializes the BuiltIn library to access Robot Framework utilities (e.g., log)
         self._builtin = BuiltIn()
 
     @property
     def driver(self):
-        # Retorna o driver Appium atualmente em uso, via AppiumLibrary
+        # Gets the current Appium driver instance from AppiumLibrary
         return self._builtin.get_library_instance("AppiumLibrary")._current_application()
 
-    # Define a keyword "Scroll Element", agora com argumentos nomeados via **kwargs
+    # Define the custom keyword "Scroll Inside" to be used in .robot files
     @keyword("Scroll Inside")
     def scroll_element(self, **kwargs):
         """
-        Executa um gesto de swipe (arrasto) dentro de um elemento localizado por qualquer estratégia.
+        Performs a swipe gesture inside a specific element, identified by ID, XPath, or other strategies.
 
-        Os parâmetros devem ser passados como argumentos nomeados no .robot:
-        - locator_type: tipo de localizador (ex: 'xpath', 'id', 'accessibility_id', etc.). Padrão: 'xpath'
-        - locator_value: valor do seletor (XPath, ID, etc.) — obrigatório!
-        - direction: direção do swipe — 'up', 'down', 'left' ou 'right'. Padrão: 'down'
-        - percent: proporção do gesto (entre 0.01 e 1.0). Padrão: 0.75
-        - speed: velocidade do swipe em pixels por segundo. Padrão: 800
+        Parameters:
+        - locator_value: value used to locate the element (e.g., //android.widget.TextView, com.example:id/button)
+        - locator_type: locator strategy (optional). If not provided, it will be auto-inferred.
+        - direction: scroll direction — one of 'up', 'down', 'left', 'right'. Default: 'down'
+        - percent: scroll distance relative to the element size (0.01 to 1.0). Default: 0.75
+        - speed: swipe speed in pixels per second. Default: 800
         """
 
-        # Lê os argumentos nomeados com valores padrão
-        locator_type = kwargs.get("locator_type", "xpath")
-        locator_value = kwargs.get("locator_value", None)
-        direction = kwargs.get("direction", "down")
-        percent = float(kwargs.get("percent", 0.75))
-        speed = int(kwargs.get("speed", 800))
+        # Read keyword arguments
+        locator_value = kwargs.get("locator_value", None)  # Required
+        locator_type = kwargs.get("locator_type", None)    # Optional
+        direction = kwargs.get("direction", "down")        # Default: 'down'
+        percent = float(kwargs.get("percent", 0.75))       # Default: 0.75
+        speed = int(kwargs.get("speed", 800))              # Default: 800
 
-        # Valida se os argumentos estão corretos
+        # Validate required parameter
         if not locator_value:
-            raise ValueError("O parâmetro 'locator_value' é obrigatório.")
-        if direction not in ["up", "down", "left", "right"]:
-            raise ValueError("O parâmetro 'direction' deve ser: 'up', 'down', 'left' ou 'right'.")
-        if not (0.01 <= percent <= 1.0):
-            raise ValueError("O parâmetro 'percent' deve estar entre 0.01 e 1.0.")
-        if speed <= 0:
-            raise ValueError("O parâmetro 'speed' deve ser um número positivo.")
+            raise ValueError("Missing required parameter: 'locator_value'.")
 
-        # Mapeia o tipo do localizador para o AppiumBy
+        # If locator_type is not provided, try to infer it automatically
+        if not locator_type:
+            locator_type = self._infer_locator_type(locator_value)
+
+        # Validate parameter values
+        if direction not in ["up", "down", "left", "right"]:
+            raise ValueError("Invalid 'direction'. Must be one of: 'up', 'down', 'left', 'right'.")
+        if not (0.01 <= percent <= 1.0):
+            raise ValueError("Invalid 'percent'. Must be between 0.01 and 1.0.")
+        if speed <= 0:
+            raise ValueError("'speed' must be a positive number.")
+
+        # Map supported locator types to AppiumBy constants
         locator_strategies = {
             "id": AppiumBy.ID,
             "xpath": AppiumBy.XPATH,
@@ -64,19 +71,19 @@ class scroll:
             "name": AppiumBy.NAME
         }
 
-        # Converte o locator_type em uma estratégia válida
+        # Convert string type into AppiumBy strategy
         strategy = locator_strategies.get(locator_type.lower())
         if not strategy:
-            raise ValueError(f"Tipo de localizador inválido: '{locator_type}'")
+            raise ValueError(f"Unsupported locator_type: '{locator_type}'")
 
         try:
-            # Acessa o driver do Appium
+            # Get the Appium driver instance
             driver = self.driver
 
-            # Localiza o elemento na tela usando o tipo e valor informados
+            # Locate the element using the strategy and locator value
             element = driver.find_element(strategy, locator_value)
 
-            # Executa o gesto de swipe dentro do elemento localizado
+            # Perform the swipe gesture using mobile: swipeGesture
             driver.execute_script("mobile: swipeGesture", {
                 "elementId": element.id,
                 "direction": direction,
@@ -84,17 +91,33 @@ class scroll:
                 "speed": speed
             })
 
-            # Registra no log do Robot Framework que a operação foi bem-sucedida
+            # Log success message in the Robot Framework report
             self._builtin.log(
-                f"[SUCESSO] Scroll no elemento localizado por {locator_type}='{locator_value}' com direction='{direction}', percent={percent}, speed={speed}.",
+                f"[SUCCESS] Scrolled element located by {locator_type}='{locator_value}' using direction='{direction}', percent={percent}, speed={speed}.",
                 "INFO"
             )
 
         except Exception as e:
-            # Se ocorrer algum erro, registra no log como erro
+            # Log error in Robot Framework report
             self._builtin.log(
-                f"[ERRO] Falha ao executar scroll: {str(e)}",
+                f"[ERROR] Failed to scroll element '{locator_value}' (type: {locator_type}): {str(e)}",
                 "ERROR"
             )
-            # E interrompe a execução do teste
+            # Raise exception to fail the test
             raise
+
+    # Helper function to guess the locator type based on the locator_value
+    def _infer_locator_type(self, locator_value):
+        """
+        Attempts to automatically detect the locator type based on the provided locator_value.
+        """
+        if locator_value.startswith("//") or locator_value.startswith("("):
+            return "xpath"
+        elif "=" in locator_value and not locator_value.startswith("com."):
+            return "android_uiautomator"
+        elif locator_value.startswith("android.widget.") or locator_value.startswith("com."):
+            return "id"
+        elif locator_value.isidentifier():  # simple name like "LoginButton"
+            return "accessibility_id"
+        else:
+            return "accessibility_id"  # fallback for safety
