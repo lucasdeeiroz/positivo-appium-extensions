@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.2.2 (Python 3.13.2 on win32)" generated="2025-07-16T19:43:53.281840" rpa="false" schemaversion="5">
+<suite id="s1" name="Teste2" source="C:\Users\cippa\OneDrive\Área de Trabalho\robot\robot-framework-front\keywords\ChangeTheme\teste2.robot">
+<test id="s1-t1" name="Muda Tema Para Escuro em &quot;Configurações&quot; na Tela Inicial" line="15">
+<kw name="Open Application" owner="AppiumLibrary">
+<arg>${APPIUM_URL}</arg>
+<arg>platformName=${PLATFORM_NAME}</arg>
+<arg>deviceName=${DEVICE_NAME}</arg>
+<arg>udid=${UDID}</arg>
+<arg>automationName=${AUTOMATION_NAME}</arg>
+<arg>appPackage=${APP_PACKAGE}</arg>
+<arg>appActivity=${APP_ACTIVITY}</arg>
+<arg>noReset=true</arg>
+<doc>Opens a new application to given Appium server.
+Capabilities of appium server, Android and iOS,
+Please check https://appium.io/docs/en/2.1/cli/args/
+| *Option*            | *Man.* | *Description*     |
+| remote_url          | Yes    | Appium server url |
+| alias               | no     | alias             |
+| strict_ssl          | No     | allows you to send commands to an invalid certificate host like a self-signed one. |</doc>
+<status status="PASS" start="2025-07-16T19:43:53.683959" elapsed="6.686196"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2025-07-16T19:44:02.372441" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2025-07-16T19:44:00.371352" elapsed="2.001327"/>
+</kw>
+<kw name="Change To Dark Theme" owner="ThemeChanger">
+<kw name="Close Application" owner="AppiumLibrary">
+<doc>Closes the current application and also close webdriver session.</doc>
+<status status="PASS" start="2025-07-16T19:44:02.374705" elapsed="0.668023"/>
+</kw>
+<kw name="Open Application" owner="AppiumLibrary">
+<arg>http://localhost:4723</arg>
+<arg>platformName=Android</arg>
+<arg>deviceName=XiaomiDevice</arg>
+<arg>udid=a83af8e7</arg>
+<arg>automationName=UiAutomator2</arg>
+<arg>appPackage=com.android.settings</arg>
+<arg>appActivity=com.android.settings.Settings</arg>
+<arg>noReset=true</arg>
+<doc>Opens a new application to given Appium server.
+Capabilities of appium server, Android and iOS,
+Please check https://appium.io/docs/en/2.1/cli/args/
+| *Option*            | *Man.* | *Description*     |
+| remote_url          | Yes    | Appium server url |
+| alias               | no     | alias             |
+| strict_ssl          | No     | allows you to send commands to an invalid certificate host like a self-signed one. |</doc>
+<status status="PASS" start="2025-07-16T19:44:03.043010" elapsed="6.952127"/>
+</kw>
+<msg time="2025-07-16T19:44:11.995693" level="INFO">App de configurações aberto com nova sessão</msg>
+<msg time="2025-07-16T19:44:26.951101" level="INFO">xpath criteria: //android.widget.TextView[@text='Configurações']
+xpath criteria: //android.widget.TextView[@text='Configurações']
+xpath criteria: //android.widget.TextView[contains(@text,'Tela e brilho')]
+xpath criteria: //android.widget.TextView[contains(@text,'Tela e brilho')]
+xpath criteria: //android.widget.TextView[contains(@text,'Tela e brilho')]
+criteria is com.android.settings:id/dark_mode_view
+criteria is com.android.settings:id/dark_mode_view</msg>
+<arg>timeout=45</arg>
+<status status="PASS" start="2025-07-16T19:44:02.373623" elapsed="24.578349"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2025-07-16T19:44:28.953442" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2025-07-16T19:44:26.952727" elapsed="2.000835"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2025-07-16T19:44:28.954104" level="INFO">Tema escuro aplicado com sucesso</msg>
+<arg>Tema escuro aplicado com sucesso</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2025-07-16T19:44:28.953965" elapsed="0.000185"/>
+</kw>
+<kw name="Close Application" owner="AppiumLibrary">
+<doc>Closes the current application and also close webdriver session.</doc>
+<status status="PASS" start="2025-07-16T19:44:28.954396" elapsed="0.652921"/>
+</kw>
+<doc>Testa a mudança do tema do dispositivo de claro para escuro</doc>
+<tag>dark_theme</tag>
+<tag>theme</tag>
+<tag>ui_automation</tag>
+<status status="PASS" start="2025-07-16T19:43:53.681431" elapsed="35.926527"/>
+</test>
+<test id="s1-t2" name="Muda Tema Para Claro em &quot;Configurações&quot; na Tela Inicial" line="38">
+<kw name="Open Application" owner="AppiumLibrary">
+<arg>${APPIUM_URL}</arg>
+<arg>platformName=${PLATFORM_NAME}</arg>
+<arg>deviceName=${DEVICE_NAME}</arg>
+<arg>udid=${UDID}</arg>
+<arg>automationName=${AUTOMATION_NAME}</arg>
+<arg>appPackage=${APP_PACKAGE}</arg>
+<arg>appActivity=${APP_ACTIVITY}</arg>
+<arg>noReset=true</arg>
+<doc>Opens a new application to given Appium server.
+Capabilities of appium server, Android and iOS,
+Please check https://appium.io/docs/en/2.1/cli/args/
+| *Option*            | *Man.* | *Description*     |
+| remote_url          | Yes    | Appium server url |
+| alias               | no     | alias             |
+| strict_ssl          | No     | allows you to send commands to an invalid certificate host like a self-signed one. |</doc>
+<status status="PASS" start="2025-07-16T19:44:29.609868" elapsed="7.487678"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2025-07-16T19:44:39.098806" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2025-07-16T19:44:37.098293" elapsed="2.000706"/>
+</kw>
+<kw name="Change To Light Theme" owner="ThemeChanger">
+<kw name="Close Application" owner="AppiumLibrary">
+<doc>Closes the current application and also close webdriver session.</doc>
+<status status="PASS" start="2025-07-16T19:44:39.099896" elapsed="0.579835"/>
+</kw>
+<kw name="Open Application" owner="AppiumLibrary">
+<arg>http://localhost:4723</arg>
+<arg>platformName=Android</arg>
+<arg>deviceName=XiaomiDevice</arg>
+<arg>udid=a83af8e7</arg>
+<arg>automationName=UiAutomator2</arg>
+<arg>appPackage=com.android.settings</arg>
+<arg>appActivity=com.android.settings.Settings</arg>
+<arg>noReset=true</arg>
+<doc>Opens a new application to given Appium server.
+Capabilities of appium server, Android and iOS,
+Please check https://appium.io/docs/en/2.1/cli/args/
+| *Option*            | *Man.* | *Description*     |
+| remote_url          | Yes    | Appium server url |
+| alias               | no     | alias             |
+| strict_ssl          | No     | allows you to send commands to an invalid certificate host like a self-signed one. |</doc>
+<status status="PASS" start="2025-07-16T19:44:39.680046" elapsed="6.087789"/>
+</kw>
+<msg time="2025-07-16T19:44:47.768110" level="INFO">App de configurações aberto com nova sessão</msg>
+<msg time="2025-07-16T19:45:00.484144" level="INFO">xpath criteria: //android.widget.TextView[@text='Configurações']
+xpath criteria: //android.widget.TextView[@text='Configurações']
+xpath criteria: //android.widget.TextView[contains(@text,'Tela e brilho')]
+xpath criteria: //android.widget.TextView[contains(@text,'Tela e brilho')]
+xpath criteria: //android.widget.TextView[contains(@text,'Tela e brilho')]
+criteria is com.android.settings:id/light_mode_view
+criteria is com.android.settings:id/light_mode_view</msg>
+<arg>timeout=45</arg>
+<status status="PASS" start="2025-07-16T19:44:39.099388" elapsed="21.384909"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2025-07-16T19:45:02.485947" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2025-07-16T19:45:00.485254" elapsed="2.000995"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2025-07-16T19:45:02.487422" level="INFO">Tema claro aplicado com sucesso</msg>
+<arg>Tema claro aplicado com sucesso</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2025-07-16T19:45:02.487020" elapsed="0.000539"/>
+</kw>
+<kw name="Close Application" owner="AppiumLibrary">
+<doc>Closes the current application and also close webdriver session.</doc>
+<status status="PASS" start="2025-07-16T19:45:02.488014" elapsed="0.499785"/>
+</kw>
+<doc>Testa a mudança do tema do dispositivo de escuro para claro</doc>
+<tag>light_theme</tag>
+<tag>theme</tag>
+<tag>ui_automation</tag>
+<status status="PASS" start="2025-07-16T19:44:29.609136" elapsed="33.379173"/>
+</test>
+<test id="s1-t3" name="Teste Completo de Alternância de Temas" line="57">
+<kw name="Open Application" owner="AppiumLibrary">
+<arg>${APPIUM_URL}</arg>
+<arg>platformName=${PLATFORM_NAME}</arg>
+<arg>deviceName=${DEVICE_NAME}</arg>
+<arg>udid=${UDID}</arg>
+<arg>automationName=${AUTOMATION_NAME}</arg>
+<arg>appPackage=${APP_PACKAGE}</arg>
+<arg>appActivity=${APP_ACTIVITY}</arg>
+<arg>noReset=true</arg>
+<doc>Opens a new application to given Appium server.
+Capabilities of appium server, Android and iOS,
+Please check https://appium.io/docs/en/2.1/cli/args/
+| *Option*            | *Man.* | *Description*     |
+| remote_url          | Yes    | Appium server url |
+| alias               | no     | alias             |
+| strict_ssl          | No     | allows you to send commands to an invalid certificate host like a self-signed one. |</doc>
+<status status="PASS" start="2025-07-16T19:45:02.989650" elapsed="6.194505"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2025-07-16T19:45:11.186756" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2025-07-16T19:45:09.186075" elapsed="2.000868"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2025-07-16T19:45:11.187605" level="INFO">Iniciando mudança para tema escuro...</msg>
+<arg>Iniciando mudança para tema escuro...</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2025-07-16T19:45:11.187449" elapsed="0.000194"/>
+</kw>
+<kw name="Change To Dark Theme" owner="ThemeChanger">
+<kw name="Close Application" owner="AppiumLibrary">
+<doc>Closes the current application and also close webdriver session.</doc>
+<status status="PASS" start="2025-07-16T19:45:11.188071" elapsed="0.556486"/>
+</kw>
+<kw name="Open Application" owner="AppiumLibrary">
+<arg>http://localhost:4723</arg>
+<arg>platformName=Android</arg>
+<arg>deviceName=XiaomiDevice</arg>
+<arg>udid=a83af8e7</arg>
+<arg>automationName=UiAutomator2</arg>
+<arg>appPackage=com.android.settings</arg>
+<arg>appActivity=com.android.settings.Settings</arg>
+<arg>noReset=true</arg>
+<doc>Opens a new application to given Appium server.
+Capabilities of appium server, Android and iOS,
+Please check https://appium.io/docs/en/2.1/cli/args/
+| *Option*            | *Man.* | *Description*     |
+| remote_url          | Yes    | Appium server url |
+| alias               | no     | alias             |
+| strict_ssl          | No     | allows you to send commands to an invalid certificate host like a self-signed one. |</doc>
+<status status="PASS" start="2025-07-16T19:45:11.744778" elapsed="6.110789"/>
+</kw>
+<msg time="2025-07-16T19:45:19.856018" level="INFO">App de configurações aberto com nova sessão</msg>
+<msg time="2025-07-16T19:45:33.373092" level="INFO">xpath criteria: //android.widget.TextView[@text='Configurações']
+xpath criteria: //android.widget.TextView[@text='Configurações']
+xpath criteria: //android.widget.TextView[contains(@text,'Tela e brilho')]
+xpath criteria: //android.widget.TextView[contains(@text,'Tela e brilho')]
+xpath criteria: //android.widget.TextView[contains(@text,'Tela e brilho')]
+criteria is com.android.settings:id/dark_mode_view
+criteria is com.android.settings:id/dark_mode_view</msg>
+<arg>timeout=45</arg>
+<status status="PASS" start="2025-07-16T19:45:11.187816" elapsed="22.185391"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2025-07-16T19:45:36.374876" level="INFO">Slept 3 seconds.</msg>
+<arg>3s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2025-07-16T19:45:33.373690" elapsed="3.001319"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2025-07-16T19:45:36.375936" level="INFO">Iniciando mudança para tema claro...</msg>
+<arg>Iniciando mudança para tema claro...</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2025-07-16T19:45:36.375620" elapsed="0.000448"/>
+</kw>
+<kw name="Change To Light Theme" owner="ThemeChanger">
+<kw name="Close Application" owner="AppiumLibrary">
+<doc>Closes the current application and also close webdriver session.</doc>
+<status status="PASS" start="2025-07-16T19:45:36.376976" elapsed="1.224226"/>
+</kw>
+<kw name="Open Application" owner="AppiumLibrary">
+<arg>http://localhost:4723</arg>
+<arg>platformName=Android</arg>
+<arg>deviceName=XiaomiDevice</arg>
+<arg>udid=a83af8e7</arg>
+<arg>automationName=UiAutomator2</arg>
+<arg>appPackage=com.android.settings</arg>
+<arg>appActivity=com.android.settings.Settings</arg>
+<arg>noReset=true</arg>
+<doc>Opens a new application to given Appium server.
+Capabilities of appium server, Android and iOS,
+Please check https://appium.io/docs/en/2.1/cli/args/
+| *Option*            | *Man.* | *Description*     |
+| remote_url          | Yes    | Appium server url |
+| alias               | no     | alias             |
+| strict_ssl          | No     | allows you to send commands to an invalid certificate host like a self-signed one. |</doc>
+<status status="PASS" start="2025-07-16T19:45:37.601622" elapsed="7.592924"/>
+</kw>
+<msg time="2025-07-16T19:45:47.195003" level="INFO">App de configurações aberto com nova sessão</msg>
+<msg time="2025-07-16T19:46:02.197915" level="INFO">xpath criteria: //android.widget.TextView[@text='Configurações']
+xpath criteria: //android.widget.TextView[@text='Configurações']
+xpath criteria: //android.widget.TextView[contains(@text,'Tela e brilho')]
+xpath criteria: //android.widget.TextView[contains(@text,'Tela e brilho')]
+xpath criteria: //android.widget.TextView[contains(@text,'Tela e brilho')]
+criteria is com.android.settings:id/light_mode_view
+criteria is com.android.settings:id/light_mode_view</msg>
+<arg>timeout=45</arg>
+<status status="PASS" start="2025-07-16T19:45:36.376623" elapsed="25.821374"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2025-07-16T19:46:05.199003" level="INFO">Slept 3 seconds.</msg>
+<arg>3s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2025-07-16T19:46:02.198396" elapsed="3.000746"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2025-07-16T19:46:05.200083" level="INFO">Teste de alternância de temas concluído com sucesso</msg>
+<arg>Teste de alternância de temas concluído com sucesso</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2025-07-16T19:46:05.199716" elapsed="0.000466"/>
+</kw>
+<kw name="Close Application" owner="AppiumLibrary">
+<doc>Closes the current application and also close webdriver session.</doc>
+<status status="PASS" start="2025-07-16T19:46:05.200781" elapsed="0.607933"/>
+</kw>
+<doc>Testa a alternância completa entre temas claro e escuro</doc>
+<tag>full_test</tag>
+<tag>theme</tag>
+<tag>ui_automation</tag>
+<status status="PASS" start="2025-07-16T19:45:02.988962" elapsed="62.820080"/>
+</test>
+<status status="PASS" start="2025-07-16T19:43:53.283446" elapsed="132.526387"/>
+</suite>
+<statistics>
+<total>
+<stat pass="3" fail="0" skip="0">All Tests</stat>
+</total>
+<tag>
+<stat pass="1" fail="0" skip="0">dark_theme</stat>
+<stat pass="1" fail="0" skip="0">full_test</stat>
+<stat pass="1" fail="0" skip="0">light_theme</stat>
+<stat pass="3" fail="0" skip="0">theme</stat>
+<stat pass="3" fail="0" skip="0">ui_automation</stat>
+</tag>
+<suite>
+<stat name="Teste2" id="s1" pass="3" fail="0" skip="0">Teste2</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>
