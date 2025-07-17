@@ -23,8 +23,8 @@ Deve realizar scroll down no Timer
     Wait Until Element Is Visible    //android.widget.TextView[@text="Timer"]
     Sleep    5
     Scroll Inside
-    ...    locator_type=xpath
-    ...    locator_value=//android.view.View[@resource-id="com.digitalchemy.timerplus:id/second_picker"]
+    ...    locator_type=id
+    ...    locator_value=com.digitalchemy.timerplus:id/second_picker
     ...    direction=up
     ...    percent=0.6
     ...    speed=300
