@@ -98,7 +98,8 @@ class VisibleElements:
             self._builtin.log(f"Erro ao buscar elementos: {e}", level="ERROR")
             return []
         
-        self._builtin.log(f"Total de elementos na tela: {len(elements)}", level="DEBUG") #-> pra manter um logging detalhado
+        if not debug:
+            self._builtin.log(f"Total de elementos na tela: {len(elements)}", level="DEBUG") #-> pra manter um logging detalhado
         visible_elements = []
 
         for el in elements: #-> percorre os elementos capturados via driver.find_elements_by_xpath("//*")
@@ -132,11 +133,11 @@ class VisibleElements:
 
         if debug:
             debug_output = json.dumps(visible_elements, indent=2) #-> o json.dumps vai converter a lista de dicionários pra um texto legível, com identação
-            print("DEBUG JSON:\n", debug_output)
             self._builtin.log("Elementos debug:\n" + debug_output, level="INFO")
 
         # depois do loop, ele loga a quantidade de elementos que passaram por todas as etapas
-        self._builtin.log(f"Elementos visíveis após filtro: {len(visible_elements)}", level="DEBUG")
+        else:
+            self._builtin.log(f"Elementos visíveis ({len(visible_elements)}): {visible_elements}", level="INFO")
         return visible_elements #-> e retorna a lista final de elementos
 
 # FLUXO: todos os elementos da tela -> is_displayed() == True? -> tem accessibility_id? -> passa no filtro? -> ADD NO RESULTADO
