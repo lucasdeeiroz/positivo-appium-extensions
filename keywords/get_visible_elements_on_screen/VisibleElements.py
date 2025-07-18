@@ -58,7 +58,7 @@ class VisibleElements:
     # Tem como parâmetro o elemento a ser inspecionado e o valor do acessibility_id do elemento
     # Pode servir pra validar se aid foi atribuído corretamente ou pra depurar testes que falham pq o botão "sumiu"
         """Args:
-            el: WebElement que passou pelos filtros.
+            el (WebElement): elemento que passou pelos filtros.
             accessibility_id (str): Valor do atributo 'accessibility-id' do elemento.
 
         Returns:
@@ -80,12 +80,11 @@ class VisibleElements:
         com filtros opcionais por tipo de elemento. Se debug=True, retorna JSON estruturado.
 
         Args:
-            filter_type (str): Tipo de elemento desejado. Opções: 'all', 'clickable', 'text', 'button', 'input'.
+            filter_type (str): Tipo de elemento desejado. Opções: 'all' | 'clickable' | 'text' | 'button' | 'input'.
             debug (bool): se True, retorna JSON com atributos extras (modo debug); se False, retorna apenas IDs.
 
         Returns:
-            list: Lista de accessibility_ids (ou dicionários, se debug=True).
-        """
+            list: Lista de accessibility_ids (ou dicionários, se debug=True)."""
 
         valid_filters = {'all', 'clickable', 'text', 'button', 'input'} #-> cria a lista de filtros válidos
         filter_type = filter_type.strip().lower() #-> coloca todas as letras minusculas e sem espaço pra evitar erro por problema na digitação
