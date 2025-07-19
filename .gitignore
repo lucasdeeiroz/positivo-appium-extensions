@@ -5,3 +5,6 @@ node_modules/
 logs/
 .venv/
 __pycache__/
+log.html
+output.xml
+report.html
