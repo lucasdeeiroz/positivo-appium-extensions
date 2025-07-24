@@ -5,6 +5,7 @@ Resource          ./base.resource
 
 *** Test Cases ***
 Testar Encerramento do YouTube
+    [Tags]    YouTube
     [Documentation]    Testa o encerramento do aplicativo YouTube Utilizando a keyword personalizada TerminateApplicationExtension
     ...                após a sessão de videos curtos "Shorts" e execução de varios swipes .
     [Teardown]    Close Application
@@ -17,6 +18,7 @@ Testar Encerramento do YouTube
 
 
 Testar Encerramento do TikTok
+    [Tags]    TikTok
     [Documentation]    Testa o encerramento do aplicativo TikTok Utilizando a keyword personalizada TerminateApplicationExtension
     ...                após a execução de varios swipes.
     [Teardown]    Close Application
