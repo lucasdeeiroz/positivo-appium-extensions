@@ -1,8 +1,6 @@
 from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
 import cv2
-import numpy as np
-import os
 
 class ScreenshotComparisonKeywords:
 
