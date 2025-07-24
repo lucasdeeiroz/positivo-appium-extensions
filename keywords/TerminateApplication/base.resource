@@ -34,3 +34,22 @@ Start Session TikTok
     ...    appActivity=com.zhiliaoapp.musically/com.ss.android.ugc.aweme.splash.SplashActivity
     ...    automationName=${AUTOMATION_NAME}
     ...    noReset=true
+
+Swipe Loop
+    [Documentation]    Realiza um swipe contínuo.
+    [Arguments]    ${swipe_range}
+    ${x}           Get Window Width
+    ${y}           Get Window Height
+    ${start_x}     Evaluate    ${x} / 2
+    ${start_y}     Evaluate    ${y} / 2
+    ${end_y}       Evaluate    ${start_y} - (${y} * 0.4)
+
+    FOR    ${index}    IN RANGE    ${swipe_range}
+        Log    Realizando swipe ${index + 1} de ${swipe_range}
+        Swipe
+        ...    start_x=${start_x}
+        ...    start_y=${start_y}
+        ...    offset_x=${start_x}
+        ...    offset_y=${end_y}
+        Sleep    0.5s
+    END
