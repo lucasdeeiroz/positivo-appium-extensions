@@ -21,10 +21,11 @@ class MockVisibleElements(VisibleElements):
 
 # Mocks básicos para simular elementos
 class Element:
-    def __init__(self, displayed, aid, text="", cls="", clickable="false", raise_display=False):
+    def __init__(self, displayed, rid, text="", cls="", clickable="false", raise_display=False):
         self.text = text
         self.attrs = {
-            "accessibility-id": aid,
+            "resource-id": rid,
+            "content-desc": None,
             "class": cls,
             "clickable": clickable
         }
@@ -57,27 +58,27 @@ if __name__ == "__main__":
 
     casos = [
         # caso de VISIBILIDADE
-        # nesse caso, temos um unico elemento visível, com accessibility_id, filtro = all
+        # nesse caso, temos um unico elemento visível, com resource_id, filtro = all
         # o elemento passa em todos os filtros, então, é incluído na lista retornada
         {
-            "desc": "Elemento visível com accessibility_id",
+            "desc": "Elemento visível com resource_id",
             "elements": [Element(True, "btn_login", text="Entrar", cls="android.widget.Button", clickable="true")],
             "filter_type": "all",
             "debug": False,
             "esperado": ["btn_login"]
         },
         # caso de (IN)VISIBILIDADE
-        # nesse caso, temos um unico elemento, com accessibility_id, mas tá invisível, filtro = all
+        # nesse caso, temos um unico elemento, com resource_id, mas tá invisível, filtro = all
         # como é necessário que o elemento seja visível,ele é descartado e espera-se que se retorne uma lista vazia: []
         {
-            "desc": "Elemento invisível com accessibility_id",
+            "desc": "Elemento invisível com resource_id",
             "elements": [Element(False, "btn_cancel")],
             "filter_type": "all",
             "debug": False,
             "esperado": []
         },
         # caso de FILTRO POR TIPO
-        # nesse caso, temos dois elementos visíveis, com accessibility_id, um é button e o outro é textview, filtro = button
+        # nesse caso, temos dois elementos visíveis, com resource_id, um é button e o outro é textview, filtro = button
         # como o filtro é button, apenas o elemento da classe "Button" deve ser retornado
         {
             "desc": "Filtro por botão (classe Button)",
@@ -90,7 +91,7 @@ if __name__ == "__main__":
             "esperado": ["btn_ok"]
         },
         # caso de FORMATO DEBUG
-        # nesse caso, temos dois elementos visíveis, com accessibility_id, classe EditText (input), filtro = input, modo debug = true
+        # nesse caso, temos dois elementos visíveis, com resource_id, classe EditText (input), filtro = input, modo debug = true
         # como ambos atendem aos critérios, e o modo debug tá ativado, o retorno esperado deve conter dicionários completos com os atributos de cada elemento
         {
             "desc": "Filtro por input (classe EditText)",
@@ -101,8 +102,8 @@ if __name__ == "__main__":
             "filter_type": "input",
             "debug": True,
             "esperado": [
-                {"accessibility_id": "inp_email", "text": "", "class": "android.widget.EditText", "clickable": False},
-                {"accessibility_id": "inp_senha", "text": "", "class": "android.widget.EditText", "clickable": False},
+                {"resource_id": "inp_email", "accessibility_id": "null", "text": "", "class": "android.widget.EditText", "clickable": False},
+                {"resource_id": "inp_senha", "accessibility_id": "null", "text": "", "class": "android.widget.EditText", "clickable": False},
             ]
         },
         # caso de TRATAMENTO DE EXCEÇÃO
