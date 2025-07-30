@@ -12,6 +12,6 @@
     "appium": "^2.16.2"
   },
   "devDependencies": {
-    "appium-uiautomator2-driver": "^4.1.0"
+    "appium-uiautomator2-driver": "^4.2.5"
   }
 }
