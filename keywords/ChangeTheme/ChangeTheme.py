@@ -8,11 +8,17 @@ class ChangeTheme:
 
     def __init__(self):
         self._builtin = BuiltIn()
-        self.device_udid = "a83af8e7"  # Mesmo UDID do seu código original
+        self.device_udid = None  
 
     @property
     def appium(self):
         return self._builtin.get_library_instance("AppiumLibrary")
+    
+    @keyword("Set Device UDID")
+    def set_device_udid(self, udid):
+        """Define o UDID do dispositivo dinamicamente"""
+        self.device_udid = udid
+        self._builtin.log(f"UDID definido para: {udid}", "INFO")
 
     def _execute_adb_command(self, command):
         """Executa comando ADB e retorna o resultado"""
