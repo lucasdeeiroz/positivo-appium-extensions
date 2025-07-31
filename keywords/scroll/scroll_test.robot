@@ -1,5 +1,7 @@
 *** Settings ***
 Resource    base_scroll.resource
+Resource    elementos.resource
+
 
 *** Test Cases ***
 Deve realizar scroll no Play Store
@@ -7,9 +9,9 @@ Deve realizar scroll no Play Store
     Start session Play Store
     Sleep    10
     Wait Until Element Is Visible    //androidx.compose.ui.platform.ComposeView[@resource-id="com.android.vending:id/0_resource_name_obfuscated"]/android.view.View/android.view.View[2]/android.view.View/android.view.View[2]/android.view.View[2]
-    Sleep    5
+    Sleep    10
     Scroll Inside
-    ...    xpath=//androidx.compose.ui.platform.ComposeView[@resource-id="com.android.vending:id/0_resource_name_obfuscated"]/android.view.View/android.view.View[1]/android.view.View/android.view.View/android.view.View[1]/android.view.View/android.view.View[3]
+    ...    ${playStore_elemento_xpath}
     ...    direction=left
     ...    percent=0.70
     ...    speed=500
@@ -20,10 +22,10 @@ Deve realizar scroll down no Timer
     Start session Timer
     Sleep    10
     Wait Until Element Is Visible    //android.widget.TextView[@text="Timer"]
-    Sleep    5
+    Sleep    10
     Scroll Inside
-    ...    id=com.digitalchemy.timerplus:id/second_picker
-    ...    direction=up
+    ...    ${timer_elemento_id}
+    ...    direction=down
     ...    percent=0.6
     ...    speed=300
     Sleep    2
