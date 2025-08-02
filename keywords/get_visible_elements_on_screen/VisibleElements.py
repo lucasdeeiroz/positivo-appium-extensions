@@ -7,142 +7,138 @@ import json
 
 class VisibleElements:
     """
-    Keyword personalizada a ser incluída na AppiumLibrary que retorna elementos visíveis na tela, filtrados por tipo.
-    Ideal para testes de validação visual em dispositivos mobile.
+    Custom AppiumLibrary keyword that returns visible elements on the screen with valid resource IDs, filtered by type.
+    Useful for visual validation in mobile automation tests.
     """
 
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
 
 
     def __init__(self):
-    # Inicializa a instância BuiltIn
         self._builtin = BuiltIn()
 
     def _get_appium_driver(self):
-    # Pega o driver atual conectado com o Appium
+    # Gets the current Appium driver instance
         appium_lib = self._builtin.get_library_instance("AppiumLibrary")
         return appium_lib._current_application()
     
     def _find_all_elements(self, driver):
-    # Busca todos os elementos da tela atual via xpath genérico e retorna uma lista dos elementos encontrados
+    # Return all elements in the current screen using a generic XPath
         return driver.find_elements(By.XPATH, "//*")
 
     def _passes_filter(self, el, filter_type):
-    # Aplica o filtro desejado e avalia se um elemento passa por ele
-    # Tem como parâmetros o elemento a ser avaliado e o tipo de filtro
+    # Check if the element matches the given filter type
         """Args:
-            el (WebElement): elemento a ser avaliado.
-            filter_type (str): Tipo de filtro ('all' | 'clickable' | 'text' | 'button' | 'input').
+            el (WebElement): the element to evaluate.
+            filter_type (str): filter type options ('all' | 'clickable' | 'text' | 'button' | 'input').
 
         Returns:
-            bool: True se o elemento atende ao filtro, False caso contrário."""
+            bool: Returns True if the element passes the filter, False otherwise."""
         
-        class_name = el.get_attribute("class") or "" #-> obtém o nome da classe do elemento. Se for None, usa string vazia ("")
-        text = el.text or "" #-> obtém o texto visível no elemento. Se for None, retorna string vazia ("")
-        clickable = el.get_attribute("clickable") == "true" #-> verifica se o atributo "clickable" é true, retornando True ou False
+        class_name = el.get_attribute("class") or ""
+        text = el.text or ""
+        clickable = el.get_attribute("clickable") == "true"
 
-        if filter_type == "all": #-> todo elemento que tiver acessibility_id e for visível é aceito. Sem restrição extra
+        if filter_type == "all":
             return True
-        if filter_type == "clickable": #-> só passa se o elemento tiver clickable="true"
+        if filter_type == "clickable":
             return clickable
-        if filter_type == "text": #-> só passa se o text do elemento for visível (não vazio)
-            return bool(text.strip()) #-> usa strip pra ignorar espaços
-        if filter_type == "button": #-> retorna True se a classe do elemento contém a palavra "Button"
+        if filter_type == "text":
+            # Uses strip() to ignore blank spaces
+            return bool(text.strip())
+        if filter_type == "button":
             return "Button" in class_name
-        if filter_type == "input": #-> retorna True se a classe contém "EditText" (que, no caso, é o componente típico de campos de input em Android)
+        if filter_type == "input":
             return "EditText" in class_name
-        return False #-> retorna False caso nenhum filtro seja reconhecido (oq na prática não deveria acontecer, já que antes de passar o filtro, a gente valida o filter_type)
+        # Returns False in case of an unrecognized filter (should not occur due to prior validation)
+        return False
 
     def _build_debug_dict(self, el, rid):
-    # Cria um dicionário com os atributos do elemento visível, caso o parâmetro debug=True seja passado na keyword
-    # Tem como parâmetro o elemento a ser inspecionado e o valor do acessibility_id do elemento
-    # Pode servir pra validar se aid foi atribuído corretamente ou pra depurar testes que falham pq o botão "sumiu"
+    # Build a structured dictionary of element attributes for debug mode
         """Args:
-            el (WebElement): elemento que passou pelos filtros.
-            accessibility_id (str): Valor do atributo 'accessibility-id' do elemento.
+            el (WebElement): the element that passed the filters.
+            rid (str): the 'resource-id' of the element.
 
         Returns:
-            dict: Dados estruturados do elemento (usado no modo debug)."""
+            dict: Structured data for debugging and inspection.
+        """
         
         return {
             "resource_id": rid,
             "accessibility_id": el.get_attribute("content-desc") or "null",
-            "text": el.text or "", #-> mostra o texto visível do elemento. se não houver texto, retorna "" pra manter o campo presente
-            "class": el.get_attribute("class") or "", #-> retorna a classe do elemento (pra saber o tipo do componente visual). tbm retorna "" caso não haja
-            "clickable": el.get_attribute("clickable") == "true" #-> verifica de clickable é true e converte pra booleano
+            "text": el.text or "",
+            "class": el.get_attribute("class") or "",
+            "clickable": el.get_attribute("clickable") == "true"
         }
 
     @keyword("Get Visible Elements On Screen")
     def get_visible_elements_on_screen(self, filter_type: str = "all", debug: bool = False):
-    # O valor padrão do filter_type é all. caso queira refinar o filtro, passa o filtro desejado
-    # O valor padrão do debug é False. caso queira analisar o modo debug: True
         """
-        Retorna os elementos visíveis na tela que possuem resource_ids válidos,
-        com filtros opcionais por tipo de elemento. Se debug=True, retorna JSON estruturado.
+        Return visible screen elements with valid resource IDs, optionally filtered by type.
 
         Args:
-            filter_type (str): Tipo de elemento desejado. Opções: 'all' | 'clickable' | 'text' | 'button' | 'input'.
-            debug (bool): se True, retorna JSON com atributos extras (modo debug); se False, retorna apenas IDs.
+            filter_type (str): Filter to apply. Options: 'all' | 'clickable' | 'text' | 'button' | 'input'.
+            debug (bool): If debug=True, return full element details as JSON; otherwise, return a list of IDs.
 
         Returns:
-            list: Lista de resource_ids (ou dicionários, se debug=True)."""
+            list: List of filtered visible elements.
+        """
 
-        valid_filters = {'all', 'clickable', 'text', 'button', 'input'} #-> cria a lista de filtros válidos
-        filter_type = filter_type.strip().lower() #-> coloca todas as letras minusculas e sem espaço pra evitar erro por problema na digitação
+        valid_filters = {'all', 'clickable', 'text', 'button', 'input'}
+        # Normalize input to lowercase (lower()) and strip (strip()) spaces to avoid typos
+        filter_type = filter_type.strip().lower()
         if filter_type not in valid_filters:
-            self._builtin.fail(f"Filter inválido '{filter_type}'. Opções: {valid_filters}")
+            self._builtin.fail(f"Invalid filter '{filter_type}'. Options: {valid_filters}")
 
         driver = self._get_appium_driver()
         try:
             elements = self._find_all_elements(driver)
         except WebDriverException as e:
-            self._builtin.log(f"Erro ao buscar elementos: {e}", level="ERROR")
+            self._builtin.log(f"Error fetching elements: {e}", level="ERROR")
             return []
         
-        # antes de qqr filtragem, vamo incluir um log em nível DEBUG pra diagnósticos que eventualmente sejam necessários
-        self._builtin.log(f"Elementos na tela (pré-filtro): {len(elements)}", level="DEBUG")
+        self._builtin.log(f"Found {len(elements)} elements before filtering", level="DEBUG")
 
         visible_elements = []
-        for el in elements: #-> percorre os elementos capturados via driver.find_elements(By.XPATH, "//*")
+        for el in elements:
             try:
-                # primeiro filtro -> visibilidade real
-                if not el.is_displayed(): #-> verifica se o elemento tá visualmente presente e renderizado na tela
-                    continue #-> caso não seja visível, é ignorado
+                # First filter: real visibility
+                if not el.is_displayed():
+                    continue
 
-                # segundo filtro -> precisa ter resource_id
+                # Second filter: must have resource_id
                 res_id = el.get_attribute("resource-id")
                 if not res_id or not res_id.strip() or res_id.strip().lower() == "null":
-                    continue #-> caso não tenha rid, é ignorado
+                    continue
                 rid = res_id.strip()
 
-                # terceiro filtro -> tipo do elemento
-                if not self._passes_filter(el, filter_type): #-> a filtragem só acontece depois da verificação do is_displayed() e do accessibility-id (pra enxugar o processo)
-                    continue #-> caso não passe pelo filtro especificado, é ignorado
+                # Third filter: match element type
+                if not self._passes_filter(el, filter_type):
+                    continue 
 
-                if debug: #-> aqi ele define o modo de retorno
-                    visible_elements.append(self._build_debug_dict(el, rid)) #-> modo debug
+                # Define return format
+                if debug:
+                    # debug mode
+                    visible_elements.append(self._build_debug_dict(el, rid))
                 else:
-                    visible_elements.append(rid) #-> modo normal
+                    # normal mode
+                    visible_elements.append(rid)
 
+            # Ignore elements that are no longer valid
             except (StaleElementReferenceException, NoSuchElementException) as ex:
-            # NoSuchElementException -> "O elemento que você está tentando acessar não existe"
-            # |-> (o seletor pode ta incorreto, e elemento ainda nao foi renderizado na tela, o atributo nao existe)
-            # StaleElementReferenceException -> "O elemento que você está tentando acessar não está mais presente no DOM"
-            # |-> (qnd o DOM é recarregado ou re-renderizado dinamicamente, a ref foi capturada, mas o elemento foi removido ou recriado na tela)
-                self._builtin.log(f"Ignorando elemento por exceção {type(ex).__name__}: {ex}", level="DEBUG")
+            # NoSuchElementException: the element does not exist (e.g., invalid selector or not rendered yet)
+            # StaleElementReferenceException: the element is no longer attached to the DOM (e.g., dynamic re-render)
+                self._builtin.log(f"Ignored element due to {type(ex).__name__}: {ex}", level="DEBUG")
                 continue
-                # é válido incluir um contador de exceções pra reportar qnts de cada tipo ocorrem?
 
-        # depois do loop, ele loga a quantidade de elementos que passaram por todas as etapas
-        count = len(visible_elements) #-> numero de elementos
-        self._builtin.log (f"Total de elementos visíveis (pós-filtro): {count}", level="INFO")
+        # Log total elements that passed all filters
+        count = len(visible_elements)
+        self._builtin.log (f"Total visible elements after filtering: {count}", level="INFO")
 
         if debug:
-            debug_output = json.dumps(visible_elements, indent=2) #-> o json.dumps vai converter a lista de dicionários pra um texto legível, com identação
+            debug_output = json.dumps(visible_elements, indent=2)
             self._builtin.log("DEBUG JSON:\n" + debug_output, level="INFO")
 
         else:
-            self._builtin.log("Elementos visíveis:\n" + json.dumps(visible_elements, indent=2), level="INFO")
-        return visible_elements #-> e retorna a lista final de elementos
-
-# FLUXO: todos os elementos da tela -> is_displayed() == True? -> tem accessibility_id? -> passa no filtro? -> ADD NO RESULTADO
+            self._builtin.log("Visible elements:\n" + json.dumps(visible_elements, indent=2), level="INFO")
+        return visible_elements
