@@ -1,7 +1,4 @@
 *** Settings ***
-
-Documentation     Suite de testes para validar a keyword customizada Get Visible Elements On Screen, que retorna elementos visíveis
-...               na tela com filtros por tipo (all, clickable, text, button, input).
 Library    AppiumLibrary
 Library    OperatingSystem
 Library    Collections
