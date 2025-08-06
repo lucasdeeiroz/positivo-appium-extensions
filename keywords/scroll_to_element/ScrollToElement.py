@@ -7,7 +7,7 @@ import time
 import random
 
 
-class SwipeToElement:
+class ScrollToElement:
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
 
     def __init__(self):
@@ -41,7 +41,7 @@ class SwipeToElement:
         center_y = y + height / 2
         return x, y, width, height, center_x, center_y
 
-    def _perform_swipe(self, start_x, start_y, end_x, end_y, duration=500, steps=20):
+    def _perform_scroll(self, start_x, start_y, end_x, end_y, duration=500, steps=20):
         driver = self.driver
         actions = ActionChains(driver)
         actions.w3c_actions.devices = []
@@ -53,8 +53,8 @@ class SwipeToElement:
 
         for i in range(1, steps + 1):
             t = i / steps
-            interp_x = start_x + t * (end_x - start_x) + random.uniform(-1, 1)
-            interp_y = start_y + t * (end_y - start_y) + random.uniform(-1, 1)
+            interp_x = start_x + t * (end_x - start_x) + random.uniform(-0, 0)
+            interp_y = start_y + t * (end_y - start_y) + random.uniform(-0, 0)
             interp_x, interp_y = self._adjust_to_screen_bounds(
                 interp_x, interp_y,
                 driver.get_window_size()['width'],
@@ -66,8 +66,8 @@ class SwipeToElement:
         finger.create_pointer_up(button=MouseButton.LEFT)
         actions.perform()
 
-    @keyword("Swipe To Element")
-    def swipe_into_element(self, locator, max_swipes=5, direction="down", swipe_distance_ratio=0.4,
+    @keyword("Scroll To Element")
+    def scroll_into_element(self, locator, max_swipes=5, direction="down", swipe_distance_ratio=0.4,
                            duration=500, container_locator=None):
         """
         Swipes vertically or horizontally (optionally within a container element) until the target element is visible.
@@ -76,15 +76,15 @@ class SwipeToElement:
             locator (str): Target element to find.
             max_swipes (int): Maximum number of swipes to attempt.
             direction (str): 'down', 'up', 'left', or 'right'.
-            swipe_distance_ratio (float): Fraction of screen/container size to swipe (0.1 to 0.9).
+            swipe_distance_ratio (float): Fraction of screen/container size to swipe (0.1 to 0.99).
             duration (int): Duration of the swipe in milliseconds.
             container_locator (str): Optional. Element within which the swipe should be confined.
         """
         direction = direction.lower()
         if direction not in ["down", "up", "left", "right"]:
             raise ValueError("Direction must be 'down', 'up', 'left', or 'right'.")
-        if not (0.1 <= swipe_distance_ratio <= 0.9):
-            raise ValueError("Swipe distance ratio must be between 0.1 and 0.9.")
+        if not (0.1 <= swipe_distance_ratio <= 0.99):
+            raise ValueError("Swipe distance ratio must be between 0.1 and 0.99.")
 
         driver = self.driver
         screen_size = driver.get_window_size()
@@ -131,7 +131,7 @@ class SwipeToElement:
                 return
 
             self._builtin.log(f"Swiping from ({start_x}, {start_y}) to ({end_x}, {end_y})", "DEBUG")
-            self._perform_swipe(start_x, start_y, end_x, end_y, duration=duration)
+            self._perform_scroll(start_x, start_y, end_x, end_y, duration=duration)
             time.sleep(0.5)
 
         raise RuntimeError(f"Element '{locator}' not found after {max_swipes} swipe attempts.")
