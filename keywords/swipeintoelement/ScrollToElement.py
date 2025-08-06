@@ -131,7 +131,7 @@ class ScrollToElement:
                 return
 
             self._builtin.log(f"Swiping from ({start_x}, {start_y}) to ({end_x}, {end_y})", "DEBUG")
-            self._perform_swipe(start_x, start_y, end_x, end_y, duration=duration)
+            self._perform_scroll(start_x, start_y, end_x, end_y, duration=duration)
             time.sleep(0.5)
 
         raise RuntimeError(f"Element '{locator}' not found after {max_swipes} swipe attempts.")
