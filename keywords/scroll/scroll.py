@@ -1,3 +1,57 @@
+"""
+Scroll Element Library
+======================
+
+Custom Robot Framework library for performing scroll (swipe) gestures inside scrollable
+elements in mobile applications using Appium.
+
+Overview
+--------
+- Supports locating elements by various strategies: id, xpath, accessibility_id,
+  class_name, android_uiautomator, ios_predicate, ios_class_chain, name.
+- Performs scroll gestures in four directions: up, down, left, right.
+- Configurable scroll distance via `percent` (0.01 to 1.0).
+- Adjustable gesture speed (milliseconds).
+- Validates input parameters and logs detailed success or error messages.
+
+Requirements
+------------
+- Python 3.7+
+- Appium Server configured and running
+- Robot Framework:
+    pip install robotframework
+- AppiumLibrary:
+    pip install robotframework-appiumlibrary
+
+Import in Robot Framework
+-------------------------
+Library    scroll.py
+Library    AppiumLibrary
+
+Usage
+-----
+Scroll Inside    <locator>    direction=<up|down|left|right>    percent=<0.01-1.0>    speed=<ms>
+
+Examples
+--------
+Scroll Inside    xpath=//android.widget.ScrollView    direction=down    percent=0.75    speed=800
+Scroll Inside    id=com.example:id/list              direction=up      percent=0.5     speed=600
+Scroll Inside    accessibility_id=MyScrollable      direction=left    percent=0.8     speed=700
+
+Parameters
+----------
+locator   (str)   Target element locator (required).
+direction (str)   Scroll direction. Default: "down".
+percent   (float) Scroll distance as a percentage of the element size. Default: 0.75.
+speed     (int)   Gesture speed in milliseconds. Default: 800.
+
+Notes
+-----
+- Throws exception if element is not found or parameters are invalid.
+- Uses Appium's `mobile: swipeGesture` command internally.
+"""
+
+
 from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
 
