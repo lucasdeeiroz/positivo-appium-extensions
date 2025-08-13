@@ -2,7 +2,6 @@
 
 Library     AppiumLibrary
 Library     ./Appiumclick.py
-Library     ./AppiumZoomExtensions.py
 Library     OperatingSystem
 Library     DateTime
 
