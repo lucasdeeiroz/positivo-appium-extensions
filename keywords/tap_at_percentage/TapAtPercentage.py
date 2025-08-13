@@ -3,8 +3,8 @@ from robot.libraries.BuiltIn import BuiltIn
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.actions.mouse_button import MouseButton
 
-class ClickAPoint:
-    """Class to click at a specific point on the screen using percentage coordinates."""
+class TapAtPercentage:
+    """Class to tap at a specific point on the screen using percentage coordinates."""
 
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
 
@@ -15,15 +15,15 @@ class ClickAPoint:
     def _driver(self):
         return self._builtin.get_library_instance("AppiumLibrary")._current_application()
 
-    @keyword("Point Click")
-    def click_a_point(self, x, y, duration=100):
+    @keyword("Tap At Percentage")
+    def tap_at_percentage(self, x, y, duration=100):
         """
-        Clicks at a specific point on the screen using percentage coordinates.
+        Taps at a specific point on the screen using percentage coordinates.
 
         Args:
             x (float): X coordinate as a percentage of the screen (0.0 to 1.0).
             y (float): Y coordinate as a percentage of the screen (0.0 to 1.0).
-            duration (int): Duration of the click in milliseconds.
+            duration (int): Duration of the tap in milliseconds.
         """
         try:
             x = float(x)
@@ -49,7 +49,7 @@ class ClickAPoint:
             x_px = int(screen_width * x)
             y_px = int(screen_height * y)
 
-            self._builtin.log(f"Clicking at ({x_px}, {y_px}) [percentages: ({x}, {y})]", level='INFO')
+            self._builtin.log(f"Tapping at ({x_px}, {y_px}) [percentages: ({x}, {y})]", level='INFO')
 
             actions = ActionChains(driver)
             touch = actions.w3c_actions.add_pointer_input('touch', 'finger')
@@ -59,8 +59,8 @@ class ClickAPoint:
             touch.create_pointer_up(button=MouseButton.LEFT)
             actions.perform()
 
-            self._builtin.log(f"Click performed at ({x_px}, {y_px})", level='INFO')
+            self._builtin.log(f"Tap performed at ({x_px}, {y_px})", level='INFO')
             return True
 
         except Exception as e:
-            raise RuntimeError(f"Error performing click: {str(e)}")
+            raise RuntimeError(f"Error performing tap: {str(e)}")

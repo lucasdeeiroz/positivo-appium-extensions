@@ -1,8 +1,7 @@
 *** Settings ***
 
 Library     AppiumLibrary
-# Library     ./ClickAPoint.py
-Library     ./click_a_point.py
+Library     ./TapAtPercentage.py
 
 *** Keywords ***
 Start Session Calculator
