@@ -1,6 +1,6 @@
 *** Settings ***
 Library    AppiumLibrary
-Library    ./ChangeTheme.py      # Passa o UDID como parâmetro
+Library    ./ChangeTheme.py
 Library    Collections
 Library    BuiltIn
 
@@ -14,6 +14,7 @@ ${APP_PACKAGE}        com.miui.home
 ${APP_ACTIVITY}       .launcher.Launcher
 ${THEME_CHANGE_DELAY}   3
 
+
 *** Keywords ***
 Setup Test Environment
     [Documentation]    Configura ambiente de teste inicial
@@ -25,8 +26,9 @@ Setup Test Environment
     ...    appPackage=${APP_PACKAGE}
     ...    appActivity=${APP_ACTIVITY}
     ...    noReset=true
-    Sleep    2s    # Aguarda carregamento da tela inicial
-
+    Set Device UDID    ${UDID}
+    Sleep    2s
+   
 Teardown Test Environment
     [Documentation]    Limpa ambiente após teste
     Close Application
