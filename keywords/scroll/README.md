@@ -1,50 +1,50 @@
 # Scroll Element Library
 
-Biblioteca customizada para **Robot Framework** e **Appium**, responsável por executar gestos de *scroll/swipe* dentro de elementos específicos da interface de aplicativos móveis.  
-Desenvolvida para oferecer **controle preciso sobre direção, distância e velocidade**, garantindo interações confiáveis mesmo em áreas internas de elementos complexos.
+A custom library for **Robot Framework** and **Appium**, designed to execute *scroll/swipe* gestures **inside specific UI elements** of mobile applications.  
+It provides **precise control over direction, distance, and speed**, ensuring reliable interactions even within internal areas of complex elements.
 
 ---
 
-## Sumário
-1. [Visão Geral](#visão-geral)  
-2. [Pré-requisitos](#pré-requisitos)  
-3. [Instalação](#instalação)  
-4. [Uso](#uso)  
-5. [Parâmetros](#parâmetros)  
-6. [Exemplos de Uso](#exemplos-de-uso)  
-7. [Observações](#observações)  
-8. [Licença](#licença)
+## Table of Contents
+1. [Overview](#overview)  
+2. [Prerequisites](#prerequisites)  
+3. [Installation](#installation)  
+4. [Usage](#usage)  
+5. [Parameters](#parameters)  
+6. [Usage Examples](#usage-examples)  
+7. [Notes](#notes)  
+8. [License](#license)
 
 ---
 
-## Visão Geral
-O keyword `Scroll Inside` é um *wrapper* para o comando **`mobile: swipeGesture`** do Appium, permitindo:
-- Localização de elementos por diferentes estratégias (`id`, `xpath`, `accessibility_id`, etc.).
-- Definição da direção (`up`, `down`, `left`, `right`).
-- Controle do percentual de deslocamento dentro do elemento.
-- Ajuste de velocidade do gesto.
+## Overview
+The `Scroll Inside` keyword is a *wrapper* for the **`mobile: swipeGesture`** Appium command, enabling:
+- Element location via different strategies (`id`, `xpath`, `accessibility_id`, etc.).
+- Direction control (`up`, `down`, `left`, `right`).
+- Scroll percentage within the element.
+- Gesture speed adjustment.
 
-Essa abordagem evita *scrolls* imprecisos na tela inteira, atuando diretamente **apenas no elemento alvo**.
+This approach prevents imprecise full-screen scrolls by interacting **only with the target element**.
 
 ---
 
-## Pré-requisitos
+## Prerequisites
 - **Python** 3.7+
-- **Appium Server** configurado e em execução.
-- **Robot Framework** instalado:
+- **Appium Server** installed and running.
+- **Robot Framework**:
   ```bash
   pip install robotframework
   ```
-- **AppiumLibrary** para Robot Framework:
+- **AppiumLibrary** for Robot Framework:
   ```bash
   pip install robotframework-appiumlibrary
   ```
 
 ---
 
-## Instalação
-1. Adicione o arquivo `scroll.py` ao diretório do seu projeto de testes.
-2. Importe a biblioteca no seu arquivo `.robot`:
+## Installation
+1. Add the `scroll.py` file to your test project directory.
+2. Import the library into your `.robot` file:
    ```robot
    Library    scroll.py
    Library    AppiumLibrary
@@ -52,57 +52,57 @@ Essa abordagem evita *scrolls* imprecisos na tela inteira, atuando diretamente *
 
 ---
 
-## Uso
-### Sintaxe
+## Usage
+### Syntax
 ```robot
 Scroll Inside    <locator>    direction=<up|down|left|right>    percent=<0.01-1.0>    speed=<ms>
 ```
 
-### Formatos de Localizador Suportados
-- `id=com.exemplo:id/meu_elemento`
-- `xpath=//android.widget.TextView[@text="Exemplo"]`
-- `accessibility_id=MeuElemento`
+### Supported Locator Formats
+- `id=com.example:id/my_element`
+- `xpath=//android.widget.TextView[@text="Example"]`
+- `accessibility_id=MyElement`
 - `class_name=android.widget.Button`
-- `android_uiautomator=new UiSelector().text("Exemplo")`
-- `ios_predicate=name == "Exemplo"`
-- `ios_class_chain=**/XCUIElementTypeButton[`name == "Exemplo"`]`
+- `android_uiautomator=new UiSelector().text("Example")`
+- `ios_predicate=name == "Example"`
+- `ios_class_chain=**/XCUIElementTypeButton[`name == "Example"`]`
 
-Também é possível passar apenas `//meu/xpath` que será interpretado automaticamente como `xpath=...`.
-
----
-
-## Parâmetros
-| Nome         | Tipo  | Obrigatório | Padrão  | Descrição |
-|--------------|-------|-------------|---------|-----------|
-| `locator`    | str   | ✅          | —       | Localizador do elemento alvo |
-| `direction`  | str   | ❌          | `down`  | Direção do scroll (`up`, `down`, `left`, `right`) |
-| `percent`    | float | ❌          | `0.75`  | Percentual do deslocamento (0.01 a 1.0) |
-| `speed`      | int   | ❌          | `800`   | Velocidade do gesto em milissegundos |
+You can also pass just `//my/xpath`, which will be automatically interpreted as `xpath=...`.
 
 ---
 
-## Exemplos de Uso
+## Parameters
+| Name         | Type  | Required | Default | Description |
+|--------------|-------|----------|---------|-------------|
+| `locator`    | str   | ✅       | —       | Locator of the target element |
+| `direction`  | str   | ❌       | `down`  | Scroll direction (`up`, `down`, `left`, `right`) |
+| `percent`    | float | ❌       | `0.75`  | Scroll distance percentage (0.01 to 1.0) |
+| `speed`      | int   | ❌       | `800`   | Gesture speed in milliseconds |
+
+---
+
+## Usage Examples
 ```robot
 *** Settings ***
 Library    scroll.py
 Library    AppiumLibrary
 
 *** Test Cases ***
-Scroll Para Baixo Por XPath
+Scroll Down by XPath
     Scroll Inside    xpath=//android.widget.ScrollView    direction=down
 
-Scroll Para Cima Usando ID
-    Scroll Inside    id=com.exemplo:id/lista    direction=up    percent=0.5    speed=1000
+Scroll Up by ID with Custom Speed
+    Scroll Inside    id=com.example:id/list    direction=up    percent=0.5    speed=1000
 ```
 
 ---
 
-## Observações
-- O `Scroll Inside` atua **apenas dentro do elemento localizado**, não afetando a tela inteira.
-- O comando `mobile: swipeGesture` é compatível com drivers Appium que utilizam **W3C Actions**.
-- Valores muito baixos em `percent` podem resultar em gestos imperceptíveis.
+## Notes
+- `Scroll Inside` works **only within the located element**, not the entire screen.
+- The `mobile: swipeGesture` command is compatible with Appium drivers that support **W3C Actions**.
+- Very low `percent` values may result in imperceptible gestures.
 
 ---
 
-## Licença
-Este projeto é de uso livre, podendo ser modificado e distribuído para fins pessoais ou comerciais.
+## License
+This project is free to use, modify, and distribute for personal or commercial purposes.
