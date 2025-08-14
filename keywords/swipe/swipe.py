@@ -170,8 +170,12 @@ class swipe:
 
         elif direction in ["up", "down"]:
             start_y = rect["y"] + rect["height"] * start_margin
-            end_y = rect["y"] + rect["height"] * percent
+            end_y   = rect["y"] + rect["height"] * percent
             x = rect["x"] + rect["width"] / 2
+
+        # Invert only for 'up' (Y axis increases downward)
+        if direction == "up":
+            start_y, end_y = end_y, start_y
 
             driver.execute_script("mobile: dragGesture", {
                 "startX": round(x),
@@ -179,8 +183,7 @@ class swipe:
                 "endX": round(x),
                 "endY": round(end_y),
                 "speed": speed
-            })
-
+        })
         # Log success
         self._builtin.log(
             f"[SUCCESS] Drag performed to {direction} with percent={percent}, speed={speed}", "INFO"
