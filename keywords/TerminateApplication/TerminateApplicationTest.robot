@@ -39,3 +39,11 @@ Testar Falha ao Encerrar Aplicativo Inexistente
     ${app_id}=    Set Variable    com.app.inexistente
     Log    Tentando encerrar aplicativo inexistente: ${app_id}
     Run Keyword And Expect Error    *    Terminate Application Extension    ${app_id}
+
+Testar Falha com App Não Iniciado
+    [Tags]    Negative    TerminateFail
+    [Documentation]    Verifica se a keyword falha ao tentar encerrar um aplicativo que não está em execução.
+    [Teardown]    Close Application
+    ${app_id}=    Set Variable    com.android.chrome
+    Log    Tentando encerrar aplicativo não iniciado: ${app_id}
+    Run Keyword And Expect Error    *    Terminate Application Extension    ${app_id}
