@@ -30,3 +30,20 @@ Testar Encerramento do TikTok
     ${app_id}=    Get Current App Id
     Log    Encerrando o aplicativo com ID: ${app_id}
     Terminate Application Extension        ${app_id}
+
+Testar Falha ao Encerrar Aplicativo Inexistente
+    [Tags]    Negative    TerminateFail
+    [Documentation]    Verifica se a keyword falha ao tentar encerrar um aplicativo com um ID inexistente.
+    [Teardown]    Close Application
+    Start Session Youtube
+    ${app_id}=    Set Variable    com.app.inexistente
+    Log    Tentando encerrar aplicativo inexistente: ${app_id}
+    Run Keyword And Expect Error    *    Terminate Application Extension    ${app_id}
+
+Testar Falha com App Não Iniciado
+    [Tags]    Negative    TerminateFail
+    [Documentation]    Verifica se a keyword falha ao tentar encerrar um aplicativo que não está em execução.
+    [Teardown]    Close Application
+    ${app_id}=    Set Variable    com.android.chrome
+    Log    Tentando encerrar aplicativo não iniciado: ${app_id}
+    Run Keyword And Expect Error    *    Terminate Application Extension    ${app_id}
