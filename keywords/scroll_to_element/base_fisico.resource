@@ -2,7 +2,6 @@
 
 Library     AppiumLibrary
 Library     ScrollToElement.py
-Library     ScrollIntoElement.py
 Library     OperatingSystem
 Library     DateTime
 
