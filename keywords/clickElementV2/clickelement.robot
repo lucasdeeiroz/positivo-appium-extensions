@@ -1,10 +1,10 @@
 *** Settings ***
-Library    AppiumLibrary
-Resource   base.resource
+Library           AppiumLibrary
+Library           ./Appiumclick.py
+Resource          ./base.resource
 
 *** Test Cases ***
-
-# Clica no centro do elemento 'Camera' (50% largura e 50% altura)
+# Clicks at the center of the 'Camera' element (50% width and 50% height)
 Click Camera At Center
     [Tags]    camera
     Start session
@@ -12,7 +12,7 @@ Click Camera At Center
     ClickC    xpath=//android.widget.TextView[@content-desc="Camera"]    0.5    0.5
     Close session
 
-# Clica no canto superior esquerdo do elemento 'Camera' (0% largura, 0% altura)
+# Clicks at the top left corner of the 'Camera' element (0% width, 0% height)
 Click Camera At Top Left
     [Tags]    camera    position
     Start session
@@ -20,7 +20,7 @@ Click Camera At Top Left
     ClickC    xpath=//android.widget.TextView[@content-desc="Camera"]    0    0
     Close session
 
-# Clica a 10px da esquerda e 20px do topo do elemento 'Camera'
+# Clicks 10px from the left and 20px from the top of the 'Camera' element
 Click Camera At Absolute Offset
     [Tags]    camera    offset
     Start session
@@ -28,10 +28,33 @@ Click Camera At Absolute Offset
     ClickC    xpath=//android.widget.TextView[@content-desc="Camera"]    10    20
     Close session
 
-# Clica no centro do botão 8 da calculadora (50% largura e altura)
+# Clicks at the center of calculator button 8 (50% width and height)
 Click Calculator Button 8 At Center
-    [Tags]    calculadora
+    [Tags]    calculator
     Start session 1
     Wait Until Element Is Visible    id=com.google.android.calculator:id/digit_8    5s
     ClickC    id=com.google.android.calculator:id/digit_8    0.5    0.5
+    Close session
+
+# Tests error for element not found
+ClickC Element Not Found - Fixed
+    [Tags]    error    locator
+    Start session
+    Run Keyword And Expect Error    ValueError: Element with locator*    ClickC    xpath=//android.widget.TextView[@content-desc="NaoExiste"]    10    20
+    Close session
+
+# Tests error for coordinates out of bounds
+ClickC Coordinates Out Of Bounds - Fixed
+    [Tags]    error    coordinates
+    Start session
+    Wait Until Element Is Visible    xpath=//android.widget.TextView[@content-desc="Camera"]    5s
+    Run Keyword And Expect Error    ValueError: Coordinates*out of device screen bounds*    ClickC    xpath=//android.widget.TextView[@content-desc="Camera"]    200    200
+    Close session
+
+# Tests error for invalid parameter type
+ClickC Invalid Offset Type - Fixed
+    [Tags]    error    parameter
+    Start session 1
+    Wait Until Element Is Visible    id=com.google.android.calculator:id/digit_8    5s
+    Run Keyword And Expect Error    ValueError: xoffset and yoffset must be numbers*    ClickC    id=com.google.android.calculator:id/digit_8    abc    def
     Close session
