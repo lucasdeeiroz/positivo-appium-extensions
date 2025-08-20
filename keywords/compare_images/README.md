@@ -1,6 +1,6 @@
 # Screenshot Comparison — AppiumLibrary Extension
 
-`Capturar Screenshot Inicial Como` and `Comparar Screenshot Final Com` are custom keywords designed to capture and compare screenshots during automated tests with Appium and Robot Framework.
+`Capture Initial Screenshot As` and `Compare Final Screenshot With` are custom keywords designed to capture and compare screenshots during automated tests with Appium and Robot Framework.
 They use OpenCV and SSIM (Structural Similarity Index) to detect visual differences between a reference image and the current app screen.
 
 ## Purpose
@@ -11,12 +11,12 @@ They use OpenCV and SSIM (Structural Similarity Index) to detect visual differen
 - Fail tests when differences exceed an allowed tolerance.
 
 ## How It Works
-### 1️⃣ Capturar Screenshot Inicial Como
+### 1️⃣ Capture Initial Screenshot As
 Saves the current device screen as the reference screenshot.
 - Creates the screenshot folder if it doesn’t exist.
 - File is saved in the specified path with the given filename.
 
-### 2️⃣ Comparar Screenshot Final Com
+### 2️⃣ Compare Final Screenshot With
 Captures the current screen as the final screenshot.
 - Loads both the reference image and the final image.
 - Converts them to grayscale and calculates SSIM similarity.
@@ -26,19 +26,19 @@ Captures the current screen as the final screenshot.
 ## Parameters
 | Keyword                        | Parameter           | Description                                 |
 |--------------------------------|---------------------|---------------------------------------------|
-| Capturar Screenshot Inicial Como | nome_arquivo        | Filename for the reference screenshot.      |
-|                                | caminho (optional)  | Folder path (default: screenshots).         |
-| Comparar Screenshot Final Com   | arquivo_referencia  | Path to the reference screenshot.           |
-|                                | tolerancia (optional)| Max allowed difference (default: 0.01 = 1%).|
-|                                | caminho (optional)  | Folder for saving screenshots and diff image.|
+| Capture Initial Screenshot As   | filename            | Filename for the reference screenshot.      |
+|                                | path (optional)     | Folder path (default: screenshots).         |
+| Compare Final Screenshot With   | reference_file      | Path to the reference screenshot.           |
+|                                | tolerance (optional)| Max allowed difference (default: 0.10 = 10%).|
+|                                | path (optional)     | Folder for saving screenshots and diff image.|
 
 ## Tolerance & SSIM
 - SSIM ranges from 0 (completely different) to 1 (identical).
-- `percentual_diferenca = 1 - score` is used to calculate the visual difference.
-- If `percentual_diferenca > tolerancia`, the keyword raises an AssertionError.
+- `percent_difference = 1 - score` is used to calculate the visual difference.
+- If `percent_difference > tolerance`, the keyword raises an AssertionError.
 
 **Example:**
-- If similarity is 0.9750, then `percentual_diferenca = 0.025` → 2.5% difference.
+- If similarity is 0.9750, then `percent_difference = 0.025` → 2.5% difference.
 - If tolerance is 1%, the comparison fails.
 
 ## How To Execute
@@ -53,12 +53,12 @@ Capture And Compare Screens
 		Open Application    http://localhost:4723/wd/hub    platformName=Android    deviceName=emulator-5554    appPackage=com.example    appActivity=.MainActivity
     
 		# Capture reference
-		Capturar Screenshot Inicial Como    baseline.png
+		Capture Initial Screenshot As    baseline.png
     
 		# Perform some UI action...
     
 		# Compare with tolerance of 2%
-		Comparar Screenshot Final Com    screenshots/baseline.png    tolerancia=0.02
+		Compare Final Screenshot With    screenshots/baseline.png    tolerance=0.02
 ```
 
 Run with:
