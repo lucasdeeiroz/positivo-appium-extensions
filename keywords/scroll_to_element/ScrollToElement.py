@@ -103,19 +103,19 @@ class ScrollToElement:
         swipe_distance_x = swipe_distance_ratio * width
         swipe_distance_y = swipe_distance_ratio * height
 
-        if direction == "up":
+        if direction == "down":
             start_x, end_x = center_x, center_x
             start_y = y + height // 2 + swipe_distance_y / 2
             end_y = y + height // 2 - swipe_distance_y / 2
-        elif direction == "down":
+        elif direction == "up":
             start_x, end_x = center_x, center_x
             start_y = y + height // 2 - swipe_distance_y / 2
             end_y = y + height // 2 + swipe_distance_y / 2
-        elif direction == "left":
+        elif direction == "right":
             start_y, end_y = center_y, center_y
             start_x = x + width // 2 + swipe_distance_x / 2
             end_x = x + width // 2 - swipe_distance_x / 2
-        elif direction == "right":
+        elif direction == "left":
             start_y, end_y = center_y, center_y
             start_x = x + width // 2 - swipe_distance_x / 2
             end_x = x + width // 2 + swipe_distance_x / 2
