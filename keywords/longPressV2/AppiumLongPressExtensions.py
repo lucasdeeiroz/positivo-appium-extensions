@@ -4,18 +4,36 @@ from selenium.webdriver.common.action_chains import ActionChains
 
 
 class AppiumLongPressExtensions:
+    """
+    Library for performing long press actions on elements using Appium.
+    Provides keywords for mobile automation requiring long press gestures.
+    """
 
-    
     def __init__(self):
+        """
+        Initializes the AppiumLongPressExtensions library and sets up the BuiltIn instance.
+        """
         self._builtin = BuiltIn()
-    
+
     @property
     def _driver(self):
+        """
+        Returns the current Appium driver instance from AppiumLibrary.
+        """
         return self._builtin.get_library_instance('AppiumLibrary')._current_application()
-    
+
     @keyword('LongP')
     def long_press(self, locator, duration=1000):
-        
+        """
+        Performs a long press on the specified element for a given duration.
+
+        Args:
+            locator (str): The locator of the element to long press.
+            duration (int): Duration of the long press in milliseconds. Default is 1000ms.
+        Raises:
+            ValueError: If the element is not found.
+            RuntimeError: If the Appium driver is not initialized.
+        """
         driver = self._driver
         
         locator_parts = locator.split('=', 1)
