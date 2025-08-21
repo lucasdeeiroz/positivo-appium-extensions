@@ -132,10 +132,16 @@ class scroll:
             if not element:
                 raise Exception(f"Element not found using locator: {locator}")
 
-            # Execute the swipe gesture inside the located element
+            # Adjust only vertical directions (Appium interprets as finger movement)
+            gesture_direction = direction
+            if direction == "down":
+                gesture_direction = "up"    # To scroll content down, finger goes up
+            elif direction == "up":
+                gesture_direction = "down"  # To scroll content up, finger goes down
+
             driver.execute_script("mobile: swipeGesture", {
                 "elementId": element.id,
-                "direction": direction,
+                "direction": gesture_direction,
                 "percent": percent,
                 "speed": speed
             })
