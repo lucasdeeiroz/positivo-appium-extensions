@@ -29,3 +29,17 @@ Deve realizar scroll down no Timer
     ...    percent=0.6
     ...    speed=300
     Sleep    2
+    
+#TESTE PARA RETORNO DE ERRO (ValueError: percent must be between 0.01 and 1.0)
+Deve realizar scroll down no Timer com erro
+    [Tags]    scroll
+    Start session Timer
+    Sleep    10
+    Wait Until Element Is Visible    //android.widget.TextView[@text="Timer"]
+    Sleep    10
+    Scroll Inside
+    ...    ${timer_elemento_id}
+    ...    direction=down
+    ...    percent=1.1
+    ...    speed=300
+    Sleep    2
