@@ -1,3 +1,78 @@
+"""
+Zoom Element Library
+====================
+
+Custom Robot Framework library for performing a realistic pinch-out (zoom-in)
+gesture on Android/iOS using Appium and Selenium W3C Pointer Actions.
+
+Overview
+--------
+- Works on a target element (by locator) or at screen center when no locator is provided.
+- Adjustable zoom scale (> 1.0), gesture duration, direction (vertical/horizontal),
+  movement amplitude, and interpolation steps.
+- Validates input arguments and constrains finger coordinates to the visible screen bounds.
+- Produces clear Robot Framework logs for troubleshooting and reproducibility.
+
+Requirements
+------------
+- Python 3.7+
+- Appium Server configured and running
+- Robot Framework:
+    pip install robotframework
+- AppiumLibrary:
+    pip install robotframework-appiumlibrary
+- Selenium (bundled with AppiumLibrary dependencies)
+
+Import in Robot Framework
+-------------------------
+Library    GestureZoom.py
+Library    AppiumLibrary
+
+Usage
+-----
+Perform Zoom Gesture    locator=<strategy=value>|None    scale=<float>    duration=<ms>
+...                     direction=<vertical|horizontal>  movement=<px>    pause=<s>    steps=<int>
+
+Examples
+--------
+*** Settings ***
+Library    GestureZoom.py
+Library    AppiumLibrary
+
+*** Test Cases ***
+Zoom On Element (Vertical)
+    Perform Zoom Gesture    locator=id=map_view    scale=1.8    duration=700    direction=vertical    movement=280
+
+Zoom At Screen Center (Horizontal)
+    Perform Zoom Gesture    scale=2.0    direction=horizontal    movement=300    steps=60
+
+Parameters
+----------
+locator    (str | None)  Locator of the element to zoom in on. If None, uses the screen center. Default: None.
+scale      (float)       Zoom scale factor (> 1.0 required). Default: 1.5.
+duration   (int)         Gesture duration in milliseconds. Default: 500.
+direction  (str)         Gesture direction: "vertical" or "horizontal". Default: "vertical".
+movement   (int|float)   Distance in pixels each finger moves from the center. Default: 300.
+pause      (float)       Pause in seconds before movement starts. Default: 0.1.
+steps      (int)         Number of interpolation steps for gesture realism. Default: 50.
+
+Notes
+-----
+- Uses Selenium ActionChains (W3C Pointer Actions) to synthesize a two-finger zoom-in.
+- Finger start positions are placed close to the center and move outward symmetrically.
+- Coordinates are clamped to the device screen size to avoid out-of-bounds gestures.
+
+Errors/Exceptions
+-----------------
+- ValueError: if `scale` ≤ 1.0, invalid `direction`, non-positive `duration`/`movement`,
+  or malformed `locator` (must be "strategy=value" when provided).
+- RuntimeError: if Appium driver is unavailable, the element cannot be found, or any
+  error occurs during gesture execution (wrapped with a descriptive message).
+- WebDriverException (from underlying driver): if the session becomes invalid or the device
+  cannot perform the requested pointer actions.
+"""
+
+
 from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
 from selenium.webdriver.common.action_chains import ActionChains
