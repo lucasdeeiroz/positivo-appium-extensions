@@ -1,3 +1,79 @@
+"""
+Pinch Element Library
+=====================
+
+Custom Robot Framework library for performing a realistic pinch-in (zoom-out)
+gesture on Android/iOS using Appium and Selenium W3C Pointer Actions.
+
+Overview
+--------
+- Works on a target element (by locator) or at screen center when no locator is provided.
+- Adjustable pinch scale (0.1 ≤ scale < 1.0), gesture duration, direction (vertical/horizontal),
+  movement amplitude (initial distance from center), and interpolation steps.
+- Validates input arguments and constrains finger coordinates to the visible screen bounds.
+- Produces clear Robot Framework logs for troubleshooting and reproducibility.
+
+Requirements
+------------
+- Python 3.7+
+- Appium Server configured and running
+- Robot Framework:
+    pip install robotframework
+- AppiumLibrary:
+    pip install robotframework-appiumlibrary
+- Selenium (bundled with AppiumLibrary dependencies)
+
+Import in Robot Framework
+-------------------------
+Library    GesturePinch.py
+Library    AppiumLibrary
+
+Usage
+-----
+Perform Pinch Gesture    locator=<strategy=value>|None    scale=<float>    duration=<ms>
+...                      direction=<vertical|horizontal>  movement=<px>    pause=<s>    steps=<int>
+
+Examples
+--------
+*** Settings ***
+Library    GesturePinch.py
+Library    AppiumLibrary
+
+*** Test Cases ***
+Pinch On Image (Vertical)
+    Perform Pinch Gesture    locator=xpath=//android.widget.ImageView[1]    scale=0.6
+    ...    duration=600    direction=vertical    movement=380
+
+Pinch At Screen Center (Horizontal)
+    Perform Pinch Gesture    scale=0.5    direction=horizontal    movement=400    steps=55
+
+Parameters
+----------
+locator    (str | None)  Locator of the element to pinch on. If None, uses the screen center. Default: None.
+scale      (float)       Pinch scale factor (0.1 ≤ scale < 1.0 required). Default: 0.5.
+duration   (int)         Gesture duration in milliseconds. Default: 500.
+direction  (str)         Gesture direction: "vertical" or "horizontal". Default: "vertical".
+movement   (int|float)   Distance in pixels each finger starts from the center. Default: 400.
+pause      (float)       Pause in seconds before movement starts. Default: 0.1.
+steps      (int)         Number of interpolation steps for gesture realism. Default: 50.
+
+Notes
+-----
+- Uses Selenium ActionChains (W3C Pointer Actions) to synthesize a two-finger pinch-in.
+- Fingers start apart at a distance derived from `movement * scale` and move toward the center.
+- Coordinates are clamped to the device screen size to avoid out-of-bounds gestures.
+
+Errors/Exceptions
+-----------------
+- ValueError: if `scale` is outside [0.1, 1.0), invalid `direction`, non-positive
+  `duration`/`movement`, or malformed `locator` (must be "strategy=value" when provided).
+- RuntimeError: if Appium driver is unavailable, the element cannot be found, or any
+  error occurs during gesture execution (wrapped with a descriptive message).
+- WebDriverException (from underlying driver): if the session becomes invalid or the device
+  cannot perform the requested pointer actions.
+"""
+
+
 from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
 from selenium.webdriver.common.action_chains import ActionChains
