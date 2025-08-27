@@ -802,7 +802,7 @@ Contribuições são bem-vindas! Por favor, consulte o arquivo [CONTRIBUTING.md]
 
 ## Licença
 
-Este projeto está licenciado sob a licença MIT - consulte o arquivo [LICENSE](LICENSE) para obter detalhes.
+Este projeto está licenciado sob a licença Apache-2.0 - consulte o arquivo [LICENSE](LICENSE) para obter detalhes. Esta licença foi escolhida para manter compatibilidade com o ecossistema Robot Framework e Appium.
 
 ## Troubleshooting
 
