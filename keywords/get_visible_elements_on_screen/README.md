@@ -1,23 +1,28 @@
 # Get Visible Elements On Screen — AppiumLibrary Extension
 
-`VisibleElements` is a custom keyword to retrieve visible UI elements from the screen, with filtering options by type and optional debug mode. Designed for mobile test automation with Robot Framework.
+`VisibleElements` is a custom keyword to retrieve visible UI elements from the screen, with optional type filtering, identifier selection (`resource_id`, `content-desc`) and optional debug mode. Designed for mobile test automation with Robot Framework.
 
 **Element Filtering Flow**
 All screen elements
        ↓
 is_displayed() == True?
        ↓
-Has valid resource-id?
-       ↓
 Passes filter type? (e.g., clickable, text)
        ↓
+Yields a chosen identifier according to id_mode? (resource-id → fallback to content-desc in auto)
+       ↓
+Not a duplicate? (dedupe by (kind, value))
+       ↓
 → Add to result
+
+**Note:** On Android,  `accessibility_id` is an alias of `content-desc`.
+The result in `auto` mode is a mixed list of identifiers (some `resource-id`, some `content-desc`).
 
 ---
 
 ## Purpose
 
-Provide a reliable method to capture **visible and valid UI elements** during Appium-based mobile testing, filtering results based on common element types and excluding non-visible or invalid references.
+Provide a reliable method to capture **visible and valid UI elements** during Appium-based mobile testing, broadening coverage beyond `resource-id`-only by supporting `content-desc` (accessibility) as a fallback or as the primary mode, while keeping the interface simple.
 
 ---
 
@@ -26,12 +31,17 @@ Provide a reliable method to capture **visible and valid UI elements** during Ap
 The keyword works by:
 1. Capturing **all UI elements** from the screen using a generic XPath (`//*`);
 2. Filtering out:
+   2. Filtering out:
    - Elements that are **not visible** (`is_displayed() == False`);
-   - Elements **without a valid `resource-id`**;
    - Elements **that do not match the selected filter** (`clickable`, `text`, etc.);
+   - Elements **without a usable identifier according to `id_mode`**:
+       - `auto` → try `resource-id`, else fallback to `content-desc`;
+       - `resource_id` → only `resource-id`;
+       - `accessibility_id` → only `content-desc`;
+   - Duplicates, using a set on `(kind, value)` (e.g., `("resource_id","com.app:id/login")`);
 3. Returning a list of:
-   - `resource-id` strings (default mode);
-   - Or structured dictionaries (debug mode).
+   - Identifier strings (`resource-id` or `content-desc`, depending on selection); or
+   - Or structured dictionaries (debug mode) including both the selected identifier and raw attributes for inspection.
 
 ---
 
@@ -45,11 +55,11 @@ Library    VisibleElements.py
 
 *** Test Cases ***
 Return Clickable Elements
-    ${result}=    Get Visible Elements On Screen    clickable
+    ${result}=    Get Visible Elements On Screen    clickable  auto
     Log    ${result}
 
 Return Text Fields in Debug Mode
-    ${result}=    Get Visible Elements On Screen    text    debug=True
+    ${result}=    Get Visible Elements On Screen    text   auto    debug=True
     Log    ${result}
 ```
 
@@ -72,19 +82,27 @@ Make sure that:
 
 ## Arguments
 
-| Argument      | Type | Default | Description                                                                         |
-|---------------|------|---------|-------------------------------------------------------------------------------------|
-| `filter_type` | str  | all     | Filter applied to elements. Options: `all`, `clickable`, `text`, `button`, `input`. |
-| `debug`       | bool | False   | If True, returns detailed element info in JSON format; otherwise, just IDs.         |
+| Argument      | Type | Default | Description                                                                                          |
+|---------------|------|---------|------------------------------------------------------------------------------------------------------|
+| `filter_type` | str  | all     | Filter applied to elements. Options: `all`, `clickable`, `text`, `button`, `input`.                  |
+| `id_mode`     | str  | auto    | Identifier mode. Options: `auto`, `resorce_id`, `accessibility_id` (Android alias of `content-desc`) |
+| `debug`       | bool | False   | If True, returns detailed element info in JSON format; otherwise, just IDs.                          |
+
+- In `auto`, the keyword prefers `resource-id`, and falls back to `content-desc` if the former is empty—expanding coverage with a single, simple option.
 
 ---
 
 ## Internal Validations
 
-- Filters only elements with `is_displayed() == True`
-- Requires `resource-id` to be present and non-null
+- Considers only elements with `is_displayed() == True`
+- Chooses an identifier per `id_mode`:
+       - `auto`: `resource-id` → fallback to `content-desc`
+       - `resource_id`: requires non-empty `resource-id`
+       - `accessibility_id`: requires non-empty `content-desc`
 - Applies the appropriate logic for each filter type
+- Deduplicates by tuple `(kind, value)` to avoid cross-type collisions
 - Skips invalid DOM references (`StaleElementReferenceException`, `NoSuchElementException`)
+- Provides informative logging: number of elements discovered and returned; pretty-printed JSON when debug=True
 - Logs total number of elements found and returned
 
 ---
@@ -109,28 +127,25 @@ Make sure that:
 
 The keyword has been validated through:
 
-- **Basic filter validation:** Ensures correct filtering by type
-- **Debug structure validation:** Checks dictionary keys for debug output
-- **Error handling:** Verifies behavior when invalid filters are passed
-- **Edge case handling:** Ensures ignored elements (e.g., no resource-id, blank text, invisible elements) are not returned
+- **Type filtering:** Ensures the category filter returns only matching visible elements on screen
+- **Attribute selector behavior:** Verifies that the selector argument honors resource_id and accessibility_id. When selector=all, results from both attributes are combined without duplicates
+- **Strict combinations & empty results:** Confirms that restrictive combinations may legitimately return an empty list when no nodes satisfy both constraints, and that this does not fail the suite
+- **Debug payload schema:** With debug=True, each returned item contains the expected keys. Tests assert presence and basic types of these fields
+- **Robustness & error handling:** Invisible nodes and nodes missing the selected attribute are excluded. Invalid type/selector values fail fast with a clear, actionable error message
 
 ### Mocked Tests
 
 In addition to automated test cases, mocked test cases were created to validate the core logic of the VisibleElements keyword:
 
-- **Resource-id enforcement:** Ensures that only elements with valid, non-null `resource-id`s are returned
-- **Basic visibility filter:** Validates that only visible elements are considered
-- **Edge case rejection:** Confirms that invisible elements or those missing required attributes are not included in the result
-- **Type-based filtering:** Confirms that elements are returned according to the selected `filter_type` (e.g., `button`, `input`)
-- **Debug output validation:** Verifies that the debug mode returns detailed dictionaries with expected attributes
-- **Exception handling:** Validates that `StaleElementReferenceException` are gracefully handled and logged
+
 
 ---
 
 ##  Known limitations and errors
 
-- Elements without `resource-id` are ignored
+- Elements lacking **both** `resource-id` **and** `content-desc` are ignored (no usable identifier)
 - Elements from hybrid/native-web views may not be captured
 - Invalid `filter_type` raises a `BuiltIn.fail()` error with accepted options
 - If screen transitions or animations occur during element lookup, stale elements may be more frequent
-- Designed primarily for Android; may need adaptation for iOS
+- Designed primarily for Android; iOS may require mapping to equivalent attributes (e.g., `name`/`label`)
+- The result list in `auto` is mixed: some entries are `resource-id`, others are `content-desc`
