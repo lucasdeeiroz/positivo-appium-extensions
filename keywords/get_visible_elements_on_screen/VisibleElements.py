@@ -112,7 +112,7 @@ class VisibleElements:
             "identifier": {"value": chosen_value, "kind": chosen_kind},
             "resource_id": self._safe_attr(el, "resource-id"),
             "accessibility_id": self._safe_attr(el, "content-desc"),
-            "text": el.text or "",
+            "text": self._safe_attr(el, "text"),
             "class": self._safe_attr(el, "class"),
             "clickable": self._safe_attr(el, "clickable") == "true"
         }
