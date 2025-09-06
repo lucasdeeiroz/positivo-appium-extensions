@@ -22,7 +22,7 @@ The result in `auto` mode is a mixed list of identifiers (some `resource-id`, so
 
 ## Purpose
 
-Provide a reliable method to capture **visible and valid UI elements** during Appium-based mobile testing, broadening coverage beyond `resource-id`-only by supporting `content-desc` (accessibility) as a fallback or as the primary mode, while keeping the interface simple.
+Provide a reliable method to capture **visible and valid UI elements** during Appium-based mobile testing,broadening coverage beyond `resource-id`-only by supporting `content-desc` (accessibility) as a fallback or as the primary mode, while keeping the interface simple.
 
 ---
 
@@ -31,7 +31,6 @@ Provide a reliable method to capture **visible and valid UI elements** during Ap
 The keyword works by:
 1. Capturing **all UI elements** from the screen using a generic XPath (`//*`);
 2. Filtering out:
-   2. Filtering out:
    - Elements that are **not visible** (`is_displayed() == False`);
    - Elements **that do not match the selected filter** (`clickable`, `text`, etc.);
    - Elements **without a usable identifier according to `id_mode`**:
@@ -127,18 +126,25 @@ Make sure that:
 
 The keyword has been validated through:
 
-- **Type filtering:** Ensures the category filter returns only matching visible elements on screen
-- **Attribute selector behavior:** Verifies that the selector argument honors resource_id and accessibility_id. When selector=all, results from both attributes are combined without duplicates
-- **Strict combinations & empty results:** Confirms that restrictive combinations may legitimately return an empty list when no nodes satisfy both constraints, and that this does not fail the suite
-- **Debug payload schema:** With debug=True, each returned item contains the expected keys. Tests assert presence and basic types of these fields
-- **Robustness & error handling:** Invisible nodes and nodes missing the selected attribute are excluded. Invalid type/selector values fail fast with a clear, actionable error message
+- **Type filtering:** returns only visible elements matching filter_type (`all`, `button`, `input`, `clickable`, `text`)
+- **Identifier selection:** `auto` prefers `resource-id` over `content-desc`; explicit modes (`resource_id`, `accessibility_id`) validated; dedup by (kind, value)
+- **Strict-empty semantics:** restrictive combos may legitimately return an empty list (suite must not fail)
+- **Debug payload:** items follow the stable schema and fields are normalized
+- **Error handling:** invisible/missing-identifier nodes are excluded; invalid args fail fast with clear messages.
 
 ### Mocked Tests
 
-In addition to automated test cases, mocked test cases were created to validate the core logic of the VisibleElements keyword:
+In addition to automated test cases, mocked test cases were created to validate the core logic of the VisibleElements keyword and to
+covering edge cases that are hard to reproduce reliably on real screens:
 
-
-
+- **Visibility & stale:** only elements that pass `is_displayed()` are considered; targeted `StaleElementReferenceException` is ignored
+- **Identifier selection:** `id_mode=auto` prefers `resource-id` over `content-desc`
+- **Normalization rules:** whitespace/`"null"`/`None` → `""`; `clickable` normalized; missing/exception-throwing attributes handled safely
+- **Type filtering:** respects filter_type (`button`, `input`, `clickable`, `text`, `all`)
+- **Strict-empty & dedup:** empty lists are valid for restrictive combos; de-dup by `(kind, value)` — same value across different kinds is kept twice
+- **Stable debug schema:** with `debug=True`, each item is
+`{"identifier": {"value","kind"}, "resource_id", "accessibility_id", "text", "class", "clickable"}` (all fields normalized)
+ 
 ---
 
 ##  Known limitations and errors
