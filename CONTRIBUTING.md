@@ -37,7 +37,6 @@ You can contribute in several ways:
 - Keyword docstrings (description, arguments, usage examples, common errors)
 - Inline code comments that improve readability
 
-
 **Principles:**
 - Clarity > quantity: prioritize executable examples and concise steps
 - Keep examples in sync with the current behavior of the keyword
@@ -48,17 +47,14 @@ You can contribute in several ways:
 
 ## Project Structure
 
-
 - `keywords/` → Python classes implementing new keywords  
 - `resources/` → Robot resources (variables, setups)  
 - `tests/` → Robot Framework test suites organized by functionality  
 - `docs/` → Extended documentation and usage guides
 
-
 ---
 
 ## Code Style Guidelines
-
 
 - Follow **PEP8** for Python code formatting.
 - Align with the structure used in AppiumLibrary:
@@ -67,9 +63,7 @@ You can contribute in several ways:
   - Helper functions should be prefixed with `_` if private.
 - Keep the code modular, readable, and well commented.
 
-
 **Example:**
-
 
 ```python
 @keyword("Get Visible Elements On Screen")
