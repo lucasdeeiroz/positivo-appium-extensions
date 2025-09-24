@@ -1,5 +1,4 @@
-# Contributing to AppiumLibrary Extension – Custom Gestures
-
+# Contributing to AppiumLibrary Extension
 
 Thank you for your interest in contributing to this project!  
 This library extends the Robot Framework's AppiumLibrary with new and restructured keywords aligned with Appium 2.0, covering both gesture-based actions and broader mobile automation needs.  
@@ -32,10 +31,10 @@ You can contribute in several ways:
 - Improving existing keywords
 - Expanding test coverage
 - Documentation contributions are highly welcome and include:
-- Improvements to `README.md` (installation, examples, troubleshooting)
-- Robot examples (in `tests/`) demonstrating the keywords
-- Keyword docstrings (description, arguments, usage examples, common errors)
-- Inline code comments that improve readability
+  - Improvements to `README.md` (installation, examples, troubleshooting)
+  - Robot examples (in `tests/`) demonstrating the keywords
+  - Keyword docstrings (description, arguments, usage examples, common errors)
+  - Inline code comments that improve readability
 
 **Principles:**
 - Clarity > quantity: prioritize executable examples and concise steps
@@ -60,12 +59,15 @@ You can contribute in several ways:
 - Align with the structure used in AppiumLibrary:
   - Use the `@keyword` decorator to expose methods to Robot Framework.
   - Class names should be in `PascalCase`
-  - Helper functions should be prefixed with `_` if private.
+  - Helper functions should be prefixed with `_` if private
 - Keep the code modular, readable, and well commented.
+- If you change user-facing behavior or arguments, update docstrings and README/docs accordingly.
 
 **Example:**
 
 ```python
+from robot.api.deco import keyword
+
 @keyword("Get Visible Elements On Screen")
 def get_visible_elements_on_screen(...):
     """Description of the keyword goes here"""
@@ -100,7 +102,8 @@ def get_visible_elements_on_screen(...):
 
 - Each keyword must have positive and negative test cases
 - All tests must be written using Robot Framework syntax
-- Organize test cases by gesture type or functionality
+- Unit tests with mocks are welcome when helpful
+- Organize test cases by type or functionality
 - Make sure to run all tests locally with *robot* and confirm they pass
 
 **Example:**
@@ -142,12 +145,6 @@ Before submitting your PR, make sure:
 
 ---
 
-## Release Notes
-
-Changes will be documented in `CHANGELOG.md`, following [Keep a Changelog](https://keepachangelog.com/).
-
----
-
 ## Code of Conduct
 
 We follow the Contributor Covenant Code of Conduct.
@@ -158,7 +155,6 @@ Respect, inclusion, and constructive collaboration are core values in this proje
 ## Questions?
 
 If you have any questions, open an issue or leave a comment on your Pull Request.
-Let's work together to improve Appium-based testing!
 
 Thank you for contributing
 
