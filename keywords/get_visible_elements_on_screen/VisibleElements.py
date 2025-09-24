@@ -7,7 +7,8 @@ import json
 
 class VisibleElements:
     """
-    Custom AppiumLibrary keyword that returns visible elements on the screen using either resource-id or content-desc (accessibility_id on Android), optionally filtered by type.
+    Custom AppiumLibrary keyword that returns visible elements on the screen using either resource-id or
+    content-desc (accessibility_id on Android), optionally filtered by type.
     Useful for visual validation in mobile automation tests.
     """
 
@@ -28,17 +29,18 @@ class VisibleElements:
     
     def _safe_attr(self, el, name):
     # Read attribute, strip, and normalize empty/null to ''.
-    # A inclusão dessa função ajuda na robustez e legibilidade do código, evitando ter que repetir o mesmo padrão de try/except/strip/null em vários pontos
+    # Avoid repetition of the same try/except/strip/null pattern across the code
         try:
-            val = el.get_attribute(name) #-> ele vai tentar ler o atributo do elemento
+            val = el.get_attribute(name)
         except Exception:
-            return "" #-> e retornar "" caso ocorra um erro de exceção de leitura, em vez de quebrar o fluxo
+            return ""
         if not val:
-            return "" #-> tbm vai normalizar valores ruins/vazios, transformando "None", espaços e até o texto literal "null" em ""
+            return "" 
         val = str(val).strip()
         if not val or val.lower() == "null":
             return ""
-        return val #-> e retornar o valor limpo/não-vazio
+        # Return a cleaned, non-empty value
+        return val
 
     def _passes_filter(self, el, filter_type):
     # Check if the element matches the given filter type
@@ -52,7 +54,8 @@ class VisibleElements:
         class_name = self._safe_attr(el, "class") or self._safe_attr(el, "className")
         text = (el.text or "").strip()
         clickable_attr = self._safe_attr(el, "clickable")
-        clickable = str(clickable_attr).strip().lower() == "true" #-> só pra não falhar no caso de receber "True", com T maiúsculo
+        # Handle case-insensitivity (e.g., "True" vs "true")
+        clickable = str(clickable_attr).strip().lower() == "true"
 
         if filter_type == "all":
             return True
@@ -81,10 +84,12 @@ class VisibleElements:
             return (rid, "resource_id") if rid else (None, None)
         if id_mode == "accessibility_id":
             return (cdesc, "accessibility_id") if cdesc else (None, None)
-        # Em id_mode = "auto", pra cada elemento que passa no filter_type ele vai tentar ler o resource_id, se não houver rid válido, ele tenta o content-desc
-        # Elementos sem nenhum desses dois identificadores, continuam sendo mantidos de fora
-        # A prioridade continua sendo o resource_id que costuma ser mais estável
-        # Em resumo, em modo auto, a lista fica mista -> com resource_id e accessibility_id (content-desc)
+        # In id_mode="auto", for each element that passes filter_type:
+        # - Try resource-id first; if not available, fallback to content-desc
+        # - Elements with neither identifier are excluded
+        # - Priority is given to resource-id, which is usually more stable
+        # - Final list may mix resource-id and accessibility_id values
+
         if rid:
             return rid, "resource_id"
         if cdesc:
@@ -103,10 +108,11 @@ class VisibleElements:
         """
         
         return {
-            "identifier": {"value": chosen_value, "kind": chosen_kind}, #-> inclui o tipo de id usado e seu valor pra ajudar na rastreabilidade
+            # Includes both id value and kind for better traceability
+            "identifier": {"value": chosen_value, "kind": chosen_kind},
             "resource_id": self._safe_attr(el, "resource-id"),
             "accessibility_id": self._safe_attr(el, "content-desc"),
-            "text": el.text or "",
+            "text": self._safe_attr(el, "text"),
             "class": self._safe_attr(el, "class"),
             "clickable": self._safe_attr(el, "clickable") == "true"
         }
@@ -114,24 +120,71 @@ class VisibleElements:
     @keyword("Get Visible Elements On Screen")
     def get_visible_elements_on_screen(self, filter_type: str = "all", id_mode: str = "auto", debug: bool = False):
         """
-        Return visible screen elements using either resource_id or accessibility_id (per id_mode), optionally filtered by type.
+        Returns the list of visible UI elements currently rendered on the screen.
+
+        This keyword is useful for visual validation or exploratory checks during mobile automation tests.
+        It applies optional filters by element type (e.g., clickable, text, button, input) and allows selecting
+        which identifier should be used (`resource-id`, `accessibility_id`, or automatic fallback).
 
         Args:
-            filter_type (str): Filter to apply. Options: 'all' | 'clickable' | 'text' | 'button' | 'input'.
-            id_mode (str): Identifier mode. Options: 'auto' | 'resource_id' | 'accessibility_id'. Note: on Android, 'accessibility_id' reads 'content-desc'.
-            debug (bool): If debug=True, return full element details as JSON; otherwise, return a list of IDs.
+            filter_type (str, optional):
+                The type of elements to include in the result. Options are:
+                - "all": no filtering, return every visible element (default)
+                - "clickable": only elements with clickable="true"
+                - "text": only elements with a non-empty text value
+                - "button": only elements whose class contains "Button"
+                - "input": only elements whose class contains "EditText"
+            id_mode (str, optional):
+                The identifier selection strategy. Options are:
+                - "auto" (default): prefer resource-id; if empty, fallback to content-desc (accessibility_id)
+                - "resource_id": only return resource-id values
+                - "accessibility_id": only return content-desc values
+            debug (bool, optional):
+                Whether to return full element details as dictionaries (for debugging/inspection).
+                If False (default), returns only a list of identifiers (strings).
+                If True, returns a list of dictionaries with the following keys:
+                - "identifier": { "value": <str>, "kind": "resource_id"|"accessibility_id" }
+                - "resource_id": element resource-id (may be empty)
+                - "accessibility_id": element content-desc (may be empty)
+                - "text": element visible text (may be empty)
+                - "class": element class name
+                - "clickable": boolean flag if element is clickable
 
         Returns:
-            list: List of filtered visible elements.
+            list:
+                - When debug=False: a list of identifier strings (resource-id or accessibility_id).
+                - When debug=True: a list of dictionaries with extended element information.
+
+        Examples:
+            | *** Test Cases ***                                                               |
+            | Return all visible elements                                                      |
+            |     @{els}=    Get Visible Elements On Screen                                    |
+            |     Should Not Be Empty    ${els}                                                |
+            |                                                                                  |
+            | Return only clickable elements in debug mode                                     |
+            |     @{els}=    Get Visible Elements On Screen    clickable    auto    debug=True |
+            |     FOR    ${el}    IN    @{els}                                                 |
+            |         Should Be True    ${el['clickable']}                                     |
+            |     END                                                                          |
+
+        Raises:
+            AssertionError:
+                - If an invalid value is passed to `filter_type` or `id_mode`.
+            WebDriverException:
+                - If fetching elements from the driver fails.
+
+        Notes:
+            - On Android, "accessibility_id" is an alias for the "content-desc" attribute.
+            - In auto mode, elements without either resource-id or content-desc are excluded.
+            - Duplicates are automatically removed based on (kind, value) pairs.
         """
 
         valid_filters = {'all', 'clickable', 'text', 'button', 'input'}
         # Normalize input to lowercase (lower()) and strip (strip()) spaces to avoid typos
-        filter_type = (filter_type or "").strip().lower() #-> ajustezinho pra garantir que não quebra se vierem "None"
+        filter_type = (filter_type or "").strip().lower()
         if filter_type not in valid_filters:
             self._builtin.fail(f"Invalid filter '{filter_type}'. Options: {valid_filters}")
 
-        # vamo incluir uma validação do id_mode pra validar o erro, quando for o caso.
         valid_ids = {"auto", "resource_id", "accessibility_id"}
         # Normalize input to lowercase (lower()) and strip (strip()) spaces to avoid typos
         id_mode = (id_mode or "").strip().lower()
@@ -148,18 +201,17 @@ class VisibleElements:
         self._builtin.log(f"Found {len(elements)} elements before filtering", level="DEBUG")
 
         visible_elements = []
-        seen = set() #-> em telas dinâmicas, é possível que o Appium capte um elemento duas vezes, então vamo incluir um seen pra evitar duplicados no resultado fora do modo debug
+        seen = set()
         for el in elements:
             try:
                 # First filter: real visibility
-                try: #-> incluí esse try/except pra deixar o is_displayed() mais resiliente em telas dinâmicas
+                try:
                     if not el.is_displayed():
                         continue
                 except (StaleElementReferenceException, NoSuchElementException):
                     continue
 
                 # Second filter: match element type
-                # Vai ser mais barato colocar a filtragem por tipo antes, pra poupar leituras de atributos de elementos que seriam descartados
                 if not self._passes_filter(el, filter_type):
                     continue 
 
@@ -168,7 +220,8 @@ class VisibleElements:
                 if not chosen_value:
                     continue
 
-                # Deduplicar pela tupla pra evitar uma possível colisão (mesmo que seja raro) se o resource_id do elemento for igual ao content-desc
+                # Deduplicate by (kind, value) tuple to avoid rare collisions
+                # (e.g., when resource-id and content-desc happen to be identical)
                 key = (chosen_kind, chosen_value)
                 if key in seen:
                     continue

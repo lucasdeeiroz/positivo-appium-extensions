@@ -3,6 +3,7 @@ Library    AppiumLibrary
 Library    OperatingSystem
 Library    Collections
 Library    BuiltIn
+Library    String
 Library    VisibleElements.py
 
 *** Variables ***
