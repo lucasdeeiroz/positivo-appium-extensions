@@ -13,9 +13,9 @@ class ScreenshotComparisonKeywords:
         return self._builtin.get_library_instance('AppiumLibrary')._current_application()
 
     @keyword("Compare Screenshots")
-    def compare_images(self, img1, img2, expected="Equal", tolerance=0.1):
+    def compare_images(self, img1, img2, expected="Equal", tolerance=0.01):
         """
-        Compara duas imagens já salvas e valida se são iguais ou diferentes.
+        Compara duas imagens já salvas e valida se são iguais ou diferenstes.
 
         Args:
             img1 (str): Caminho completo da primeira imagem.
@@ -43,25 +43,10 @@ class ScreenshotComparisonKeywords:
         total_pixels = gray.size
         difference_percent = (non_zero / total_pixels) * 100
 
-        # Define limite em %
-        limit = tolerance * 100
-
-        # Logging helper
-        def log(msg, level="INFO"):
-            self._builtin.log_to_console(msg)
-            self._builtin.log(msg, level)
-
         # Avalia conforme esperado
-        if expected == "Equal":
-            if difference_percent > limit:
-                log(f"❌ Imagens DIFERENTES. Diferença: {difference_percent:.2f}% (limite {limit:.2f}%)", "ERROR")
-                raise AssertionError(f"Imagens diferentes. Diferença {difference_percent:.2f}% > limite {limit:.2f}%")
-            else:
-                log(f"✅ Imagens IGUAIS. Diferença: {difference_percent:.2f}% (<= {limit:.2f}%)")
-
-        elif expected == "Different":
-            if difference_percent <= limit:
-                log(f"❌ Imagens MUITO PARECIDAS. Diferença: {difference_percent:.2f}% (limite {limit:.2f}%)", "ERROR")
-                raise AssertionError(f"Imagens muito parecidas. Diferença {difference_percent:.2f}% <= limite {limit:.2f}%")
-            else:
-                log(f"✅ Imagens DIFERENTES. Diferença: {difference_percent:.2f}% (> {limit:.2f}%)")
+        if expected == "Equal" and difference_percent > (tolerance * 100):
+            raise AssertionError(f"❌ Imagens diferentes! Diferença: {difference_percent:.2f}%")
+        elif expected == "Different" and difference_percent <= (tolerance * 100):
+            raise AssertionError(f"❌ Imagens muito parecidas! Diferença: {difference_percent:.2f}%")
+        else:
+            print(f"✅ Comparação bem-sucedida! Diferença: {difference_percent:.2f}%")
