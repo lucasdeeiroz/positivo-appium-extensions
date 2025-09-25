@@ -16,6 +16,7 @@ class ChangeTheme:
     
     @keyword("Set Device UDID")
     def set_device_udid(self, udid):
+<<<<<<< HEAD
         """Set the device UDID dynamically.
 
         Args:
@@ -23,6 +24,11 @@ class ChangeTheme:
         """
         self.device_udid = udid
         self._builtin.log(f"UDID set to: {udid}", "INFO")
+=======
+        """Define o UDID do dispositivo dinamicamente"""
+        self.device_udid = udid
+        self._builtin.log(f"UDID definido para: {udid}", "INFO")
+>>>>>>> e01a67c7fda31bd94104d36d87b21b24b32930a5
 
     def _execute_adb_command(self, command):
         """Execute an ADB command and return the result.
@@ -253,5 +259,10 @@ class ChangeTheme:
             return True
 
         except Exception as e:
+<<<<<<< HEAD
             self._builtin.log(f"Error resetting theme: {str(e)}", "ERROR")
             raise RuntimeError(f"Failed to reset theme: {str(e)}")
+=======
+            self._builtin.log(f"Erro ao resetar tema: {str(e)}", "ERROR")
+            raise RuntimeError(f"Falha ao resetar tema: {str(e)}")
+>>>>>>> e01a67c7fda31bd94104d36d87b21b24b32930a5
