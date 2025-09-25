@@ -33,7 +33,7 @@ Testar Encerramento do TikTok
 
 Testar Falha ao Encerrar Aplicativo Inexistente
     [Tags]    Negative    TerminateFail
-    [Documentation]    Verifica se a keyword falha ao tentar encerrar um aplicativo com um ID inexistente.
+    [Documentation]    Checks if the keyword fails when trying to terminate an application with an invalid ID.
     [Teardown]    Close Application
     Start Session Youtube
     ${app_id}=    Set Variable    com.app.inexistente
@@ -42,7 +42,8 @@ Testar Falha ao Encerrar Aplicativo Inexistente
 
 Testar Falha com App Não Iniciado
     [Tags]    Negative    TerminateFail
-    [Documentation]    Verifica se a keyword falha ao tentar encerrar um aplicativo que não está em execução.
+    [Documentation]    Checks if the keyword fails when trying to terminate an application that is not running.
+    ...                For this, it uses the Chrome app, which is not started in this test.
     [Teardown]    Close Application
     ${app_id}=    Set Variable    com.android.chrome
     Log    Tentando encerrar aplicativo não iniciado: ${app_id}
