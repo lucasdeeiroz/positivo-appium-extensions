@@ -15,22 +15,25 @@ class ScreenshotComparisonKeywords:
     @keyword("Compare Screenshots")
     def compare_images(self, img1, img2, expected="Equal", tolerance=0.01):
         """
-        Compara duas imagens já salvas e valida se são iguais ou diferenstes.
+        Compare two saved images and validate if they are equal or different.
 
         Args:
-            img1 (str): Caminho completo da primeira imagem.
-            img2 (str): Caminho completo da segunda imagem.
-            expected (str): "Equal" (espera iguais) ou "Different" (espera diferentes).
-            tolerance (float): Tolerância de diferença em percentual (0.1 = 10%).
+            img1 (str): Full path to the first image.
+            img2 (str): Full path to the second image.
+            expected (str): "Equal" (expect equal) or "Different" (expect different).
+            tolerance (float): Difference tolerance in percent (0.1 = 10%).
+
+        Usage example:
+            Compare Screenshots    path/to/img1.png    path/to/img2.png    Equal    0.02
         """
         # Carregar as imagens
         image1 = cv2.imread(img1)
         image2 = cv2.imread(img2)
 
         if image1 is None:
-            raise AssertionError(f"Não foi possível abrir a imagem: {img1}")
+            raise AssertionError(f"Could not open image: {img1}")
         if image2 is None:
-            raise AssertionError(f"Não foi possível abrir a imagem: {img2}")
+            raise AssertionError(f"Could not open image: {img2}")
 
         # Redimensiona se forem de tamanhos diferentes
         if image1.shape != image2.shape:
@@ -45,8 +48,8 @@ class ScreenshotComparisonKeywords:
 
         # Avalia conforme esperado
         if expected == "Equal" and difference_percent > (tolerance * 100):
-            raise AssertionError(f"❌ Imagens diferentes! Diferença: {difference_percent:.2f}%")
+            raise AssertionError(f"❌ Images are different! Difference: {difference_percent:.2f}%")
         elif expected == "Different" and difference_percent <= (tolerance * 100):
-            raise AssertionError(f"❌ Imagens muito parecidas! Diferença: {difference_percent:.2f}%")
+            raise AssertionError(f"❌ Images are too similar! Difference: {difference_percent:.2f}%")
         else:
-            print(f"✅ Comparação bem-sucedida! Diferença: {difference_percent:.2f}%")
+            print(f"✅ Comparison successful! Difference: {difference_percent:.2f}%")
