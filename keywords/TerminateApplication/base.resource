@@ -36,7 +36,7 @@ Start Session TikTok
     ...    noReset=true
 
 Swipe Loop
-    [Documentation]    Performs a continuous vertical swipe.
+    [Documentation]    Receives a number as an argument and performs a vertical swipe according to the value.
     [Arguments]    ${swipe_range}
     ${x}           Get Window Width
     ${y}           Get Window Height
