@@ -30,9 +30,9 @@ from .keywords.get_network_connection_status.NetworkStatus import NetworkStatus
 from .keywords.get_visible_elements_on_screen.VisibleElements import VisibleElements
 from .keywords.longPressV2.AppiumLongPressExtensions import AppiumLongPressExtensions
 from .keywords.pinch.GesturePinch import GesturePinch
-from .keywords.scroll.scroll import Scroll
+from .keywords.scroll.scroll import scroll
 from .keywords.scroll_to_element.ScrollToElement import ScrollToElement
-from .keywords.swipe.swipe import Swipe
+from .keywords.swipe.swipe import swipe
 from .keywords.tap_at_percentage.TapAtPercentage import TapAtPercentage
 from .keywords.TerminateApplication.TerminateApplicationExtension import TerminateApplicationExtension
 from .keywords.wait_multiple_elements.WaitMultipleElements import WaitMultipleElements
@@ -47,9 +47,9 @@ class ProjetoKeywords(
     VisibleElements,
     AppiumLongPressExtensions,
     GesturePinch,
-    Scroll,
+    scroll,
     ScrollToElement,
-    Swipe,
+    swipe,
     TapAtPercentage,
     TerminateApplicationExtension,
     WaitMultipleElements,
