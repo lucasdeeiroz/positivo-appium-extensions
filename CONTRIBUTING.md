@@ -108,9 +108,11 @@ def get_visible_elements_on_screen(...):
 
 **Example:**
 
+```robot
 *** Test Cases ***
 Return all visible elements
     Get Visible Elements On Screen    all    auto    debug=True
+```
 
 ---
 
