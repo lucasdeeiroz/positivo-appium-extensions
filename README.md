@@ -72,7 +72,7 @@ Library    keywords/
 
 *** Test Cases ***
 Pinch Example
-    Open Application    http://localhost:4723/wd/hub    platformName=Android    automationName=UiAutomator2
+    Open Application    http://localhost:4723    platformName=Android    automationName=UiAutomator2
     Perform Pinch Gesture    locator=id=map_view    scale=0.6
 ```
 
