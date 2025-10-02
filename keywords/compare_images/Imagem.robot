@@ -68,12 +68,6 @@ Compare Screen After inicio
     Compare Screenshots    img1=${PATH}/search.png    img2=${PATH}/search_final.png    expected=Different
     Close Application
 
-Compare Screen After inicio
-    [Tags]    gmail
-    Create Directory    ${PATH}
-    Start Session
-
-
 
 Compare Screen Calculator    
     [Tags]    calculator
