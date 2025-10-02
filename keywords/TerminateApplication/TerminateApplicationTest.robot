@@ -1,7 +1,8 @@
 *** Settings ***
 Documentation    This test suite runs the applications and simulates their use by swiping upwards,
 ...              with the aim of testing the application's closure with the custom keyword terminate application
-...              after prolonged use.
+...              after prolonged use. We use YouTube and TikTok as examples because both applications
+...              feature the swipe-up interaction as a primary form of navigation and content consumption
    
 Library           AppiumLibrary
 Resource          ./base.resource
