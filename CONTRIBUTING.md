@@ -53,15 +53,58 @@ You can contribute in several ways:
 
 ---
 
+## Tooling Setup
+
+To ensure consistent code style and automated checks across all contributors, set up the following tools locally:
+
+```bash
+pip install --upgrade pip
+pip install pre-commit black ruff
+pre-commit install
+```
+
+Create a `.pre-commit-config.yaml` file at the project root:
+
+```yaml
+repos:
+  - repo: https://github.com/psf/black
+    rev: 24.8.0
+    hooks:
+      - id: black
+        args: ["--line-length", "120", "--target-version", "py39"]
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.6.9
+    hooks:
+      - id: ruff
+        args: ["--select", "E,F,W,I,B,UP,C90", "--target-version", "py39"]
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+```
+
+**Quick tips**
+- Run all hooks manually: `pre-commit run --all-files`
+- Run lint manually: `ruff check .`
+- Reformat code manually: `black .`
+
+---
+
 ## Code Style Guidelines
 
+- Formatter: Use Black with line-length = 120 (helps readability in long Robot/Appium calls)
+- Linter: Use Ruff with rules E,F,W,I,B,UP,C90 and target-version = py39
+  - `I` handles import sorting; no separate `isort` is needed
 - Follow **PEP8** for Python code formatting.
 - Align with the structure used in AppiumLibrary:
-  - Use the `@keyword` decorator to expose methods to Robot Framework.
+  - Use the `@keyword` decorator to expose methods to Robot Framework
   - Class names should be in `PascalCase`
   - Helper functions should be prefixed with `_` if private
 - Keep the code modular, readable, and well commented.
-- If you change user-facing behavior or arguments, update docstrings and README/docs accordingly.
+- If you change user-facing behavior or arguments, update docstrings and README/docs accordingly
 
 **Example:**
 
@@ -136,6 +179,8 @@ Each PR should include:
 
 Before submitting your PR, make sure:
 
+- [ ] Your code is formatted with Black (120 columns) and passes Ruff lint (E,F,W,I,B,UP,C90, py39) 
+- [ ] Pre-commit hooks were executed locally (pre-commit run --all-files)
 - [ ] Your code follows AppiumLibrary conventions and is clearly commented  
 - [ ] Your keyword is documented with a detailed docstring  
 - [ ] You added logs via `self._builtin.log()` for easier debugging  
@@ -161,3 +206,6 @@ If you have any questions, open an issue or leave a comment on your Pull Request
 Thank you for contributing
 
 ---
+
+**Project context:**  
+Developed under the **CEPEDI Technology Residency Program**, coordinated by **SOFTEX** and supported by **MCTI**.

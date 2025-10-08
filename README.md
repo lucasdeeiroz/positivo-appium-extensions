@@ -114,3 +114,15 @@ Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for gui
 ## License
 
 Licensed under Apache 2.0 [LICENSE](LICENSE)
+
+---
+
+### Acknowledgments
+
+This open-source repository was developed within the scope of the **Technology Residency Program**,  
+executed by **CEPEDI**, coordinated by **SOFTEX**, and supported by the **Ministry of Science, Technology and Innovation (MCTI)**.
+
+The development challenge addressed in this repository was proposed by **Positivo Tecnologia**,  
+a partner company of the program, as part of its collaboration with the Technology Residency initiative.
+
+We acknowledge and thank all the institutions involved for their support in the execution and dissemination of this open-source project.
