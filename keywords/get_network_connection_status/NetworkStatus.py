@@ -1,11 +1,13 @@
+import subprocess
+
 from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
-import subprocess
+
 
 class NetworkStatus:
     """
-    Keyword that interprets the connection bitmask returned by Appium and identifies the network status of the Android device.
-    Also considers airplane mode via ADB.
+    Keyword that interprets the connection bitmask returned by Appium and identifies the network status
+    of the Android device. Also considers airplane mode via ADB.
     """
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
 
@@ -16,7 +18,7 @@ class NetworkStatus:
     # Gets the current Appium driver instance
         appium_lib = self._builtin.get_library_instance("AppiumLibrary")
         return appium_lib._current_application()
-    
+
     def _interpret_bitmask(self, status):
     # Bitwise AND is used to compare the bitmask and identify which connections are active.
     # Interprets the meaning behind the combined bits and returns: wifi, data, no_network
@@ -24,7 +26,7 @@ class NetworkStatus:
         data = (status & 4) != 0
         no_network = status == 0
         return wifi, data, no_network
-    
+
     def _airplane_mode_enabled(self):
     # Returns True if airplane mode is enabled via ADB settings, False otherwise.
         try:
@@ -38,23 +40,23 @@ class NetworkStatus:
         except Exception as e:
             self._builtin.log(f"Error checking airplane mode: {e}", level='WARN')
             return False
-        
+
     def _get_network_status(self, wifi, data, airplane_mode, no_network):
     # Returns a readable string representing the final network status, based on the bitmask and airplane mode
         if airplane_mode:
             return 'AIRPLANE_MODE'
         # In case where no bits are active (Wi-Fi, data, and airplane mode are off)
-        elif no_network: 
+        elif no_network:
             return 'NONE'
         elif wifi and data:
             return 'WIFI_AND_DATA'
         elif wifi:
-            return 'WIFI_ONLY'           
+            return 'WIFI_ONLY'
         elif data:
             return 'DATA_ONLY'
         # Fallback case: if none of the above conditions match (this shouldn't occur under normal conditions)
         # Handles possible anomalies in the bitmask or unexpected status values
-        else: 
+        else:
             return 'UNKNOWN'
 
     @keyword('Get Readable Network Status')
@@ -113,7 +115,7 @@ class NetworkStatus:
 
         # Retrieves the network status as an integer (bitmask)
         driver = self._get_appium_driver()
-        status = driver.network_connection 
+        status = driver.network_connection
 
         # Logs the read bitmask and its binary representation for debugging
         self._builtin.log(f"Read bitmask: {status} (binary: {bin(status)})", level='INFO')

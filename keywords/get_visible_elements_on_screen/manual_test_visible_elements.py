@@ -1,5 +1,6 @@
+from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
+
 from VisibleElements import VisibleElements
-from selenium.common.exceptions import StaleElementReferenceException, NoSuchElementException
 
 # Create a fake BuiltIn to simulate .log() and .fail()
 class FakeBuiltIn:
@@ -7,7 +8,7 @@ class FakeBuiltIn:
         print(f"[{level}] {msg}")
     def fail(self, msg):
         raise Exception(msg)
-    
+
 # Mocked version of VisibleElements to inject the driver directly
 class MockVisibleElements(VisibleElements):
     def __init__(self, mock_driver):
@@ -151,14 +152,14 @@ if __name__ == "__main__":
             "desc": "Dedup: same value across different kinds (rid vs accessibility_id) keeps both",
             "elements": [
                 Element(True, "btn_same", text="OK", cls="android.widget.Button", clickable="true"),
-                Element(True, None,       text="OK", cls="android.widget.Button", clickable="true", content_desc="btn_same"),
+                Element(True, None, text="OK", cls="android.widget.Button", clickable="true", content_desc="btn_same"),
             ],
             "filter_type": "all",
             "debug": False,
             "expected": ["btn_same", "btn_same"],  # two items because (kind, value) differs
         },
 
-        # LEGIT EMPTY CASE 1 — input with NO identifiers -> [] 
+        # LEGIT EMPTY CASE 1 — input with NO identifiers -> []
         {
             "desc": "Legit empty: input element without identifiers returns []",
             "elements": [
@@ -191,7 +192,7 @@ if __name__ == "__main__":
                         clickable="true", content_desc="field_user"),
             ],
             "filter_type": "input",
-            "id_mode": "accessibility_id",   
+            "id_mode": "accessibility_id",
             "debug": False,
             "expected": ["field_user"],
         },
@@ -204,5 +205,6 @@ if __name__ == "__main__":
         visible = MockVisibleElements(driver)
 
         id_mode = case.get("id_mode", "auto")
-        result = visible.get_visible_elements_on_screen(filter_type=case["filter_type"], id_mode=id_mode, debug=case["debug"])
+        result = visible.get_visible_elements_on_screen(filter_type=case["filter_type"],
+                                                        id_mode=id_mode, debug=case["debug"])
         print("✅ PASSED\n" if result == case["expected"] else "❌ FAILED\n")

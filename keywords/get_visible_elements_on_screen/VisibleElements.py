@@ -1,8 +1,13 @@
-from robot.api.deco import keyword
-from selenium.common.exceptions import StaleElementReferenceException, NoSuchElementException, WebDriverException
-from robot.libraries.BuiltIn import BuiltIn
-from selenium.webdriver.common.by import By
 import json
+
+from robot.api.deco import keyword
+from robot.libraries.BuiltIn import BuiltIn
+from selenium.common.exceptions import (
+    NoSuchElementException,
+    StaleElementReferenceException,
+    WebDriverException,
+)
+from selenium.webdriver.common.by import By
 
 
 class VisibleElements:
@@ -22,11 +27,11 @@ class VisibleElements:
     # Gets the current Appium driver instance
         appium_lib = self._builtin.get_library_instance("AppiumLibrary")
         return appium_lib._current_application()
-    
+
     def _find_all_elements(self, driver):
     # Return all elements in the current screen using a generic XPath
         return driver.find_elements(By.XPATH, "//*")
-    
+
     def _safe_attr(self, el, name):
     # Read attribute, strip, and normalize empty/null to ''.
     # Avoid repetition of the same try/except/strip/null pattern across the code
@@ -35,7 +40,7 @@ class VisibleElements:
         except Exception:
             return ""
         if not val:
-            return "" 
+            return ""
         val = str(val).strip()
         if not val or val.lower() == "null":
             return ""
@@ -50,7 +55,7 @@ class VisibleElements:
 
         Returns:
             bool: Returns True if the element passes the filter, False otherwise."""
-        
+
         class_name = self._safe_attr(el, "class") or self._safe_attr(el, "className")
         text = (el.text or "").strip()
         clickable_attr = self._safe_attr(el, "clickable")
@@ -69,7 +74,7 @@ class VisibleElements:
             return "EditText" in class_name
         # Returns False in case of an unrecognized filter (should not occur due to prior validation)
         return False
-    
+
     def _choose_identifier(self, el, id_mode):
         """
         Returns (value, kind) according to id_mode:
@@ -100,13 +105,14 @@ class VisibleElements:
     # Build a structured dictionary of element attributes for debug mode
         """Args:
             el (WebElement): the element that passed the visibility and `filter_type` checks.
-            chosen_value (str): the identifier value selected according to `id_mode` (e.g., resource-id or content-desc).
-            chosen_kind(str): the type of identifier selected. One of: 'resource_id' | 'accessibility_id' (on Android, accessibility_id is an alias of content-desc).
+            chosen_value (str): the identifier value selected according to `id_mode` (resource-id or content-desc).
+            chosen_kind(str): the type of identifier selected. One of: 'resource_id' | 'accessibility_id'
+                (on Android, accessibility_id is an alias of content-desc).
 
         Returns:
             dict: Structured data for debugging and inspection.
         """
-        
+
         return {
             # Includes both id value and kind for better traceability
             "identifier": {"value": chosen_value, "kind": chosen_kind},
@@ -197,7 +203,7 @@ class VisibleElements:
         except WebDriverException as e:
             self._builtin.log(f"Error fetching elements: {e}", level="ERROR")
             return []
-        
+
         self._builtin.log(f"Found {len(elements)} elements before filtering", level="DEBUG")
 
         visible_elements = []
@@ -213,7 +219,7 @@ class VisibleElements:
 
                 # Second filter: match element type
                 if not self._passes_filter(el, filter_type):
-                    continue 
+                    continue
 
                 # Third filter: must yield a chosen identifier
                 chosen_value, chosen_kind = self._choose_identifier(el, id_mode)
