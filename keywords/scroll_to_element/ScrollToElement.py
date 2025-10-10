@@ -30,8 +30,8 @@ Library    AppiumLibrary
 
 Usage
 -----
-Scroll To Element    <locator>    max_swipes=<int>    direction=<up|down|left|right>    
-                     swipe_distance_ratio=<0.1-0.99>    duration=<ms>    
+Scroll To Element    <locator>    max_swipes=<int>    direction=<up|down|left|right>
+                     swipe_distance_ratio=<0.1-0.99>    duration=<ms>
                      container_locator=<locator>
 
 Examples
@@ -62,13 +62,13 @@ Errors/Exceptions
 """
 
 
+import random
+import time
+
 from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.actions.mouse_button import MouseButton
-import warnings
-import time
-import random
 
 
 class ScrollToElement:

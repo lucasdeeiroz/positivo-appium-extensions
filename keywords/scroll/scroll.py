@@ -55,6 +55,7 @@ Notes
 from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
 
+
 # Defines the custom keyword class
 class scroll:
     # Defines the library scope as GLOBAL (same instance will be reused across all tests)

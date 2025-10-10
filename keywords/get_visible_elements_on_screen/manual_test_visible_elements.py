@@ -2,6 +2,7 @@ from selenium.common.exceptions import NoSuchElementException, StaleElementRefer
 
 from VisibleElements import VisibleElements
 
+
 # Create a fake BuiltIn to simulate .log() and .fail()
 class FakeBuiltIn:
     def log(self, msg, level=None):
