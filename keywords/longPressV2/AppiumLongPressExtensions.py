@@ -35,17 +35,16 @@ class AppiumLongPressExtensions:
             RuntimeError: If the Appium driver is not initialized.
         """
         driver = self._driver
-        
+
         locator_parts = locator.split('=', 1)
         if len(locator_parts) != 2:
             raise ValueError("Locator deve estar no formato 'estrategia=valor'")
-        
+
         strategy, value = locator_parts
-        
-       
+
+
         element = driver.find_element(strategy, value)
-        
-      
+
+
         actions = ActionChains(driver)
         actions.click_and_hold(element).pause(duration/1000).release().perform()
-

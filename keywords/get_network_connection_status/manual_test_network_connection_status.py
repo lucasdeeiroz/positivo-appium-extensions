@@ -1,5 +1,6 @@
 from NetworkStatus import NetworkStatus
 
+
 # Mock for the Appium driver
 class MockDriver:
     def __init__(self, network_status):
@@ -30,7 +31,7 @@ def create_mock_subprocess(airplane_mode_enabled):
 
         if 'airplane_mode_on' in args:
             return Result('1\n' if airplane_mode_enabled else '0\n')
-        
+
         return Result('')
 
     return mock_subprocess_run

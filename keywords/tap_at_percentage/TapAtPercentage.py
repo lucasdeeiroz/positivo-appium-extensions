@@ -3,6 +3,7 @@ from robot.libraries.BuiltIn import BuiltIn
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.actions.mouse_button import MouseButton
 
+
 class TapAtPercentage:
     """Class to tap at a specific point on the screen using percentage coordinates."""
 
@@ -30,7 +31,7 @@ class TapAtPercentage:
             y = float(y)
         except ValueError:
             raise ValueError("Arguments 'x' and 'y' must be numbers (float).")
-        
+
         if not (0.0 <= x <= 1.0) or not (0.0 <= y <= 1.0):
             raise ValueError("Arguments 'x' and 'y' must be percentages between 0.0 and 1.0.")
 

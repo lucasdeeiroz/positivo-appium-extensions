@@ -3,6 +3,7 @@ import numpy as np
 from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
 
+
 class ScreenshotComparisonKeywords:
 
     def __init__(self):
