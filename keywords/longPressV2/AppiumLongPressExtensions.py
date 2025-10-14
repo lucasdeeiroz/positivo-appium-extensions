@@ -20,9 +20,9 @@ class AppiumLongPressExtensions:
         """
         Returns the current Appium driver instance from AppiumLibrary.
         """
-        return self._builtin.get_library_instance('AppiumLibrary')._current_application()
+        return self._builtin.get_library_instance("AppiumLibrary")._current_application()
 
-    @keyword('LongP')
+    @keyword("LongP")
     def long_press(self, locator, duration=1000):
         """
         Performs a long press on the specified element for a given duration.
@@ -36,15 +36,13 @@ class AppiumLongPressExtensions:
         """
         driver = self._driver
 
-        locator_parts = locator.split('=', 1)
+        locator_parts = locator.split("=", 1)
         if len(locator_parts) != 2:
             raise ValueError("Locator deve estar no formato 'estrategia=valor'")
 
         strategy, value = locator_parts
 
-
         element = driver.find_element(strategy, value)
 
-
         actions = ActionChains(driver)
-        actions.click_and_hold(element).pause(duration/1000).release().perform()
+        actions.click_and_hold(element).pause(duration / 1000).release().perform()

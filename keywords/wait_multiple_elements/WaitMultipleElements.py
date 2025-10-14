@@ -7,7 +7,7 @@ from robot.libraries.BuiltIn import BuiltIn
 class WaitMultipleElements:
     """Class to wait for multiple elements simultaneously."""
 
-    ROBOT_LIBRARY_SCOPE = 'GLOBAL'
+    ROBOT_LIBRARY_SCOPE = "GLOBAL"
 
     def __init__(self):
         self._builtin = BuiltIn()
@@ -56,9 +56,9 @@ class WaitMultipleElements:
         # Wait_for_all validation
         if not isinstance(wait_for_all, bool):
             # Convert Robot Framework strings to boolean
-            if str(wait_for_all).lower() in ['true', '1', 'yes']:
+            if str(wait_for_all).lower() in ["true", "1", "yes"]:
                 wait_for_all = True
-            elif str(wait_for_all).lower() in ['false', '0', 'no']:
+            elif str(wait_for_all).lower() in ["false", "0", "no"]:
                 wait_for_all = False
             else:
                 raise ValueError("wait_for_all must be a boolean value")
@@ -70,7 +70,10 @@ class WaitMultipleElements:
 
             appium_lib = self._builtin.get_library_instance("AppiumLibrary")
 
-            self._builtin.log(f"Starting wait for {len(elements_list)} elements to be visible (wait_for_all={wait_for_all}, timeout={timeout}s)", level='INFO')
+            self._builtin.log(
+                f"Starting wait for {len(elements_list)} elements to be visible (wait_for_all={wait_for_all}, timeout={timeout}s)",
+                level="INFO",
+            )
 
             start_time = time.time()
 
@@ -85,19 +88,21 @@ class WaitMultipleElements:
                         if element and element.is_displayed():
                             results[locator] = True
                             visible_elements += 1
-                            self._builtin.log(f"Element visible: {locator}", level='DEBUG')
+                            self._builtin.log(f"Element visible: {locator}", level="DEBUG")
                         else:
                             results[locator] = False
                     except Exception as e:
                         results[locator] = False
-                        self._builtin.log(f"Element not found or error: {locator} - {str(e)}", level='DEBUG')
+                        self._builtin.log(f"Element not found or error: {locator} - {str(e)}", level="DEBUG")
 
                 # Check success conditions
                 if wait_for_all and visible_elements == len(elements_list):
-                    self._builtin.log(f"All {len(elements_list)} elements are visible", level='INFO')
+                    self._builtin.log(f"All {len(elements_list)} elements are visible", level="INFO")
                     return results
                 elif not wait_for_all and visible_elements > 0:
-                    self._builtin.log(f"{visible_elements} out of {len(elements_list)} elements are visible", level='INFO')
+                    self._builtin.log(
+                        f"{visible_elements} out of {len(elements_list)} elements are visible", level="INFO"
+                    )
                     return results
 
                 # Avoid unnecessary sleep on last iteration
@@ -131,7 +136,9 @@ class WaitMultipleElements:
                 raise TimeoutError(error_msg)
             else:
                 if visible_count == 0:
-                    raise TimeoutError(f"Timeout waiting for any element to be visible. No visible elements found within {timeout}s")
+                    raise TimeoutError(
+                        f"Timeout waiting for any element to be visible. No visible elements found within {timeout}s"
+                    )
                 else:
                     # This case shouldn't happen, but we keep it for safety
                     return final_results

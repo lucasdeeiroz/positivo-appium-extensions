@@ -6,6 +6,7 @@ class MockDriver:
     def __init__(self, network_status):
         self.network_connection = network_status
 
+
 # Mock for the AppiumLibrary
 class MockAppiumLibrary:
     def __init__(self, network_status):
@@ -13,6 +14,7 @@ class MockAppiumLibrary:
 
     def _current_application(self):
         return self.driver
+
 
 # Mock for Robot Framework's BuiltIn library
 class MockBuiltIn:
@@ -22,6 +24,7 @@ class MockBuiltIn:
     def log(self, message, level):
         print(f"[{level}] {message}")
 
+
 # Generic mock for subprocess.run
 def create_mock_subprocess(airplane_mode_enabled):
     def mock_subprocess_run(args, capture_output=True, text=True, timeout=2, stdout=None, stderr=None):
@@ -29,10 +32,10 @@ def create_mock_subprocess(airplane_mode_enabled):
             def __init__(self, stdout_text):
                 self.stdout = stdout_text
 
-        if 'airplane_mode_on' in args:
-            return Result('1\n' if airplane_mode_enabled else '0\n')
+        if "airplane_mode_on" in args:
+            return Result("1\n" if airplane_mode_enabled else "0\n")
 
-        return Result('')
+        return Result("")
 
     return mock_subprocess_run
 
