@@ -1,11 +1,41 @@
 
-node_modules/
-.env
+# --- Python ---
 *.pyc
-logs/
-.venv/
 __pycache__/
+.venv/
+.env
+*.pyo
+*.pyd
+*.so
+
+# --- Robot Framework outputs ---
 log.html
 output.xml
 report.html
 interactive_console_output.xml
+
+# --- Build & distribution ---
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# --- Tooling & caches ---
+.cache/
+.pytest_cache/
+.tox/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# --- Editors / IDEs ---
+.vscode/
+.idea/
+
+# --- Logs ---
+logs/
+*.log
+
+# --- OS files ---
+.DS_Store
+Thumbs.db
