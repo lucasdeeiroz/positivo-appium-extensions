@@ -6,7 +6,7 @@ from robot.libraries.BuiltIn import BuiltIn
 
 
 class ChangeTheme:
-    ROBOT_LIBRARY_SCOPE = 'GLOBAL'
+    ROBOT_LIBRARY_SCOPE = "GLOBAL"
 
     def __init__(self):
         self._builtin = BuiltIn()
@@ -37,12 +37,7 @@ class ChangeTheme:
         """
         try:
             full_command = f"adb -s {self.device_udid} {command}"
-            result = subprocess.run(
-                full_command.split(),
-                capture_output=True,
-                text=True,
-                timeout=10
-            )
+            result = subprocess.run(full_command.split(), capture_output=True, text=True, timeout=10)
 
             if result.returncode == 0:
                 self._builtin.log(f"ADB command executed: {full_command}", "INFO")
@@ -101,17 +96,18 @@ class ChangeTheme:
         Returns:
             bool: True if verification passed, False otherwise.
         """
-        expected_values = {
-            "dark": "2",
-            "light": "1"
-        }
+        expected_values = {"dark": "2", "light": "1"}
 
         current_theme = self._get_current_theme()
         if current_theme == expected_values[expected_mode]:
-            self._builtin.log(f"{expected_mode.capitalize()} theme successfully applied (code: {current_theme})", "INFO")
+            self._builtin.log(
+                f"{expected_mode.capitalize()} theme successfully applied (code: {current_theme})", "INFO"
+            )
             return True
         else:
-            self._builtin.log(f"Theme not applied. Expected: {expected_values[expected_mode]}, Current: {current_theme}", "WARN")
+            self._builtin.log(
+                f"Theme not applied. Expected: {expected_values[expected_mode]}, Current: {current_theme}", "WARN"
+            )
             return False
 
     @keyword("Change To Dark Theme")
@@ -195,11 +191,7 @@ class ChangeTheme:
         """
         try:
             theme_code = self._get_current_theme()
-            theme_map = {
-                "0": "auto",
-                "1": "light",
-                "2": "dark"
-            }
+            theme_map = {"0": "auto", "1": "light", "2": "dark"}
 
             theme_name = theme_map.get(theme_code, "unknown")
             self._builtin.log(f"Current theme: {theme_name} (code: {theme_code})", "INFO")

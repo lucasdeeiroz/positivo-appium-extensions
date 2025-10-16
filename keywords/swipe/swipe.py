@@ -76,7 +76,7 @@ from robot.libraries.BuiltIn import BuiltIn
 
 
 class swipe:
-    ROBOT_LIBRARY_SCOPE = 'GLOBAL'
+    ROBOT_LIBRARY_SCOPE = "GLOBAL"
 
     def __init__(self):
         # Access to Robot Framework's built-in library
@@ -106,7 +106,7 @@ class swipe:
             "android_uiautomator": AppiumBy.ANDROID_UIAUTOMATOR,
             "ios_predicate": AppiumBy.IOS_PREDICATE,
             "ios_class_chain": AppiumBy.IOS_CLASS_CHAIN,
-            "name": AppiumBy.NAME
+            "name": AppiumBy.NAME,
         }
 
         locator_type = None
@@ -161,31 +161,23 @@ class swipe:
             end_x = rect["x"] + rect["width"] * percent
             y = rect["y"] + rect["height"] / 2
 
-            driver.execute_script("mobile: dragGesture", {
-                "startX": round(start_x),
-                "startY": round(y),
-                "endX": round(end_x),
-                "endY": round(y),
-                "speed": speed
-            })
+            driver.execute_script(
+                "mobile: dragGesture",
+                {"startX": round(start_x), "startY": round(y), "endX": round(end_x), "endY": round(y), "speed": speed},
+            )
 
         elif direction in ["up", "down"]:
             start_y = rect["y"] + rect["height"] * start_margin
-            end_y   = rect["y"] + rect["height"] * percent
+            end_y = rect["y"] + rect["height"] * percent
             x = rect["x"] + rect["width"] / 2
 
         # Invert only for 'up' (Y axis increases downward)
         if direction == "up":
             start_y, end_y = end_y, start_y
 
-            driver.execute_script("mobile: dragGesture", {
-                "startX": round(x),
-                "startY": round(start_y),
-                "endX": round(x),
-                "endY": round(end_y),
-                "speed": speed
-        })
+            driver.execute_script(
+                "mobile: dragGesture",
+                {"startX": round(x), "startY": round(start_y), "endX": round(x), "endY": round(end_y), "speed": speed},
+            )
         # Log success
-        self._builtin.log(
-            f"[SUCCESS] Drag performed to {direction} with percent={percent}, speed={speed}", "INFO"
-        )
+        self._builtin.log(f"[SUCCESS] Drag performed to {direction} with percent={percent}, speed={speed}", "INFO")

@@ -11,7 +11,7 @@ class ScreenshotComparisonKeywords:
 
     @property
     def driver(self):
-        return self._builtin.get_library_instance('AppiumLibrary')._current_application()
+        return self._builtin.get_library_instance("AppiumLibrary")._current_application()
 
     @keyword("Compare Screenshots")
     def compare_images(self, img1, img2, expected="Equal", tolerance=0.1):
@@ -63,6 +63,8 @@ class ScreenshotComparisonKeywords:
         elif expected == "Different":
             if difference_percent <= limit:
                 log(f"❌ IMAGES ARE TOO SIMILAR. Difference: {difference_percent:.2f}% (limit {limit:.2f}%)", "ERROR")
-                raise AssertionError(f"Images are too similar. Difference {difference_percent:.2f}% <= limit {limit:.2f}%")
+                raise AssertionError(
+                    f"Images are too similar. Difference {difference_percent:.2f}% <= limit {limit:.2f}%"
+                )
             else:
                 log(f"✅ IMAGES ARE DIFFERENT. Difference: {difference_percent:.2f}% (> {limit:.2f}%)")

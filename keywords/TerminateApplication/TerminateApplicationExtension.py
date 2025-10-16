@@ -10,7 +10,8 @@ class TerminateApplicationExtension:
     Additionally, it allows retrieval of the current application ID(appPackage) and activity(appActivity) for your own use.
     This is useful for testing scenarios where you need to ensure the application is closed
     """
-    ROBOT_LIBRARY_SCOPE = 'GLOBAL'
+
+    ROBOT_LIBRARY_SCOPE = "GLOBAL"
 
     def __init__(self):
         self._builtin = BuiltIn()
@@ -21,7 +22,9 @@ class TerminateApplicationExtension:
         try:
             return self._builtin.get_library_instance("AppiumLibrary")._current_application()
         except Exception as e:
-            raise RuntimeError(f"Failed to get AppiumLibrary instance. Ensure AppiumLibrary is imported and a session is active. Error: {str(e)}")
+            raise RuntimeError(
+                f"Failed to get AppiumLibrary instance. Ensure AppiumLibrary is imported and a session is active. Error: {str(e)}"
+            )
 
     @keyword("Terminate Application Extension")
     def terminate_application(self, app_id):
@@ -120,13 +123,13 @@ class TerminateApplicationExtension:
             return False
 
         # Basic validation: must contain at least one dot and alphanumeric characters
-        parts = package_name.split('.')
+        parts = package_name.split(".")
         if len(parts) < 2:
             return False
 
         # Each part should contain only alphanumeric characters and underscores
         for part in parts:
-            if not part or not all(c.isalnum() or c == '_' for c in part):
+            if not part or not all(c.isalnum() or c == "_" for c in part):
                 return False
             # Cannot start with a number
             if part[0].isdigit():

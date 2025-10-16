@@ -17,24 +17,23 @@ class VisibleElements:
     Useful for visual validation in mobile automation tests.
     """
 
-    ROBOT_LIBRARY_SCOPE = 'GLOBAL'
-
+    ROBOT_LIBRARY_SCOPE = "GLOBAL"
 
     def __init__(self):
         self._builtin = BuiltIn()
 
     def _get_appium_driver(self):
-    # Gets the current Appium driver instance
+        # Gets the current Appium driver instance
         appium_lib = self._builtin.get_library_instance("AppiumLibrary")
         return appium_lib._current_application()
 
     def _find_all_elements(self, driver):
-    # Return all elements in the current screen using a generic XPath
+        # Return all elements in the current screen using a generic XPath
         return driver.find_elements(By.XPATH, "//*")
 
     def _safe_attr(self, el, name):
-    # Read attribute, strip, and normalize empty/null to ''.
-    # Avoid repetition of the same try/except/strip/null pattern across the code
+        # Read attribute, strip, and normalize empty/null to ''.
+        # Avoid repetition of the same try/except/strip/null pattern across the code
         try:
             val = el.get_attribute(name)
         except Exception:
@@ -48,7 +47,7 @@ class VisibleElements:
         return val
 
     def _passes_filter(self, el, filter_type):
-    # Check if the element matches the given filter type
+        # Check if the element matches the given filter type
         """Args:
             el (WebElement): the element to evaluate.
             filter_type (str): filter type options ('all' | 'clickable' | 'text' | 'button' | 'input').
@@ -102,7 +101,7 @@ class VisibleElements:
         return None, None
 
     def _build_debug_dict(self, el, chosen_value, chosen_kind):
-    # Build a structured dictionary of element attributes for debug mode
+        # Build a structured dictionary of element attributes for debug mode
         """Args:
             el (WebElement): the element that passed the visibility and `filter_type` checks.
             chosen_value (str): the identifier value selected according to `id_mode` (resource-id or content-desc).
@@ -120,7 +119,7 @@ class VisibleElements:
             "accessibility_id": self._safe_attr(el, "content-desc"),
             "text": self._safe_attr(el, "text"),
             "class": self._safe_attr(el, "class"),
-            "clickable": self._safe_attr(el, "clickable") == "true"
+            "clickable": self._safe_attr(el, "clickable") == "true",
         }
 
     @keyword("Get Visible Elements On Screen")
@@ -185,7 +184,7 @@ class VisibleElements:
             - Duplicates are automatically removed based on (kind, value) pairs.
         """
 
-        valid_filters = {'all', 'clickable', 'text', 'button', 'input'}
+        valid_filters = {"all", "clickable", "text", "button", "input"}
         # Normalize input to lowercase (lower()) and strip (strip()) spaces to avoid typos
         filter_type = (filter_type or "").strip().lower()
         if filter_type not in valid_filters:
@@ -243,14 +242,14 @@ class VisibleElements:
 
             # Ignore elements that are no longer valid
             except (StaleElementReferenceException, NoSuchElementException) as ex:
-            # NoSuchElementException: the element does not exist (e.g., invalid selector or not rendered yet)
-            # StaleElementReferenceException: the element is no longer attached to the DOM (e.g., dynamic re-render)
+                # NoSuchElementException: the element does not exist (e.g., invalid selector or not rendered yet)
+                # StaleElementReferenceException: the element is no longer attached to the DOM (e.g., dynamic re-render)
                 self._builtin.log(f"Ignored element due to {type(ex).__name__}: {ex}", level="DEBUG")
                 continue
 
         # Log total elements that passed all filters
         count = len(visible_elements)
-        self._builtin.log (f"Total visible elements after filtering: {count}", level="INFO")
+        self._builtin.log(f"Total visible elements after filtering: {count}", level="INFO")
 
         if debug:
             debug_output = json.dumps(visible_elements, indent=2)

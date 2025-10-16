@@ -8,7 +8,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 class ClickElements:
     """Class to execute sequential clicks on multiple elements."""
 
-    ROBOT_LIBRARY_SCOPE = 'GLOBAL'
+    ROBOT_LIBRARY_SCOPE = "GLOBAL"
 
     def __init__(self):
         self._builtin = BuiltIn()
@@ -40,15 +40,15 @@ class ClickElements:
 
             appium_lib = self._builtin.get_library_instance("AppiumLibrary")
 
-            self._builtin.log(f"Starting sequential click on {len(elements_list)} elements", level='INFO')
+            self._builtin.log(f"Starting sequential click on {len(elements_list)} elements", level="INFO")
 
             for i, locator in enumerate(elements_list, 1):
-                self._builtin.log(f"Clicking element {i}/{len(elements_list)}: {locator}", level='INFO')
+                self._builtin.log(f"Clicking element {i}/{len(elements_list)}: {locator}", level="INFO")
 
                 # Find element
                 element = appium_lib._element_find(locator, True, True)
                 if not element:
-                    self._builtin.log(f"Element not found: {locator}", level='WARN')
+                    self._builtin.log(f"Element not found: {locator}", level="WARN")
                     continue
 
                 # Get location and size
@@ -56,12 +56,12 @@ class ClickElements:
                 size = element.size
 
                 # Calculate center coordinates
-                center_x = location['x'] + size['width'] / 2
-                center_y = location['y'] + size['height'] / 2
+                center_x = location["x"] + size["width"] / 2
+                center_y = location["y"] + size["height"] / 2
 
                 # Execute click
                 actions = ActionChains(driver)
-                touch = actions.w3c_actions.add_pointer_input('touch', 'finger')
+                touch = actions.w3c_actions.add_pointer_input("touch", "finger")
 
                 touch.create_pointer_move(x=center_x, y=center_y)
                 touch.create_pointer_down(button=0)
@@ -70,7 +70,7 @@ class ClickElements:
 
                 actions.perform()
 
-                self._builtin.log(f"Click executed on element {i}: {locator}", level='INFO')
+                self._builtin.log(f"Click executed on element {i}: {locator}", level="INFO")
 
                 # Pause between clicks (except for the last one)
                 if i < len(elements_list):

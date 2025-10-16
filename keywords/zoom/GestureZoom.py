@@ -72,7 +72,6 @@ Errors/Exceptions
   cannot perform the requested pointer actions.
 """
 
-
 import random
 import warnings
 
@@ -84,7 +83,8 @@ from selenium.webdriver.common.actions.mouse_button import MouseButton
 
 class GestureZoom:
     """Custom Gesture Extension Class for AppiumLibrary with enhanced zoom gesture."""
-    ROBOT_LIBRARY_SCOPE = 'GLOBAL'
+
+    ROBOT_LIBRARY_SCOPE = "GLOBAL"
 
     def __init__(self):
         self._builtin = BuiltIn()
@@ -102,8 +102,8 @@ class GestureZoom:
             raise RuntimeError(f"Element not found for locator: {locator}")
         location = element.location
         size = element.size
-        x, y = location['x'], location['y']
-        width, height = size['width'], size['height']
+        x, y = location["x"], location["y"]
+        width, height = size["width"], size["height"]
         return x + width / 2, y + height / 2, element
 
     def _calculate_finger_final_positions(self, x, y, scale, movement, direction):
@@ -121,8 +121,7 @@ class GestureZoom:
             new_x = max(0, min(x, screen_width))
             new_y = max(0, min(y, screen_height))
             if (x, y) != (new_x, new_y):
-                warnings.warn(
-                    f"Finger position ({x}, {y}) adjusted to ({new_x}, {new_y}) to fit within screen bounds.")
+                warnings.warn(f"Finger position ({x}, {y}) adjusted to ({new_x}, {new_y}) to fit within screen bounds.")
             adjusted_positions.append((new_x, new_y))
         return adjusted_positions
 
@@ -131,7 +130,7 @@ class GestureZoom:
         if locator is not None:
             if not isinstance(locator, str) or not locator:
                 raise ValueError("The 'locator' must be a non-empty string.")
-            if '=' not in locator:
+            if "=" not in locator:
                 raise ValueError(f"Locator '{locator}' must be in the format 'strategy=value'")
         if scale <= 1.0:
             raise ValueError("Scale must be greater than 1.0")
@@ -143,7 +142,9 @@ class GestureZoom:
             raise ValueError("Movement must be positive")
 
     @keyword("Perform Zoom Gesture")
-    def perform_zoom_gesture(self, locator=None, scale=1.5, duration=500, direction="vertical", movement=300, pause=0.1, steps=50):
+    def perform_zoom_gesture(
+        self, locator=None, scale=1.5, duration=500, direction="vertical", movement=300, pause=0.1, steps=50
+    ):
         """
         Performs a realistic zoom gesture with perturbation.
 
@@ -165,8 +166,8 @@ class GestureZoom:
                 raise RuntimeError("The Appium driver is not available.")
 
             screen_size = driver.get_window_size()
-            screen_width = screen_size['width']
-            screen_height = screen_size['height']
+            screen_width = screen_size["width"]
+            screen_height = screen_size["height"]
 
             if locator is None:
                 center_x = screen_width / 2
@@ -183,15 +184,16 @@ class GestureZoom:
             f1_end, f2_end = self._calculate_finger_final_positions(center_x, center_y, scale, movement, direction)
 
             f1_start, f1_end, f2_start, f2_end = self._adjust_to_screen_bounds(
-                [f1_start, f1_end, f2_start, f2_end], screen_width, screen_height)
+                [f1_start, f1_end, f2_start, f2_end], screen_width, screen_height
+            )
 
             self._builtin.log(f"Finger 1 starts at ({f1_start})", "INFO")
             self._builtin.log(f"Finger 2 starts at ({f2_start})", "INFO")
 
             actions = ActionChains(driver)
             actions.w3c_actions.devices = []
-            finger1 = actions.w3c_actions.add_pointer_input('touch', 'finger1')
-            finger2 = actions.w3c_actions.add_pointer_input('touch', 'finger2')
+            finger1 = actions.w3c_actions.add_pointer_input("touch", "finger1")
+            finger2 = actions.w3c_actions.add_pointer_input("touch", "finger2")
 
             finger1.create_pointer_move(x=f1_start[0], y=f1_start[1])
             finger2.create_pointer_move(x=f2_start[0], y=f2_start[1])
@@ -209,8 +211,12 @@ class GestureZoom:
                 interp_f2_x = f2_start[0] + t * (f2_end[0] - f2_start[0]) + random.uniform(-0.0, 0.0)
                 interp_f2_y = f2_start[1] + t * (f2_end[1] - f2_start[1]) + random.uniform(-0.0, 0.0)
 
-                interp_f1_x, interp_f1_y = max(0, min(interp_f1_x, screen_width)), max(0, min(interp_f1_y, screen_height))
-                interp_f2_x, interp_f2_y = max(0, min(interp_f2_x, screen_width)), max(0, min(interp_f2_y, screen_height))
+                interp_f1_x, interp_f1_y = max(0, min(interp_f1_x, screen_width)), max(
+                    0, min(interp_f1_y, screen_height)
+                )
+                interp_f2_x, interp_f2_y = max(0, min(interp_f2_x, screen_width)), max(
+                    0, min(interp_f2_y, screen_height)
+                )
 
                 move_duration = int(duration / steps)
                 finger1.create_pointer_move(x=interp_f1_x, y=interp_f1_y, duration=move_duration)

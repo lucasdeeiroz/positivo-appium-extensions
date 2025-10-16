@@ -7,8 +7,10 @@ from VisibleElements import VisibleElements
 class FakeBuiltIn:
     def log(self, msg, level=None):
         print(f"[{level}] {msg}")
+
     def fail(self, msg):
         raise Exception(msg)
+
 
 # Mocked version of VisibleElements to inject the driver directly
 class MockVisibleElements(VisibleElements):
@@ -22,15 +24,14 @@ class MockVisibleElements(VisibleElements):
 
 # Basic element mock to simulate screen elements
 class Element:
-    def __init__(self, displayed, rid, text="", cls="", clickable="false",
-                 raise_display=False, content_desc=None):
+    def __init__(self, displayed, rid, text="", cls="", clickable="false", raise_display=False, content_desc=None):
         self.text = text
         self.attrs = {
             "resource-id": rid,
             "content-desc": content_desc,
             "class": cls,
             "clickable": clickable,
-            "text": text
+            "text": text,
         }
         self.raise_display = raise_display
         self._displayed = displayed
@@ -64,21 +65,26 @@ if __name__ == "__main__":
         {
             "desc": "Stale element is ignored deterministically (middle item)",
             "elements": [
-                Element(True, "btn1", text="One",  cls="android.widget.Button", clickable="true"),
-                Element(True, "btn2", text="Two",  cls="android.widget.Button", clickable="true", raise_display=True),
-                Element(True, "btn3", text="Three",cls="android.widget.Button", clickable="true"),
+                Element(True, "btn1", text="One", cls="android.widget.Button", clickable="true"),
+                Element(True, "btn2", text="Two", cls="android.widget.Button", clickable="true", raise_display=True),
+                Element(True, "btn3", text="Three", cls="android.widget.Button", clickable="true"),
             ],
             "filter_type": "all",
             "debug": False,
             "expected": ["btn1", "btn3"],
         },
-
         # NORMALIZATION CASE 1 — content-desc '  null  ' becomes '' (keep resource-id to ensure inclusion)
         {
             "desc": "Normalization: content-desc '  null  ' -> '' (debug payload)",
             "elements": [
-                Element(True, "inp_name", text="   ", cls="android.widget.EditText",
-                        clickable="false", content_desc="  null  "),
+                Element(
+                    True,
+                    "inp_name",
+                    text="   ",
+                    cls="android.widget.EditText",
+                    clickable="false",
+                    content_desc="  null  ",
+                ),
             ],
             "filter_type": "input",
             "debug": True,
@@ -86,20 +92,20 @@ if __name__ == "__main__":
                 {
                     "identifier": {"value": "inp_name", "kind": "resource_id"},
                     "resource_id": "inp_name",
-                    "accessibility_id": "",            # normalized from '  null  '
-                    "text": "",                        # normalized blank text
+                    "accessibility_id": "",  # normalized from '  null  '
+                    "text": "",  # normalized blank text
                     "class": "android.widget.EditText",
                     "clickable": False,
                 }
             ],
         },
-
         # NORMALIZATION CASE 2 — missing content-desc (None) normalizes to ""
         {
             "desc": "Normalization: content-desc None -> '' (debug payload)",
             "elements": [
-                Element(True, "inp_email", text="", cls="android.widget.EditText",
-                        clickable="false", content_desc=None),
+                Element(
+                    True, "inp_email", text="", cls="android.widget.EditText", clickable="false", content_desc=None
+                ),
             ],
             "filter_type": "input",
             "debug": True,
@@ -107,20 +113,25 @@ if __name__ == "__main__":
                 {
                     "identifier": {"value": "inp_email", "kind": "resource_id"},
                     "resource_id": "inp_email",
-                    "accessibility_id": "",            # None -> ""
+                    "accessibility_id": "",  # None -> ""
                     "text": "",
                     "class": "android.widget.EditText",
                     "clickable": False,
                 }
             ],
         },
-
         # IDENTIFIER CASE — auto prioritizes resource-id when both exist
         {
             "desc": "Identifier: auto prefers resource-id over content-desc (debug)",
             "elements": [
-                Element(True, "btn_dual", text="OK", cls="android.widget.Button",
-                        clickable="true", content_desc="btn_dual_cd"),
+                Element(
+                    True,
+                    "btn_dual",
+                    text="OK",
+                    cls="android.widget.Button",
+                    clickable="true",
+                    content_desc="btn_dual_cd",
+                ),
             ],
             "filter_type": "all",
             "debug": True,
@@ -135,7 +146,6 @@ if __name__ == "__main__":
                 }
             ],
         },
-
         # DEDUP CASE — same (kind, value) for resource-id -> 1 item
         {
             "desc": "Dedup: same (kind,value) for resource-id collapses to one",
@@ -147,7 +157,6 @@ if __name__ == "__main__":
             "debug": False,
             "expected": ["btn_dup"],
         },
-
         # DEDUP CASE — same value across different kinds results in 2 entries (normal output is strings)
         {
             "desc": "Dedup: same value across different kinds (rid vs accessibility_id) keeps both",
@@ -159,38 +168,36 @@ if __name__ == "__main__":
             "debug": False,
             "expected": ["btn_same", "btn_same"],  # two items because (kind, value) differs
         },
-
         # LEGIT EMPTY CASE 1 — input with NO identifiers -> []
         {
             "desc": "Legit empty: input element without identifiers returns []",
             "elements": [
-                Element(True, None, text="", cls="android.widget.EditText",
-                        clickable="false", content_desc=None),
+                Element(True, None, text="", cls="android.widget.EditText", clickable="false", content_desc=None),
             ],
             "filter_type": "input",
             "debug": False,
             "expected": [],
         },
-
         # LEGIT EMPTY CASE 2 (selector-strict) — require accessibility_id when only resource-id exists
         {
             "desc": "Legit empty (strict): id_mode=accessibility_id but element has only resource-id",
             "elements": [
-                Element(True, "input_user", text="", cls="android.widget.EditText",
-                        clickable="true", content_desc=None),
+                Element(
+                    True, "input_user", text="", cls="android.widget.EditText", clickable="true", content_desc=None
+                ),
             ],
             "filter_type": "input",
             "id_mode": "accessibility_id",
             "debug": False,
             "expected": [],
         },
-
         # CONTROL CASE 3 (selector-strict) — require accessibility_id and element has only content-desc
         {
             "desc": "Strict selector returns value when content-desc exists",
             "elements": [
-                Element(True, None, text="", cls="android.widget.EditText",
-                        clickable="true", content_desc="field_user"),
+                Element(
+                    True, None, text="", cls="android.widget.EditText", clickable="true", content_desc="field_user"
+                ),
             ],
             "filter_type": "input",
             "id_mode": "accessibility_id",
@@ -206,6 +213,7 @@ if __name__ == "__main__":
         visible = MockVisibleElements(driver)
 
         id_mode = case.get("id_mode", "auto")
-        result = visible.get_visible_elements_on_screen(filter_type=case["filter_type"],
-                                                        id_mode=id_mode, debug=case["debug"])
+        result = visible.get_visible_elements_on_screen(
+            filter_type=case["filter_type"], id_mode=id_mode, debug=case["debug"]
+        )
         print("✅ PASSED\n" if result == case["expected"] else "❌ FAILED\n")

@@ -7,7 +7,7 @@ from selenium.webdriver.common.actions.mouse_button import MouseButton
 class TapAtPercentage:
     """Class to tap at a specific point on the screen using percentage coordinates."""
 
-    ROBOT_LIBRARY_SCOPE = 'GLOBAL'
+    ROBOT_LIBRARY_SCOPE = "GLOBAL"
 
     def __init__(self):
         self._builtin = BuiltIn()
@@ -44,23 +44,23 @@ class TapAtPercentage:
                 raise RuntimeError("Appium driver is not available.")
 
             screen_size = driver.get_window_size()
-            screen_width = screen_size['width']
-            screen_height = screen_size['height']
+            screen_width = screen_size["width"]
+            screen_height = screen_size["height"]
 
             x_px = int(screen_width * x)
             y_px = int(screen_height * y)
 
-            self._builtin.log(f"Tapping at ({x_px}, {y_px}) [percentages: ({x}, {y})]", level='INFO')
+            self._builtin.log(f"Tapping at ({x_px}, {y_px}) [percentages: ({x}, {y})]", level="INFO")
 
             actions = ActionChains(driver)
-            touch = actions.w3c_actions.add_pointer_input('touch', 'finger')
+            touch = actions.w3c_actions.add_pointer_input("touch", "finger")
             touch.create_pointer_move(x=x_px, y=y_px)
             touch.create_pointer_down(button=MouseButton.LEFT)
             touch.create_pause(duration / 1000)
             touch.create_pointer_up(button=MouseButton.LEFT)
             actions.perform()
 
-            self._builtin.log(f"Tap performed at ({x_px}, {y_px})", level='INFO')
+            self._builtin.log(f"Tap performed at ({x_px}, {y_px})", level="INFO")
             return True
 
         except Exception as e:
