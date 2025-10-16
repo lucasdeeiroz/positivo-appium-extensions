@@ -71,13 +71,13 @@ repos:
     rev: 24.8.0
     hooks:
       - id: black
-        args: ["--line-length", "120", "--target-version", "py39"]
+        args: ["--line-length", "120", "--target-version", "py312"]
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.6.9
     hooks:
       - id: ruff
-        args: ["--select", "E,F,W,I,B,UP,C90", "--target-version", "py39"]
+        args: ["--select", "E,F,W,I,B,UP", "--target-version", "py312"]
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0
@@ -96,7 +96,7 @@ repos:
 ## Code Style Guidelines
 
 - Formatter: Use Black with line-length = 120 (helps readability in long Robot/Appium calls)
-- Linter: Use Ruff with rules E,F,W,I,B,UP,C90 and target-version = py39
+- Linter: Use Ruff with rules E,F,W,I,B,UP and target-version = py312
   - `I` handles import sorting; no separate `isort` is needed
 - Follow **PEP8** for Python code formatting.
 - Align with the structure used in AppiumLibrary:
@@ -179,7 +179,7 @@ Each PR should include:
 
 Before submitting your PR, make sure:
 
-- [ ] Your code is formatted with Black (120 columns) and passes Ruff lint (E,F,W,I,B,UP,C90, py39) 
+- [ ] Your code is formatted with Black (120 columns) and passes Ruff lint (E,F,W,I,B,UP, py312) 
 - [ ] Pre-commit hooks were executed locally (pre-commit run --all-files)
 - [ ] Your code follows AppiumLibrary conventions and is clearly commented  
 - [ ] Your keyword is documented with a detailed docstring  
