@@ -20,29 +20,43 @@ class AppiumLongPressExtensions:
         """
         Returns the current Appium driver instance from AppiumLibrary.
         """
-        return self._builtin.get_library_instance("AppiumLibrary")._current_application()
+        return self._builtin.get_library_instance('AppiumLibrary')._current_application()
 
-    @keyword("LongP")
+    @keyword('Long-Press')
     def long_press(self, locator, duration=1000):
-        """
-        Performs a long press on the specified element for a given duration.
+        """Perform a long press gesture on a mobile element.
 
-        Args:
-            locator (str): The locator of the element to long press.
-            duration (int): Duration of the long press in milliseconds. Default is 1000ms.
-        Raises:
-            ValueError: If the element is not found.
-            RuntimeError: If the Appium driver is not initialized.
+        Locates an element using the given locator strategy and value, then
+        performs a long press gesture on it for the specified duration.
+        
+        [Arguments]
+        locator    Element locator in format 'strategy=value'. Supported strategies:
+                  id, xpath, accessibility_id, class name, css selector, name
+        duration   Time in milliseconds to hold the press (default 1000)
+
+        [Return Values]
+        None. Passes if gesture is performed successfully.
+
+        [Raises]
+        ValueError     If locator is None, empty or malformed
+                      If strategy is not supported
+                      If element cannot be found
+                      If duration is not a positive number
+        RuntimeError   If Appium driver is not initialized
+                      If gesture cannot be performed
         """
         driver = self._driver
-
-        locator_parts = locator.split("=", 1)
+        
+        locator_parts = locator.split('=', 1)
         if len(locator_parts) != 2:
-            raise ValueError("Locator deve estar no formato 'estrategia=valor'")
-
+            raise ValueError("Locator must be in 'strategy=value' format")
+        
         strategy, value = locator_parts
-
+        
+       
         element = driver.find_element(strategy, value)
-
+        
+      
         actions = ActionChains(driver)
-        actions.click_and_hold(element).pause(duration / 1000).release().perform()
+        actions.click_and_hold(element).pause(duration/1000).release().perform()
+
