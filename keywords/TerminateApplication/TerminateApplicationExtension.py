@@ -36,13 +36,18 @@ class TerminateApplicationExtension:
         [Return Values]
         - Returns True if application was running and successfully terminated
         - Returns False if application was not running
+
+        Note: The return value indicates the application state before termination:
+        - True means the app was active and has been closed
+        - False means the app was already closed or not running
         
         [Raises]
         - ValueError: If app_id is empty or invalid
         - RuntimeError: If driver is not available or termination fails
         
-        [Example]
-        | Terminate Application Extension | com.google.android.youtube |
+         [Example]
+        | ${result}= | Terminate Application Extension | com.google.android.youtube |
+        | Should Be True | ${result} | Application should have been running |
         """
         # Validate app_id parameter
         if not app_id:
