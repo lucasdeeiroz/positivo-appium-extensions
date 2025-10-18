@@ -87,9 +87,14 @@ class TerminateApplicationExtension:
             
         except RuntimeError:
             # Re-raise RuntimeError with original message
+            self._builtin.log(f"RuntimeError occurred while terminating '{app_id}'", level="ERROR")
             raise
         except Exception as e:
+            self._builtin.log(f"Unexpected exception occurred while terminating '{app_id}': {type(e).__name__}", level="ERROR")
             raise RuntimeError(f"Failed to terminate application '{app_id}': {str(e)}")
+        finally:
+            # Log completion of termination attempt regardless of success or failure
+            self._builtin.log(f"Termination attempt completed for application: {app_id}", level="DEBUG")
 
     @keyword("Get Current App Id")
     def get_current_app_id(self):
@@ -117,9 +122,14 @@ class TerminateApplicationExtension:
             return app_id
             
         except RuntimeError:
+            self._builtin.log("RuntimeError occurred while retrieving current app ID", level="ERROR")
             raise
         except Exception as e:
+            self._builtin.log(f"Unexpected exception occurred while retrieving app ID: {type(e).__name__}", level="ERROR")
             raise RuntimeError(f"Failed to get current app ID: {str(e)}")
+        finally:
+            # Log completion of app ID retrieval attempt
+            self._builtin.log("App ID retrieval attempt completed", level="DEBUG")
     
     def _is_valid_package_name(self, package_name):
         """
