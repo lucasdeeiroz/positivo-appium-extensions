@@ -14,7 +14,9 @@ Test YouTube Application Termination
     ...                custom keyword after the "Shorts" video session and execution of several swipes.
     [Teardown]    Close Application
     Start Session Youtube
-    Click Text    text=Shorts
+    Wait Until Element Is Visible    accessibility_id=Shorts    5s
+    Click Element    accessibility_id=Shorts
+
     Swipe Loop    10
     ${app_id}=    Get Current App Id
     Log    Terminating application with ID: ${app_id}    level=INFO
