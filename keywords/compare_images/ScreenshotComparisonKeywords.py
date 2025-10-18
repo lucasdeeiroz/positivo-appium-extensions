@@ -1,8 +1,8 @@
 import cv2
 import numpy as np
+import os.path
 from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
-
 
 class ScreenshotComparisonKeywords:
 
@@ -11,27 +11,57 @@ class ScreenshotComparisonKeywords:
 
     @property
     def driver(self):
-        return self._builtin.get_library_instance("AppiumLibrary")._current_application()
+        return self._builtin.get_library_instance('AppiumLibrary')._current_application()
 
     @keyword("Compare Screenshots")
-    def compare_images(self, img1, img2, expected="Equal", tolerance=0.1):
-        """
-        Compares two saved images and validates if they are equal or different.
+    def compare_images(self, img1, img2, expected="equal", tolerance=0.1):
+        """Compares two saved images and validates if they are equal or different based on pixel difference.
 
-        Args:
-            img1 (str): Full path to the first image.
-            img2 (str): Full path to the second image.
-            expected (str): "Equal" (expects images to be equal) or "Different" (expects images to be different).
-            tolerance (float): Difference tolerance in percent (0.1 = 10%).
+        [Arguments]
+        img1           Path to the first image file to compare
+        img2           Path to the second image file to compare
+        expected      Whether images should be 'equal' or 'different' (case-insensitive)
+        tolerance     Maximum allowed difference ratio between images (0.0 to 1.0)
+
+        [Return Values]
+        None. Passes if comparison matches expectation, fails otherwise.
+
+        [Raises]
+        ValueError    If img1/img2 are not strings
+                     If image files do not exist
+                     If images are corrupt or in invalid format
+                     If expected is not 'equal' or 'different'
+                     If tolerance is not a number between 0 and 1
+        AssertionError    If images are too different when expected='equal'
+                         If images are too similar when expected='different'
         """
+        # Validate tolerance parameter
+        try:
+            tolerance = float(tolerance)
+        except (TypeError, ValueError):
+            raise ValueError(f'Invalid value for "tolerance" parameter. Must be a number, got: {type(tolerance).__name__}')
+        
+        if not (0 <= tolerance <= 1):
+            raise ValueError(f'Invalid value for "tolerance" parameter. Must be between 0 and 1, got: {tolerance}')
+
+        # Validate file paths
+        if not isinstance(img1, str) or not isinstance(img2, str):
+            raise ValueError(f"Image paths must be strings, got: img1={type(img1).__name__}, img2={type(img2).__name__}")
+
+        # Check if files exist
+        if not os.path.exists(img1):
+            raise ValueError(f"Image file does not exist: {img1}")
+        if not os.path.exists(img2):
+            raise ValueError(f"Image file does not exist: {img2}")
+
         # Load images
         image1 = cv2.imread(img1)
         image2 = cv2.imread(img2)
 
         if image1 is None:
-            raise AssertionError(f"Could not open image: {img1}")
+            raise ValueError(f"Could not read image (invalid format or corrupted): {img1}")
         if image2 is None:
-            raise AssertionError(f"Could not open image: {img2}")
+            raise ValueError(f"Could not read image (invalid format or corrupted): {img2}")
 
         # Resize if images have different sizes
         if image1.shape != image2.shape:
@@ -52,19 +82,22 @@ class ScreenshotComparisonKeywords:
             self._builtin.log_to_console(msg)
             self._builtin.log(msg, level)
 
+        # Validate expected parameter
+        expected = expected.lower()
+        if expected not in ["equal", "different"]:
+            raise ValueError(f'Invalid value for "expected" parameter. Must be "equal" or "different", got: "{expected}"')
+
         # Evaluate as expected
-        if expected == "Equal":
+        if expected == "equal":
             if difference_percent > limit:
                 log(f"❌ IMAGES ARE DIFFERENT. Difference: {difference_percent:.2f}% (limit {limit:.2f}%)", "ERROR")
                 raise AssertionError(f"Images are different. Difference {difference_percent:.2f}% > limit {limit:.2f}%")
             else:
                 log(f"✅ IMAGES ARE EQUAL. Difference: {difference_percent:.2f}% (<= {limit:.2f}%)")
 
-        elif expected == "Different":
+        else:  # expected == "different"
             if difference_percent <= limit:
                 log(f"❌ IMAGES ARE TOO SIMILAR. Difference: {difference_percent:.2f}% (limit {limit:.2f}%)", "ERROR")
-                raise AssertionError(
-                    f"Images are too similar. Difference {difference_percent:.2f}% <= limit {limit:.2f}%"
-                )
+                raise AssertionError(f"Images are too similar. Difference {difference_percent:.2f}% <= limit {limit:.2f}%")
             else:
                 log(f"✅ IMAGES ARE DIFFERENT. Difference: {difference_percent:.2f}% (> {limit:.2f}%)")
