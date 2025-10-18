@@ -30,15 +30,19 @@ class TerminateApplicationExtension:
         """
         Terminates the application specified by app_id.
         
-        Args:
-            app_id (str): The application package identifier (e.g., 'com.example.app')
+        [Arguments]
+        - app_id: The application package identifier (e.g., 'com.example.app')
         
-        Raises:
-            ValueError: If app_id is empty or invalid
-            RuntimeError: If driver is not available or termination fails
-            
-        Example:
-            | Terminate Application Extension | com.google.android.youtube |
+        [Return Values]
+        - Returns True if application was running and successfully terminated
+        - Returns False if application was not running
+        
+        [Raises]
+        - ValueError: If app_id is empty or invalid
+        - RuntimeError: If driver is not available or termination fails
+        
+        [Example]
+        | Terminate Application Extension | com.google.android.youtube |
         """
         # Validate app_id parameter
         if not app_id:
@@ -83,15 +87,15 @@ class TerminateApplicationExtension:
         """
         Returns the appPackage (app_id) of the current session.
         
-        Returns:
-            str: The application package identifier
-            
-        Raises:
-            RuntimeError: If driver is not available or app_id cannot be retrieved
-            
-        Example:
-            | ${app_id}= | Get Current App Id |
-            | Log | Current app: ${app_id} |
+        [Return Values]
+        - Returns the application package identifier as a string
+        
+        [Raises]
+        - RuntimeError: If driver is not available or app_id cannot be retrieved
+        
+        [Example]
+        | ${app_id}= | Get Current App Id |
+        | Log | Current app: ${app_id} |
         """
         try:
             driver = self.driver
@@ -110,13 +114,11 @@ class TerminateApplicationExtension:
     
     def _is_valid_package_name(self, package_name):
         """
-        Validates if the package name follows Android package naming conventions.
+        [Arguments]
+        - package_name: The package name to validate
         
-        Args:
-            package_name (str): The package name to validate
-            
-        Returns:
-            bool: True if valid, False otherwise
+        [Return Values]
+        - Returns True if valid, False otherwise
         """
         if not package_name or not isinstance(package_name, str):
             return False
