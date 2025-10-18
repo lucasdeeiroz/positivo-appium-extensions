@@ -26,13 +26,13 @@ Long Press Example
 
 ```robotframework
 # Press button for 8 seconds
-LongP    id=com.app.example:id/menu_button    8000
+Long-Press    id=com.app.example:id/menu_button    8000
 
 # Press text element for 5 seconds
-LongP    xpath=//android.widget.TextView[@text="Options"]    5000
+LongLong-Press P    xpath=//android.widget.TextView[@text="Options"]    5000
 
 # Press using default duration (1 second)
-LongP    accessibility_id=menu_button
+Long-Press    accessibility_id=menu_button
 ```
 
 ## How to Run Tests
