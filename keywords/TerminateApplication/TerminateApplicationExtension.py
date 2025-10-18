@@ -1,6 +1,7 @@
 from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
 from appium.webdriver.extensions.applications import Applications
+import re
 
 
 class TerminateApplicationExtension:
@@ -133,26 +134,31 @@ class TerminateApplicationExtension:
     
     def _is_valid_package_name(self, package_name):
         """
+        Validates if the package name follows Android package naming conventions.
+        
+        Uses regex pattern based on Android conventions:
+        - Must start with a letter (a-z, A-Z)
+        - Can contain letters, digits, and underscores
+        - Must have at least two segments separated by dots
+        - Each segment must start with a letter
+        - Pattern: ^[a-zA-Z][a-zA-Z0-9_]*(\.[a-zA-Z][a-zA-Z0-9_]*)+$
+        
         [Arguments]
         - package_name: The package name to validate
         
         [Return Values]
         - Returns True if valid, False otherwise
+        
+        [Examples]
+        Valid: com.example.app, com.google.android.youtube, my.app.test_2
+        Invalid: com, 123.app, .com.app, com..app, com.123app
         """
         if not package_name or not isinstance(package_name, str):
             return False
         
-        # Basic validation: must contain at least one dot and alphanumeric characters
-        parts = package_name.split('.')
-        if len(parts) < 2:
-            return False
+        # Android package name regex pattern
+        # ^[a-zA-Z][a-zA-Z0-9_]* - First segment: starts with letter, followed by letters/digits/underscores
+        # (\.[a-zA-Z][a-zA-Z0-9_]*)+ - Additional segments: dot + letter + letters/digits/underscores (one or more)
+        android_package_pattern = r'^[a-zA-Z][a-zA-Z0-9_]*(\.[a-zA-Z][a-zA-Z0-9_]*)+$'
         
-        # Each part should contain only alphanumeric characters and underscores
-        for part in parts:
-            if not part or not all(c.isalnum() or c == '_' for c in part):
-                return False
-            # Cannot start with a number
-            if part[0].isdigit():
-                return False
-        
-        return True
+        return bool(re.match(android_package_pattern, package_name))
