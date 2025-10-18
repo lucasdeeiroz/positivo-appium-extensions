@@ -72,6 +72,10 @@ class TerminateApplicationExtension:
             if not driver.is_app_installed(app_id):
                 raise RuntimeError(f"Application '{app_id}' is not installed on the device")
             
+            # Debug log before terminate_app() execution
+            self._builtin.log(f"DEBUG: Executing driver.terminate_app() for app_id='{app_id}'", level="DEBUG")
+            self._builtin.log(f"DEBUG: Driver capabilities: {driver.desired_capabilities}", level="DEBUG")
+            
             result = driver.terminate_app(app_id)
             
             if result:
