@@ -9,6 +9,8 @@ class TerminateApplicationExtension:
     This class provides keywords to terminate an application
     Additionally, it allows retrieval of the current application ID(appPackage) and activity(appActivity) for your own use.
     This is useful for testing scenarios where you need to ensure the application is closed
+    If the application is not installed, a RuntimeError is expected to be raised at runtime.
+    If the application is not currently running, a warning will be logged.
     """
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
 
