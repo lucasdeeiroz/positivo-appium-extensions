@@ -1,4 +1,4 @@
-# Long Press (LongP) - AppiumLibrary Extension
+# Long Press (Long-Press) - AppiumLibrary Extension
 
 A keyword for performing long press gestures on Android or iOS app elements during automated testing with Appium and Robot Framework.
 
@@ -11,7 +11,7 @@ Library    AppiumLongPressExtensions.py
 
 *** Test Cases ***
 Long Press Example
-    LongP    id=button_id    2000    # Press for 2 seconds
+    Long-Press    id=button_id    2000    # Press for 2 seconds
 ```
 
 ## Arguments
@@ -44,6 +44,7 @@ robot test_long_press.robot
 ```
 
 ### Requirements
+
 - AppiumLibrary installed
 - Physical device or emulator connected
 - Appium Server running
