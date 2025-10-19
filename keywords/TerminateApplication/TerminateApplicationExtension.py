@@ -159,6 +159,6 @@ class TerminateApplicationExtension:
         # Android package name regex pattern
         # ^[a-zA-Z][a-zA-Z0-9_]* - First segment: starts with letter, followed by letters/digits/underscores
         # (\.[a-zA-Z][a-zA-Z0-9_]*)+ - Additional segments: dot + letter + letters/digits/underscores (one or more)
-        android_package_pattern = r'^[a-zA-Z][a-zA-Z0-9_]*(\.[a-zA-Z][a-zA-Z0-9_]*)+$'
+        android_package_pattern = r'^[a-zA-Z][a-zA-Z0-9_-]*(\.[a-zA-Z][a-zA-Z0-9_-]*)+$'
         
         return bool(re.match(android_package_pattern, package_name))
