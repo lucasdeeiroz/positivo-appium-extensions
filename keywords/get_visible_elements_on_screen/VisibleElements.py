@@ -140,8 +140,11 @@ class VisibleElements:
             debug: if False (default), returns only a list of identifiers (strings); If True, returns a list of dictionaries
 
         [Return Values]
-            - debug=False: a list of identifier strings (resource-id or accessibility_id).
-            - debug=True: a list of dictionaries with extended element information:
+            - debug=False: list[str]
+            A list of identifier strings (resource-id or accessibility_id).
+
+            - debug=True: list[dict]
+            A list of dictionaries with extended element information:
                 identifier: { value: <str>, kind: resource_id|accessibility_id }
                 resource_id: <str>
                 accessibility_id: <str>
