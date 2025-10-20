@@ -18,18 +18,31 @@ class ClickElements:
 
     @keyword("Click Elements")
     def click_elements(self, elements_list, click_duration=100, interval_between_clicks=0.5):
-        """
-        Clicks sequentially on multiple elements.
-
-        Args:
-            elements_list (list): List of element locators
-            click_duration (int): Click duration in milliseconds
-            interval_between_clicks (float): Interval between clicks in seconds
+        """Clicks sequentially on multiple elements using Appium's touch actions.
         
-        Raises:
-            TypeError: If parameters have incompatible types
-            ValueError: If parameter values are outside acceptable ranges
-            RuntimeError: If driver or element operations fail
+        Executes clicks on each element in the provided list, in sequence. 
+        If an element is not found, a WARN level log message is generated and the keyword 
+        continues with the next element without failing. A delay between clicks can be configured.
+        
+        [Arguments]
+        - ``elements_list``: List of element locators (id, xpath, accessibility_id, etc.)
+        - ``click_duration``: Duration of each click in milliseconds (1-2000)
+        - ``interval_between_clicks``: Time between clicks in seconds (must be non-negative)
+        
+        [Return Values]
+        None. The keyword completes after all elements are clicked or attempted.
+        
+        [Examples]
+        | @{elements}=    Create List    id=button1    xpath=//android.widget.TextView[@text="Submit"]
+        | Click Elements    ${elements}    click_duration=200    interval_between_clicks=0.5
+        
+        | @{calculator_buttons}=    Create List    id=digit_1    id=digit_2    id=plus    id=equals
+        | Click Elements    ${calculator_buttons}
+        
+        [Raises]
+        - ``TypeError``: If parameters have incompatible types (non-list elements_list, non-numeric duration)
+        - ``ValueError``: If parameter values are outside acceptable ranges (empty list, negative intervals)
+        - ``RuntimeError``: If driver is unavailable or element operations fail
         """
         # Validate elements_list type
         if elements_list is None:
