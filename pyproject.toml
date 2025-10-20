@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "robotframework-appium-extensions"
-version = "1.0.0"
+version = "0.1.0"
 description = """Additional keywords for Robot Framework's AppiumLibrary.
     Developed within the Technology Residency Program, executed by CEPEDI, coordinated by SOFTEX, and supported by MCTI,
     with the participation of Positivo Tecnologia as a partner company that proposed the development challenge."""
