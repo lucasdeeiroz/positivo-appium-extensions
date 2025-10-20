@@ -157,15 +157,18 @@ class VisibleElements:
 
         valid_filters = {"all", "clickable", "text", "button", "input"}
         # Normalize input to lowercase (lower()) and strip (strip()) spaces to avoid typos
-        filter_type = (filter_type or "").strip().lower()
+        filter_type = str(filter_type or "").strip().lower()
         if filter_type not in valid_filters:
             self._builtin.fail(f"Invalid filter '{filter_type}'. Options: {valid_filters}")
 
         valid_ids = {"auto", "resource_id", "accessibility_id"}
         # Normalize input to lowercase (lower()) and strip (strip()) spaces to avoid typos
-        id_mode = (id_mode or "").strip().lower()
+        id_mode = str(id_mode or "").strip().lower()
         if id_mode not in valid_ids:
             self._builtin.fail(f"Invalid id_mode '{id_mode}'. Options: {valid_ids}")
+
+        # Converts textual values like "True"/"False" to real booleans
+        debug = self._builtin.convert_to_boolean(debug)
 
         driver = self._get_appium_driver()
         try:
