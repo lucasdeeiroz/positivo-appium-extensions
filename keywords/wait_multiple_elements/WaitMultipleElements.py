@@ -1,11 +1,17 @@
 from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
 import time
+import re
 
 class WaitMultipleElements:
     """Class to wait for multiple elements simultaneously."""
 
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
+    # Estratégias de localização válidas
+    VALID_STRATEGIES = ['id', 'xpath', 'accessibility_id', 'class_name', 'css selector', 'name', 
+                        'android uiautomator', 'ios class chain', 'ios predicate']
+    # Tempo máximo permitido para timeout (5 minutos)
+    MAX_TIMEOUT = 300
 
     def __init__(self):
         self._builtin = BuiltIn()
@@ -13,6 +19,29 @@ class WaitMultipleElements:
     @property
     def _driver(self):
         return self._builtin.get_library_instance("AppiumLibrary")._current_application()
+        
+    def _validate_locator(self, locator):
+        """
+        Valida se um locator está no formato strategy=value e usa uma estratégia válida.
+        """
+        if not isinstance(locator, str):
+            raise ValueError(f"Locator must be a string, got {type(locator).__name__}: {repr(locator)}")
+            
+        # Aceita xpath começando com // sem precisar de prefixo
+        if locator.startswith('//'):
+            return True
+            
+        # Verifica o formato strategy=value
+        match = re.match(r'^([a-zA-Z_\s]+)=(.+)$', locator)
+        if not match:
+            raise ValueError(f"Invalid locator format: {locator}. Must be 'strategy=value' or start with '//'")
+            
+        strategy = match.group(1).lower().strip()
+        if strategy not in self.VALID_STRATEGIES:
+            valid_strategies_str = ', '.join(self.VALID_STRATEGIES)
+            raise ValueError(f"Invalid strategy in locator '{locator}'. Valid strategies are: {valid_strategies_str}")
+            
+        return True
 
     @keyword("Wait Multiple Elements")
     def wait_multiple_elements(self, elements_list, timeout=10, wait_for_all=True, polling_interval=0.5):
@@ -34,12 +63,21 @@ class WaitMultipleElements:
         
         if not elements_list:
             raise ValueError("The elements list cannot be empty")
+            
+        # Validate each locator format
+        for idx, locator in enumerate(elements_list):
+            try:
+                self._validate_locator(locator)
+            except ValueError as e:
+                raise ValueError(f"Invalid locator at position {idx}: {str(e)}")
 
-        # Timeout validation and conversion
+        # Timeout validation
         try:
             timeout = float(timeout)
             if timeout <= 0:
                 raise ValueError("timeout must be a positive number")
+            if timeout > self.MAX_TIMEOUT:
+                raise ValueError(f"timeout cannot exceed {self.MAX_TIMEOUT} seconds")
         except (ValueError, TypeError) as e:
             raise ValueError("timeout must be a positive numeric value") from e
 
@@ -48,6 +86,8 @@ class WaitMultipleElements:
             polling_interval = float(polling_interval)
             if polling_interval <= 0:
                 raise ValueError("polling_interval must be a positive number")
+            if polling_interval >= timeout:
+                raise ValueError("polling_interval must be smaller than timeout")
         except (ValueError, TypeError) as e:
             raise ValueError("polling_interval must be a positive numeric value") from e
 
@@ -62,9 +102,19 @@ class WaitMultipleElements:
                 raise ValueError("wait_for_all must be a boolean value")
 
         try:
+            # Validar disponibilidade do driver
             driver = self._driver
-            if not driver:
-                raise RuntimeError("Appium driver is not available")
+            if driver is None:
+                raise RuntimeError("Appium driver is not available - ensure Appium session is initialized")
+                
+            # Validar sessão do driver
+            try:
+                session_id = driver.session_id
+                if not session_id:
+                    raise RuntimeError("Appium driver session is not valid - session may have been closed")
+                self._builtin.log(f"Driver session is valid (ID: {session_id})", level='DEBUG')
+            except Exception as session_error:
+                raise RuntimeError(f"Failed to validate Appium driver session: {str(session_error)}")
 
             appium_lib = self._builtin.get_library_instance("AppiumLibrary")
             
@@ -135,6 +185,11 @@ class WaitMultipleElements:
                     return final_results
                     
         except Exception as e:
-            if isinstance(e, (TimeoutError, ValueError, RuntimeError)):
+            if isinstance(e, (TimeoutError, ValueError)):
                 raise
-            raise RuntimeError(f"Error waiting for multiple elements visibility: {str(e)}")
+            elif isinstance(e, RuntimeError) and "Appium driver" in str(e):
+                raise
+            elif "Invalid locator" in str(e):
+                raise ValueError(str(e))
+            else:
+                raise RuntimeError(f"Error waiting for multiple elements visibility: {str(e)}")
