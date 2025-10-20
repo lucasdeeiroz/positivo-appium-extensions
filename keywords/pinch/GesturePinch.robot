@@ -38,3 +38,13 @@ Error message when Pinch Scale is invalid
     Sleep    10
     Perform Pinch Gesture    locator=xpath=//android.widget.ScrollView    scale=1.5
     Sleep    5
+
+Error message when Duration is invalid
+
+    [Documentation]    Should get an error message when Duration is invalid
+    [Tags]     maps
+    Start session Google Maps
+    Sleep    10
+    Perform Pinch Gesture    locator=xpath=//android.widget.ScrollView    duration=999999
+    Perform Pinch Gesture    locator=xpath=//android.widget.ScrollView    duration=99.99
+    Sleep    5
