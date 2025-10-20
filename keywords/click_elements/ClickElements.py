@@ -25,17 +25,64 @@ class ClickElements:
             elements_list (list): List of element locators
             click_duration (int): Click duration in milliseconds
             interval_between_clicks (float): Interval between clicks in seconds
-        """
-        if not isinstance(elements_list, list):
-            raise ValueError("elements_list must be a list of locators")
         
+        Raises:
+            TypeError: If parameters have incompatible types
+            ValueError: If parameter values are outside acceptable ranges
+            RuntimeError: If driver or element operations fail
+        """
+        # Validate elements_list type
+        if elements_list is None:
+            raise TypeError("elements_list cannot be None - a list of locator strings is required")
+        if not isinstance(elements_list, list):
+            raise TypeError(f"elements_list must be a list of locator strings, got {type(elements_list).__name__}")
+        
+        # Validate elements_list is not empty
         if not elements_list:
-            raise ValueError("The elements list cannot be empty")
+            raise ValueError("The elements list cannot be empty - at least one locator is required")
 
+        # Validate each element in the list is a string
+        for idx, item in enumerate(elements_list):
+            if not isinstance(item, str):
+                raise TypeError(
+                    f"All elements in elements_list must be strings (locators). "
+                    f"Invalid item at position {idx}: {repr(item)} (type: {type(item).__name__})"
+                )
+                    
+        # Validate click_duration
+        if click_duration is None:
+            raise TypeError("click_duration cannot be None - a positive number is required")
+        if not isinstance(click_duration, (int, float)):
+            raise TypeError(f"click_duration must be a number (int or float), got {type(click_duration).__name__}")
+        if click_duration <= 0:
+            raise ValueError(f"click_duration must be positive, got {click_duration}")
+        if click_duration > 2000:
+            raise ValueError(f"click_duration cannot exceed 2000ms, got {click_duration}")
+            
+        # Validate interval_between_clicks
+        if interval_between_clicks is None:
+            raise TypeError("interval_between_clicks cannot be None - a non-negative number is required")
+        if not isinstance(interval_between_clicks, (int, float)):
+            raise TypeError(f"interval_between_clicks must be a number (int or float), got {type(interval_between_clicks).__name__}")
+        if interval_between_clicks < 0:
+            raise ValueError(f"interval_between_clicks cannot be negative, got {interval_between_clicks}")
+            
         try:
+            # Validate driver existence
             driver = self._driver
-            if not driver:
-                raise RuntimeError("Appium driver is not available")
+            if driver is None:
+                raise RuntimeError("Appium driver is not available - ensure a session is started")
+            
+            # Validate driver session
+            try:
+                session_id = driver.session_id
+                if not session_id:
+                    raise RuntimeError("Appium driver session is not valid - session may have been closed")
+                self._builtin.log(f"Driver session is valid (ID: {session_id})", level='DEBUG')
+            except AttributeError:
+                raise RuntimeError("Failed to validate Appium driver session - driver object is invalid")
+            except Exception as session_error:
+                raise RuntimeError(f"Failed to validate Appium driver session: {str(session_error)}")
 
             appium_lib = self._builtin.get_library_instance("AppiumLibrary")
             
@@ -75,5 +122,12 @@ class ClickElements:
                 if i < len(elements_list):
                     time.sleep(interval_between_clicks)
                     
+        except (TypeError, ValueError) as e:
+            # Re-raise parameter validation exceptions without modification
+            raise
+        except RuntimeError as e:
+            # Re-raise runtime errors without modification
+            raise
         except Exception as e:
+            # Wrap other exceptions with detailed context
             raise RuntimeError(f"Error executing multiple clicks: {str(e)}")
