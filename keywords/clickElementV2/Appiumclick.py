@@ -25,18 +25,28 @@ class Appiumclick:
         """
         return self._builtin.get_library_instance("AppiumLibrary")._current_application()
 
-    @keyword("ClickC")
+    @keyword("Click Elements")
     def clickC(self, locator, xoffset=0.5, yoffset=0.5):
-        """
-        Clicks on an element at a specific offset, using either percentage or pixel values.
+        """Click on mobile element at specified coordinates using touch actions.
+        Supports percentage or pixel offsets from element's top-left corner.
 
-        Args:
-            locator (str): The locator of the element to click.
-            xoffset (float|int): Horizontal offset (0-1 for percentage, >1 for pixels). Default is 0.5 (center).
-            yoffset (float|int): Vertical offset (0-1 for percentage, >1 for pixels). Default is 0.5 (center).
-        Raises:
-            ValueError: If the element is not found, offsets are invalid, or coordinates are out of bounds.
-            RuntimeError: If the Appium driver is not initialized.
+        [Arguments]
+        locator    Element locator string (id=submit, xpath=//button, etc)
+        xoffset    Horizontal offset from left edge (default 0.5)
+                  Values 0-1: percentage of element width
+                  Values >1: absolute pixels from left
+        yoffset    Vertical offset from top edge (default 0.5)
+                  Values 0-1: percentage of element height 
+                  Values >1: absolute pixels from top
+
+        [Returns]
+        None. Keyword passes if click action completes successfully.
+
+        [Raises]
+        RuntimeError    When Appium driver is not initialized
+        ValueError     When element is not found
+                      When offsets are not valid numbers
+                      When click position is outside screen
         """
         driver = self._driver
         appium_lib = self._builtin.get_library_instance("AppiumLibrary")
