@@ -45,17 +45,35 @@ class WaitMultipleElements:
 
     @keyword("Wait Multiple Elements")
     def wait_multiple_elements(self, elements_list, timeout=10, wait_for_all=True, polling_interval=0.5):
-        """
-        Waits for multiple elements to be visible.
-
-        Args:
-            elements_list (list): List of element locators
-            timeout (int): Maximum time to wait in seconds
-            wait_for_all (bool): If True, waits for ALL elements; if False, waits for ANY element
-            polling_interval (float): Time between checks in seconds
+        """Waits for multiple elements to be visible with configurable strategies.
         
-        Returns:
-            dict: Dictionary with locator as key and visibility status as value
+        Continuously polls for element visibility using the provided locators
+        and applies different waiting strategies based on the wait_for_all parameter.
+        
+        [Arguments]
+        - ``elements_list``: List of element locators in format 'strategy=value' or XPath starting with '//'
+        - ``timeout``: Maximum time to wait in seconds (1-300)
+        - ``wait_for_all``: If True, waits until ALL elements are visible; if False, waits until ANY element is visible
+        - ``polling_interval``: Time between visibility checks in seconds (must be less than timeout)
+        
+        [Return Values]
+        Dictionary with locator strings as keys and boolean visibility status as values:
+        - True: Element is visible
+        - False: Element is not visible
+        
+        [Examples]
+        | @{locators}=    Create List    id=button1    xpath=//android.widget.TextView[@text="Submit"]
+        | ${result}=      Wait Multiple Elements    ${locators}    timeout=15    wait_for_all=True
+        | Should Be True  ${result['id=button1']}
+        
+        | @{locators}=    Create List    id=loading    id=error
+        | ${result}=      Wait Multiple Elements    ${locators}    wait_for_all=False
+        | Log             ${result}
+        
+        [Raises]
+        - ``ValueError``: If parameters are invalid (empty list, malformed locators, invalid timeout values)
+        - ``TimeoutError``: If elements do not become visible within the timeout period
+        - ``RuntimeError``: If Appium driver is unavailable or session is invalid
         """
         # Input validation
         if not isinstance(elements_list, list):
