@@ -2,6 +2,7 @@ from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.actions.mouse_button import MouseButton
+from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, WebDriverException
 import time
 
 class ClickElements:
@@ -15,9 +16,61 @@ class ClickElements:
     @property
     def _driver(self):
         return self._builtin.get_library_instance("AppiumLibrary")._current_application()
+    
+    def _click_element(self, appium_lib, locator, click_duration):
+        """
+        Clicks on a specific element.
+        
+        Args:
+            appium_lib: AppiumLibrary instance
+            locator: Element locator string
+            click_duration: Duration of click in milliseconds
+            
+        Returns:
+            bool: True if click was successful, False otherwise
+        """
+        try:
+            # Find element
+            element = appium_lib._element_find(locator, True, True)
+            if not element:
+                self._builtin.log(f"Element not found: {locator}", level='WARN')
+                return False
+            
+            # Get location and size
+            location = element.location
+            size = element.size
+            
+            # Calculate center coordinates
+            center_x = location['x'] + size['width'] / 2
+            center_y = location['y'] + size['height'] / 2
+            
+            # Execute click
+            actions = ActionChains(self._driver)
+            touch = actions.w3c_actions.add_pointer_input('touch', 'finger')
+            
+            touch.create_pointer_move(x=center_x, y=center_y)
+            touch.create_pointer_down(button=0)
+            touch.create_pause(click_duration / 1000)
+            touch.create_pointer_up(button=0)
+            
+            actions.perform()
+            
+            return True
+        except NoSuchElementException:
+            self._builtin.log(f"Element not found in DOM: {locator}", level='WARN')
+            return False
+        except StaleElementReferenceException:
+            self._builtin.log(f"Element became stale: {locator}", level='WARN')
+            return False
+        except WebDriverException as wde:
+            self._builtin.log(f"WebDriver error during click: {locator} - {str(wde)}", level='WARN')
+            return False
+        except Exception as e:
+            self._builtin.log(f"Unexpected error during click: {locator} - {str(e)}", level='ERROR')
+            return False
 
     @keyword("Click Elements")
-    def click_elements(self, elements_list, click_duration=100, interval_between_clicks=0.5):
+    def click_elements(self, elements_list, click_duration=100, interval_between_clicks=0.5, stop_on_fail=False):
         """Clicks sequentially on multiple elements using Appium's touch actions.
         
         Executes clicks on each element in the provided list, in sequence. 
@@ -28,6 +81,7 @@ class ClickElements:
         - ``elements_list``: List of element locators (id, xpath, accessibility_id, etc.)
         - ``click_duration``: Duration of each click in milliseconds (1-2000)
         - ``interval_between_clicks``: Time between clicks in seconds (must be non-negative)
+        - ``stop_on_fail``: If True, stops execution on first click failure
         
         [Return Values]
         None. The keyword completes after all elements are clicked or attempted.
@@ -37,7 +91,7 @@ class ClickElements:
         | Click Elements    ${elements}    click_duration=200    interval_between_clicks=0.5
         
         | @{calculator_buttons}=    Create List    id=digit_1    id=digit_2    id=plus    id=equals
-        | Click Elements    ${calculator_buttons}
+        | Click Elements    ${calculator_buttons}    stop_on_fail=True
         
         [Raises]
         - ``TypeError``: If parameters have incompatible types (non-list elements_list, non-numeric duration)
@@ -80,6 +134,16 @@ class ClickElements:
         if interval_between_clicks < 0:
             raise ValueError(f"interval_between_clicks cannot be negative, got {interval_between_clicks}")
             
+        # Validate stop_on_fail
+        if not isinstance(stop_on_fail, bool):
+            # Convert Robot Framework strings to boolean
+            if str(stop_on_fail).lower() in ['true', '1', 'yes']:
+                stop_on_fail = True
+            elif str(stop_on_fail).lower() in ['false', '0', 'no']:
+                stop_on_fail = False
+            else:
+                raise TypeError(f"stop_on_fail must be a boolean value, got {stop_on_fail}")
+            
         try:
             # Validate driver existence
             driver = self._driver
@@ -101,40 +165,40 @@ class ClickElements:
             
             self._builtin.log(f"Starting sequential click on {len(elements_list)} elements", level='INFO')
             
+            success_count = 0
+            failed_count = 0
+            failed_locators = []
+            
             for i, locator in enumerate(elements_list, 1):
                 self._builtin.log(f"Clicking element {i}/{len(elements_list)}: {locator}", level='INFO')
                 
-                # Find element
-                element = appium_lib._element_find(locator, True, True)
-                if not element:
-                    self._builtin.log(f"Element not found: {locator}", level='WARN')
-                    continue
+                success = self._click_element(appium_lib, locator, click_duration)
                 
-                # Get location and size
-                location = element.location
-                size = element.size
-                
-                # Calculate center coordinates
-                center_x = location['x'] + size['width'] / 2
-                center_y = location['y'] + size['height'] / 2
-                
-                # Execute click
-                actions = ActionChains(driver)
-                touch = actions.w3c_actions.add_pointer_input('touch', 'finger')
-                
-                touch.create_pointer_move(x=center_x, y=center_y)
-                touch.create_pointer_down(button=0)
-                touch.create_pause(click_duration / 1000)
-                touch.create_pointer_up(button=0)
-                
-                actions.perform()
-                
-                self._builtin.log(f"Click executed on element {i}: {locator}", level='INFO')
+                if success:
+                    success_count += 1
+                    self._builtin.log(f"Click executed on element {i}: {locator}", level='INFO')
+                else:
+                    failed_count += 1
+                    failed_locators.append(locator)
+                    if stop_on_fail:
+                        self._builtin.log(f"Stopping sequence due to click failure (stop_on_fail=True)", level='WARN')
+                        break
                 
                 # Pause between clicks (except for the last one)
-                if i < len(elements_list):
+                if i < len(elements_list) and i < len(elements_list):
                     time.sleep(interval_between_clicks)
-                    
+            
+            # Log resumo final
+            total_attempted = success_count + failed_count
+            self._builtin.log(
+                f"Click sequence completed: {success_count}/{total_attempted} successful, "
+                f"{failed_count}/{total_attempted} failed.", 
+                level='INFO'
+            )
+            
+            if failed_count > 0:
+                self._builtin.log(f"Failed locators: {failed_locators}", level='INFO')
+                
         except (TypeError, ValueError) as e:
             # Re-raise parameter validation exceptions without modification
             raise
