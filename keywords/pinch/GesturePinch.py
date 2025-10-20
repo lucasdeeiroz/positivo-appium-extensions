@@ -1,76 +1,39 @@
 """
-Pinch Element Library
-=====================
+    Perform Pinch Gesture
+    =====================
 
-Custom Robot Framework library for performing a realistic pinch-in (zoom-out)
-gesture on Android/iOS using Appium and Selenium W3C Pointer Actions.
+    Performs a pinch gesture on the specified element or at the screen center if no locator is provided.
+    The gesture simulates a realistic "pinch" action by moving two fingers toward each other along a chosen axis.
 
-Overview
---------
-- Works on a target element (by locator) or at screen center when no locator is provided.
-- Adjustable pinch scale (0.1 ≤ scale < 1.0), gesture duration, direction (vertical/horizontal),
-  movement amplitude (initial distance from center), and interpolation steps.
-- Validates input arguments and constrains finger coordinates to the visible screen bounds.
-- Produces clear Robot Framework logs for troubleshooting and reproducibility.
+    The gesture parameters such as scale, movement, duration, and direction are configurable.
+    Optional pause and step interpolation can be used to adjust the smoothness of the gesture.
 
-Requirements
-------------
-- Python 3.7+
-- Appium Server configured and running
-- Robot Framework:
-    pip install robotframework
-- AppiumLibrary:
-    pip install robotframework-appiumlibrary
-- Selenium (bundled with AppiumLibrary dependencies)
+    Example:
+        | Perform Pinch Gesture | id=imagePreview | scale=0.6 | duration=800 | direction=vertical | movement=350 |
+        | Perform Pinch Gesture | xpath=//android.widget.ImageView | direction=horizontal | movement=300 | steps=40 |
 
-Import in Robot Framework
--------------------------
-Library    GesturePinch.py
-Library    AppiumLibrary
+    [Arguments]
+        | locator   | (string) Element locator in the format strategy=value. Optional; if not provided, gesture occurs at screen center. |
+        | scale     | (float) Scale of the gesture between 0.1 and less than 1.0. Defines the proportion of movement for each finger. Default is 0.5. |
+        | duration  | (integer) Total duration of the gesture in milliseconds. Must be positive and below 5000 to prevent long blocking operations. Default is 500. |
+        | direction | (string) Axis of the gesture: "vertical" or "horizontal". Default is "vertical". |
+        | movement  | (integer or float) Distance, in pixels, that each finger moves during the gesture. Must be positive. Default is 400. |
+        | pause     | (integer or float) Pause in seconds before movement begins. Must be ≥ 0. Default is 0.1. |
+        | steps     | (integer) Number of interpolation steps to simulate smooth finger movement. Must be ≥ 1. Default is 50. |
 
-Usage
------
-Perform Pinch Gesture    locator=<strategy=value>|None    scale=<float>    duration=<ms>
-...                      direction=<vertical|horizontal>  movement=<px>    pause=<s>    steps=<int>
+    [Return Values]
+        None. The keyword performs the gesture and logs a success message upon completion.
 
-Examples
---------
-*** Settings ***
-Library    GesturePinch.py
-Library    AppiumLibrary
+    [Raises]
+        | ValueError   | If one or more arguments are invalid (e.g., out of range values or malformed locator). |
+        | TypeError    | If an argument has an incorrect type (e.g., string instead of numeric). |
+        | RuntimeError | If the gesture cannot be performed or the element is not found. |
 
-*** Test Cases ***
-Pinch On Image (Vertical)
-    Perform Pinch Gesture    locator=xpath=//android.widget.ImageView[1]    scale=0.6
-    ...    duration=600    direction=vertical    movement=380
-
-Pinch At Screen Center (Horizontal)
-    Perform Pinch Gesture    scale=0.5    direction=horizontal    movement=400    steps=55
-
-Parameters
-----------
-locator    (str | None)  Locator of the element to pinch on. If None, uses the screen center. Default: None.
-scale      (float)       Pinch scale factor (0.1 ≤ scale < 1.0 required). Default: 0.5.
-duration   (int)         Gesture duration in milliseconds. Default: 500.
-direction  (str)         Gesture direction: "vertical" or "horizontal". Default: "vertical".
-movement   (int|float)   Distance in pixels each finger starts from the center. Default: 400.
-pause      (float)       Pause in seconds before movement starts. Default: 0.1.
-steps      (int)         Number of interpolation steps for gesture realism. Default: 50.
-
-Notes
------
-- Uses Selenium ActionChains (W3C Pointer Actions) to synthesize a two-finger pinch-in.
-- Fingers start apart at a distance derived from `movement * scale` and move toward the center.
-- Coordinates are clamped to the device screen size to avoid out-of-bounds gestures.
-
-Errors/Exceptions
------------------
-- ValueError: if `scale` is outside [0.1, 1.0), invalid `direction`, non-positive
-  `duration`/`movement`, or malformed `locator` (must be "strategy=value" when provided).
-- RuntimeError: if Appium driver is unavailable, the element cannot be found, or any
-  error occurs during gesture execution (wrapped with a descriptive message).
-- WebDriverException (from underlying driver): if the session becomes invalid or the device
-  cannot perform the requested pointer actions.
+    Notes:
+        - Locators must follow the 'strategy=value' format. Supported strategies are: id, xpath, accessibility_id, class_name.
+        - The gesture automatically adjusts finger positions to stay within screen boundaries.
+        - If a locator is not specified, the gesture defaults to the screen center.
+        - Minor random perturbations are applied to improve gesture realism.
 """
 
 import random
@@ -110,7 +73,7 @@ class GesturePinch:
     def _calculate_finger_inicial_positions(self, x, y, scale, movement, direction):
         # Defines the initial finger positions based on gesture center, scale, and movement range
         displacement = scale * movement
-        if direction.lower() == "vertical":
+        if direction == "vertical":
             return (x, y - displacement), (x, y + displacement)
         else:
             return (x - displacement, y), (x + displacement, y)
@@ -122,13 +85,46 @@ class GesturePinch:
             new_x = max(0, min(x, screen_width))
             new_y = max(0, min(y, screen_height))
             if (x, y) != (new_x, new_y):
+                warnings.warn(
+                    f"Finger position ({x}, {y}) adjusted to ({new_x}, {new_y}) to fit within screen bounds."
+                )
                 warnings.warn(f"Finger position ({x}, {y}) adjusted to ({new_x}, {new_y}) to fit within screen bounds.")
             adjusted_positions.append((new_x, new_y))
         return adjusted_positions
 
-    def _validate_pinch_args(self, locator, scale, duration, direction, movement):
-        # Validates gesture arguments for correctness and safety
+    def _validate_pinch_args(self, locator, scale, duration, direction, movement, pause, steps):
+        # Validates gesture arguments for correctness, types, and safety
+        valid_strategies = ["id", "xpath", "accessibility_id", "class_name"]
+
+        # --- Locator validation ---
         if locator is not None:
+            if not isinstance(locator, str) or not locator.strip():
+                raise TypeError("The 'locator' must be a non-empty string.")
+            if '=' not in locator:
+                raise ValueError(f"Locator '{locator}' must be in the format 'strategy=value'.")
+            strategy, value = locator.split('=', 1)
+            if strategy.strip() != strategy or value.strip() != value:
+                raise ValueError(f"Locator '{locator}' must not contain spaces around '='.")
+            if strategy not in valid_strategies:
+                raise ValueError(f"Unsupported locator strategy '{strategy}'. Use one of: {valid_strategies}.")
+
+        # --- Scale validation ---
+        if not isinstance(scale, (int, float)):
+            raise TypeError("Scale must be a numeric value (float).")
+        if not (0.1 <= float(scale) < 1.0):
+            raise ValueError("Scale must be between 0.1 and less than 1.0.")
+
+        # --- Duration validation ---
+        if not isinstance(duration, int):
+            raise TypeError("Duration must be an integer (milliseconds).")
+        if duration <= 0 or duration > 5000:
+            raise ValueError("Duration must be positive and less than or equal to 5000 ms.")
+
+        # --- Direction normalization and validation ---
+        if not isinstance(direction, str):
+            raise TypeError("Direction must be a string: 'vertical' or 'horizontal'.")
+        direction = direction.lower()
+        if direction not in ["vertical", "horizontal"]:
             if not isinstance(locator, str) or not locator:
                 raise ValueError("The 'locator' must be a non-empty string.")
             if "=" not in locator:
@@ -139,10 +135,29 @@ class GesturePinch:
             raise ValueError("Duration must be a positive integer.")
         if direction.lower() not in ["vertical", "horizontal"]:
             raise ValueError("Direction must be 'vertical' or 'horizontal'.")
+
+        # --- Movement validation ---
+        if not isinstance(movement, (int, float)):
+            raise TypeError("Movement must be a numeric value (int or float).")
         if movement <= 0:
-            raise ValueError("Movement must be positive")
+            raise ValueError("Movement must be positive.")
+
+        # --- Pause validation ---
+        if not isinstance(pause, (int, float)):
+            raise TypeError("Pause must be a numeric value (int or float).")
+        if pause < 0:
+            raise ValueError("Pause must be greater than or equal to zero.")
+
+        # --- Steps validation ---
+        if not isinstance(steps, int):
+            raise TypeError("Steps must be an integer.")
+        if steps < 1:
+            raise ValueError("Steps must be greater than or equal to 1.")
+
+        return direction 
 
     @keyword("Perform Pinch Gesture")
+    def perform_pinch_gesture(self,locator=None,scale=0.5,duration=500,direction="vertical",movement=400,pause=0.1,steps=50):
     def perform_pinch_gesture(
         self, locator=None, scale=0.5, duration=500, direction="vertical", movement=400, pause=0.1, steps=50
     ):
@@ -159,6 +174,8 @@ class GesturePinch:
             steps (int): Number of interpolation steps for gesture realism.
         """
 
+        # Validate arguments with type and range enforcement
+        direction = self._validate_pinch_args(locator, scale, duration, direction, movement, pause, steps)
         self._validate_pinch_args(locator, scale, duration, direction, movement)
 
         try:
@@ -178,12 +195,13 @@ class GesturePinch:
                 center_x, center_y, _ = self._get_element_center(locator)
                 self._builtin.log(f"Element center at ({center_x}, {center_y})", "INFO")
 
+            f1_start, f2_start = self._calculate_finger_inicial_positions(center_x, center_y, scale, movement, direction)
             f1_start, f2_start = self._calculate_finger_inicial_positions(
                 center_x, center_y, scale, movement, direction
             )
 
             offset = 10
-            if direction.lower() == "vertical":
+            if direction == "vertical":
                 f1_end = (center_x, center_y - offset)
                 f2_end = (center_x, center_y + offset)
             else:
@@ -213,6 +231,13 @@ class GesturePinch:
 
             for i in range(1, steps + 1):
                 t = i / steps
+                interp_f1_x = f1_start[0] + t * (f1_end[0] - f1_start[0])
+                interp_f1_y = f1_start[1] + t * (f1_end[1] - f1_start[1])
+                interp_f2_x = f2_start[0] + t * (f2_end[0] - f2_start[0])
+                interp_f2_y = f2_start[1] + t * (f2_end[1] - f2_start[1])
+
+                interp_f1_x, interp_f1_y = max(0, min(interp_f1_x, screen_width)), max(0, min(interp_f1_y, screen_height))
+                interp_f2_x, interp_f2_y = max(0, min(interp_f2_x, screen_width)), max(0, min(interp_f2_y, screen_height))
                 interp_f1_x = f1_start[0] + t * (f1_end[0] - f1_start[0]) + random.uniform(-0.0, 0.0)
                 interp_f1_y = f1_start[1] + t * (f1_end[1] - f1_start[1]) + random.uniform(-0.0, 0.0)
                 interp_f2_x = f2_start[0] + t * (f2_end[0] - f2_start[0]) + random.uniform(-0.0, 0.0)

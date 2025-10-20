@@ -1,75 +1,51 @@
-"""
-Zoom Element Library
-====================
+"""Perform Zoom Gesture
+        =======================
 
-Custom Robot Framework library for performing a realistic pinch-out (zoom-in)
-gesture on Android/iOS using Appium and Selenium W3C Pointer Actions.
+        Performs a realistic zoom-in (pinch-out) gesture on a specific element or at the
+        center of the screen when no locator is provided. Simulates a two-finger gesture
+        expanding outward, using Selenium W3C Pointer Actions integrated with Appium.
 
-Overview
---------
-- Works on a target element (by locator) or at screen center when no locator is provided.
-- Adjustable zoom scale (> 1.0), gesture duration, direction (vertical/horizontal),
-  movement amplitude, and interpolation steps.
-- Validates input arguments and constrains finger coordinates to the visible screen bounds.
-- Produces clear Robot Framework logs for troubleshooting and reproducibility.
+        [Arguments]
+        -----------
+        - ``locator``: Locator of the element to perform the zoom gesture on. 
+          Supports ``id``, ``xpath``, ``accessibility_id`` and ``class_name``.
+          If omitted, the gesture is applied at the screen center.
+        - ``scale``: Zoom scale factor (must be greater than 1.0). Defines the
+          proportional distance each finger will move from the center. Default is ``1.5``.
+        - ``duration``: Duration of the zoom gesture in milliseconds. Default is ``500``.
+        - ``direction``: Orientation of finger movement, either ``vertical`` or ``horizontal``.
+          Default is ``vertical``.
+        - ``movement``: Distance (in pixels) that each finger travels from the center.
+          Default is ``300``.
+        - ``pause``: Pause time in seconds before the movement begins. Default is ``0.1``.
+        - ``steps``: Number of incremental interpolation steps used to create a smooth,
+          realistic gesture. Default is ``50``.
 
-Requirements
-------------
-- Python 3.7+
-- Appium Server configured and running
-- Robot Framework:
-    pip install robotframework
-- AppiumLibrary:
-    pip install robotframework-appiumlibrary
-- Selenium (bundled with AppiumLibrary dependencies)
+        [Return Values]
+        ---------------
+        - Returns ``True`` if the zoom gesture completes successfully.
+        - Raises an exception if any validation or execution step fails.
 
-Import in Robot Framework
--------------------------
-Library    GestureZoom.py
-Library    AppiumLibrary
+        [Raises]
+        --------
+        - ``ValueError``: If invalid arguments are provided (e.g., ``scale`` ≤ 1.0,
+          negative duration or movement, malformed locator).
+        - ``RuntimeError``: If the Appium driver is unavailable, the element cannot
+          be located, or any gesture execution error occurs.
 
-Usage
------
-Perform Zoom Gesture    locator=<strategy=value>|None    scale=<float>    duration=<ms>
-...                     direction=<vertical|horizontal>  movement=<px>    pause=<s>    steps=<int>
+        [Examples]
+        ----------
+        | Perform Zoom Gesture | locator=id=map_view | scale=1.8 | duration=700 | direction=vertical | movement=280 |
+        | Perform Zoom Gesture | scale=2.0 | direction=horizontal | movement=300 | steps=60 |
+        | Perform Zoom Gesture | locator=xpath=//android.view.View[@content-desc="photo"] | scale=1.6 |
 
-Examples
---------
-*** Settings ***
-Library    GestureZoom.py
-Library    AppiumLibrary
-
-*** Test Cases ***
-Zoom On Element (Vertical)
-    Perform Zoom Gesture    locator=id=map_view    scale=1.8    duration=700    direction=vertical    movement=280
-
-Zoom At Screen Center (Horizontal)
-    Perform Zoom Gesture    scale=2.0    direction=horizontal    movement=300    steps=60
-
-Parameters
-----------
-locator    (str | None)  Locator of the element to zoom in on. If None, uses the screen center. Default: None.
-scale      (float)       Zoom scale factor (> 1.0 required). Default: 1.5.
-duration   (int)         Gesture duration in milliseconds. Default: 500.
-direction  (str)         Gesture direction: "vertical" or "horizontal". Default: "vertical".
-movement   (int|float)   Distance in pixels each finger moves from the center. Default: 300.
-pause      (float)       Pause in seconds before movement starts. Default: 0.1.
-steps      (int)         Number of interpolation steps for gesture realism. Default: 50.
-
-Notes
------
-- Uses Selenium ActionChains (W3C Pointer Actions) to synthesize a two-finger zoom-in.
-- Finger start positions are placed close to the center and move outward symmetrically.
-- Coordinates are clamped to the device screen size to avoid out-of-bounds gestures.
-
-Errors/Exceptions
------------------
-- ValueError: if `scale` ≤ 1.0, invalid `direction`, non-positive `duration`/`movement`,
-  or malformed `locator` (must be "strategy=value" when provided).
-- RuntimeError: if Appium driver is unavailable, the element cannot be found, or any
-  error occurs during gesture execution (wrapped with a descriptive message).
-- WebDriverException (from underlying driver): if the session becomes invalid or the device
-  cannot perform the requested pointer actions.
+        [Notes]
+        -------
+        - Uses Selenium W3C Pointer Actions under Appium for realistic multi-touch simulation.
+        - If ``locator`` is provided, zoom occurs around the element’s center; otherwise, around
+          the screen’s center.
+        - Finger coordinates are constrained within screen bounds to prevent invalid gestures.
+        - To perform the opposite gesture (zoom-out), use the ``Pinch`` keyword.
 """
 
 import random
@@ -109,7 +85,7 @@ class GestureZoom:
     def _calculate_finger_final_positions(self, x, y, scale, movement, direction):
         # Defines the final finger positions based on gesture center, scale, and movement range
         displacement = scale * movement
-        if direction.lower() == "vertical":
+        if direction == "vertical":
             return (x, y - displacement), (x, y + displacement)
         else:
             return (x - displacement, y), (x + displacement, y)
@@ -125,9 +101,42 @@ class GestureZoom:
             adjusted_positions.append((new_x, new_y))
         return adjusted_positions
 
-    def _validate_zoom_args(self, locator, scale, duration, direction, movement):
+    def _validate_zoom_args(self, locator, scale, duration, direction, movement, pause, steps):
         # Validates gesture arguments for correctness and safety
+
+        # Locator validation
         if locator is not None:
+            if not isinstance(locator, str):
+                raise TypeError("The 'locator' must be a string.")
+            locator = locator.strip()
+            if not locator:
+                raise ValueError("The 'locator' cannot be empty.")
+            if '=' not in locator:
+                raise ValueError(f"Locator '{locator}' must be in the format 'strategy=value'.")
+            if ' ' in locator.split('=')[0] or ' ' in locator.split('=')[1]:
+                raise ValueError(f"Locator '{locator}' must not contain spaces around '='.")
+            valid_strategies = ["id", "xpath", "accessibility_id", "class_name"]
+            strategy = locator.split('=')[0]
+            if strategy not in valid_strategies:
+                raise ValueError(f"Invalid locator strategy '{strategy}'. Valid options: {valid_strategies}")
+
+        # Scale validation
+        if not isinstance(scale, (float, int)):
+            raise TypeError("Scale must be a numeric value (float).")
+        if not (scale > 1.0):
+            raise ValueError("Scale must be greater than 1.0 for zoom gestures.")
+
+        # Duration validation
+        if not isinstance(duration, int):
+            raise TypeError("Duration must be an integer (milliseconds).")
+        if duration <= 0 or duration > 5000:
+            raise ValueError("Duration must be a positive integer and less than or equal to 5000 ms.")
+
+        # Direction normalization and validation
+        if not isinstance(direction, str):
+            raise TypeError("Direction must be a string.")
+        direction = direction.lower()
+        if direction not in ["vertical", "horizontal"]:
             if not isinstance(locator, str) or not locator:
                 raise ValueError("The 'locator' must be a non-empty string.")
             if "=" not in locator:
@@ -138,8 +147,26 @@ class GestureZoom:
             raise ValueError("Duration must be a positive integer.")
         if direction.lower() not in ["vertical", "horizontal"]:
             raise ValueError("Direction must be 'vertical' or 'horizontal'.")
+
+        # Movement validation
+        if not isinstance(movement, (float, int)):
+            raise TypeError("Movement must be numeric (int or float).")
         if movement <= 0:
-            raise ValueError("Movement must be positive")
+            raise ValueError("Movement must be a positive number.")
+
+        # Pause validation
+        if not isinstance(pause, (float, int)):
+            raise TypeError("Pause must be numeric (float or int).")
+        if pause < 0:
+            raise ValueError("Pause must be zero or positive.")
+
+        # Steps validation
+        if not isinstance(steps, int):
+            raise TypeError("Steps must be an integer.")
+        if steps < 1:
+            raise ValueError("Steps must be an integer greater than or equal to 1.")
+
+        return direction  # Return normalized direction for reuse
 
     @keyword("Perform Zoom Gesture")
     def perform_zoom_gesture(
@@ -147,18 +174,9 @@ class GestureZoom:
     ):
         """
         Performs a realistic zoom gesture with perturbation.
-
-        Args:
-            locator (str): Element locator (optional; if None, uses screen center).
-            scale (float): Gesture scale (> 1.0).
-            duration (int): Total duration of the gesture in milliseconds.
-            direction (str): Gesture direction ("vertical" or "horizontal").
-            movement (int/float): Gesture amplitude in pixels.
-            pause (int/float): Pause in seconds before movement begins.
-            steps (int): Number of interpolation steps for gesture realism.
         """
 
-        self._validate_zoom_args(locator, scale, duration, direction, movement)
+        direction = self._validate_zoom_args(locator, scale, duration, direction, movement, pause, steps)
 
         try:
             driver = self.driver
