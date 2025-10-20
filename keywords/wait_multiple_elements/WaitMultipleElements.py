@@ -1,3 +1,5 @@
+import time
+
 from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
 import time
@@ -132,7 +134,7 @@ class WaitMultipleElements:
         # Input validation
         if not isinstance(elements_list, list):
             raise ValueError("elements_list must be a list of locators")
-        
+
         if not elements_list:
             raise ValueError("The elements list cannot be empty")
             
@@ -166,9 +168,9 @@ class WaitMultipleElements:
         # Wait_for_all validation
         if not isinstance(wait_for_all, bool):
             # Convert Robot Framework strings to boolean
-            if str(wait_for_all).lower() in ['true', '1', 'yes']:
+            if str(wait_for_all).lower() in ["true", "1", "yes"]:
                 wait_for_all = True
-            elif str(wait_for_all).lower() in ['false', '0', 'no']:
+            elif str(wait_for_all).lower() in ["false", "0", "no"]:
                 wait_for_all = False
             else:
                 raise ValueError("wait_for_all must be a boolean value")

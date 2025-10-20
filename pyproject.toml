@@ -1,0 +1,76 @@
+[build-system]
+requires = ["setuptools>=73"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "robotframework-appium-extensions"
+version = "0.1.0"
+description = """Additional keywords for Robot Framework's AppiumLibrary.
+    Developed within the Technology Residency Program, executed by CEPEDI, coordinated by SOFTEX, and supported by MCTI,
+    with the participation of Positivo Tecnologia as a partner company that proposed the development challenge."""
+readme = "README.md"
+requires-python = ">=3.9"
+
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+
+authors = [
+  { name = "CEPEDI & Positivo Residence Team" }
+]
+maintainers = [
+  { name = "Diogo Dorea", email = "diogodorea@gmail.com" },
+  { name = "Eduardo Takeshi", email = "wattksh@gmail.com" },
+  { name = "Fabio Nilo", email = "fabionilosoares@gmail.com" },
+  { name = "Gabriel Cerqueira", email = "gcacarvalho.cic@uesc.br" },
+  { name = "Geovane Glória", email = "geovaneglorialima@gmail.com" },
+  { name = "Henio Pedro", email = "henioslv@gmail.com" },
+  { name = "Marya Fernandes", email = "marya_matos@hotmail.com" }
+]
+
+keywords = ["robotframework", "automation", "mobile", "appium", "android", "keywords"]
+
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",   
+  "Framework :: Robot Framework",
+  "Framework :: Robot Framework :: Library",
+  "Topic :: Software Development :: Testing",
+  "Topic :: Software Development :: Quality Assurance",
+]
+
+dependencies = [
+  "robotframework>=7.0",
+  "robotframework-appiumlibrary>=2.1.0",
+  "Appium-Python-Client>=5.1.1",
+  "selenium>=4.26.0",
+]
+
+[project.optional-dependencies]
+images = ["opencv-python-headless>=4.8.0", "numpy>=1.26.0"]
+
+[tool.black]
+line-length = 120
+target-version = ["py312", "py313"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 120
+exclude = ["__pycache__", "build", "dist"]
+lint.select = ["E","F","W","I","B","UP"]
+
+[project.urls]
+Homepage = "incluir https do repositório"
+Documentation = "incluir https do readme"
+Changelog = "incluir https do changelog"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+exclude = [
+  "tests*", "docs*", "examples*", "demo*",
+  "node_modules*", "scripts*", "dist*", "build*"
+]

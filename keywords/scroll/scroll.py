@@ -51,14 +51,14 @@ Notes
 - Uses Appium's `mobile: swipeGesture` command internally.
 """
 
-
 from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
+
 
 # Defines the custom keyword class
 class scroll:
     # Defines the library scope as GLOBAL (same instance will be reused across all tests)
-    ROBOT_LIBRARY_SCOPE = 'GLOBAL'
+    ROBOT_LIBRARY_SCOPE = "GLOBAL"
 
     def __init__(self):
         # Access to Robot Framework's BuiltIn library (for functions like Log, Set Test Variable, etc.)
@@ -84,8 +84,14 @@ class scroll:
 
         # List of supported locator strategies
         locator_keys = [
-            "id", "xpath", "accessibility_id", "class_name",
-            "android_uiautomator", "ios_predicate", "ios_class_chain", "name"
+            "id",
+            "xpath",
+            "accessibility_id",
+            "class_name",
+            "android_uiautomator",
+            "ios_predicate",
+            "ios_class_chain",
+            "name",
         ]
 
         # Attempt to extract locator from keyword arguments (e.g., xpath=..., id=...)
@@ -107,12 +113,14 @@ class scroll:
 
         # If still no valid locator, raise an error
         if not locator:
-            raise ValueError("You must provide a valid locator: 'xpath=...', 'id=...', 'accessibility_id=...', or just '//...'.")
+            raise ValueError(
+                "You must provide a valid locator: 'xpath=...', 'id=...', 'accessibility_id=...', or just '//...'."
+            )
 
         # Read optional parameters
-        direction = kwargs.get("direction", "down")       # Scroll direction
-        percent = float(kwargs.get("percent", 0.75))      # Scroll percentage (0.01 to 1.0)
-        speed = int(kwargs.get("speed", 800))             # Gesture speed in milliseconds
+        direction = kwargs.get("direction", "down")  # Scroll direction
+        percent = float(kwargs.get("percent", 0.75))  # Scroll percentage (0.01 to 1.0)
+        speed = int(kwargs.get("speed", 800))  # Gesture speed in milliseconds
 
         # Validate direction and limits
         if direction not in ["up", "down", "left", "right"]:
@@ -135,21 +143,19 @@ class scroll:
             # Adjust only vertical directions (Appium interprets as finger movement)
             gesture_direction = direction
             if direction == "down":
-                gesture_direction = "up"    # To scroll content down, finger goes up
+                gesture_direction = "up"  # To scroll content down, finger goes up
             elif direction == "up":
                 gesture_direction = "down"  # To scroll content up, finger goes down
 
-            driver.execute_script("mobile: swipeGesture", {
-                "elementId": element.id,
-                "direction": gesture_direction,
-                "percent": percent,
-                "speed": speed
-            })
+            driver.execute_script(
+                "mobile: swipeGesture",
+                {"elementId": element.id, "direction": gesture_direction, "percent": percent, "speed": speed},
+            )
 
             # Log success message
             self._builtin.log(
                 f"[SUCCESS] Scroll performed with locator='{locator}', direction='{direction}', percent={percent}, speed={speed}",
-                "INFO"
+                "INFO",
             )
 
         except Exception as e:
