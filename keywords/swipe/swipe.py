@@ -1,5 +1,5 @@
 """
-Swipe Element Library — Robot Framework + Appium
+Swipe Element Library — Robot Framework + Appium 
 
 Performs swipes (`mobile: dragGesture`) on elements with configurable `direction`,
 `percent` (0.01-2.0) and `speed` (ms). Applies a fixed 5% start margin.
