@@ -20,3 +20,33 @@ Zoom on Google Maps without a locator
     Sleep    10
     Perform Zoom Gesture
     Sleep    5
+
+
+Error message when element doesnt exist or path is invalid
+    
+    [Documentation]    Should get an error message when element is not visible
+    [Tags]    maps
+    Start session Google Maps
+    Sleep    10
+    Perform Zoom Gesture    locator=//android.widget.ScrollView
+    Sleep    5
+
+Error message when Zoom Scale is invalid
+
+    [Documentation]    Should get an error message when Zoom Scale is invalid
+    [Tags]     maps
+    Start session Google Maps
+    Sleep    10
+    Perform Zoom Gesture    locator=xpath=//android.widget.ScrollView    scale=0.5
+    Sleep    5
+
+Error message when Duration is invalid
+
+    [Documentation]    Should get an error message when Zoom Scale is invalid
+    [Tags]     maps
+    Start session Google Maps
+    Sleep    10
+    Perform Zoom Gesture    locator=xpath=//android.widget.ScrollView    duration=999999
+    Perform Zoom Gesture    locator=xpath=//android.widget.ScrollView    duration=99.99
+    Sleep    5
+
