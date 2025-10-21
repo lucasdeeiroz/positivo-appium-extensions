@@ -10,7 +10,7 @@ from appium.webdriver.common.appiumby import AppiumBy
 from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
 
-class Swipe:
+class swipe:
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
 
     def __init__(self):
