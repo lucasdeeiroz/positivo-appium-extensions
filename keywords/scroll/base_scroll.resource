@@ -1,6 +1,6 @@
 *** Settings ***
 Library    AppiumLibrary
-Library    scroll.py
+Library    Scroll.py
 
 *** Keywords ***
 Start session Play Store
