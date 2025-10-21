@@ -1,5 +1,5 @@
 """
-Scroll Element Library — RF + Appium
+Scroll Element Library — Robot Framework + Appium
 
 Performs scroll/swipe gestures (`mobile: swipeGesture`) inside a scrollable element.
 Configurable `direction`, `percent` (0.01–1.0) and `speed` (ms). Reuses AppiumLibrary session.
