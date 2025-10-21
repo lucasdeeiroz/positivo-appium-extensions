@@ -18,7 +18,10 @@ class NetworkStatus:
     def _get_appium_driver(self):
         # Gets the current Appium driver instance
         appium_lib = self._builtin.get_library_instance("AppiumLibrary")
-        return appium_lib._current_application()
+        driver = appium_lib._current_application()
+        if driver is None or not getattr(driver, "session_id", None):
+            self._builtin.fail("Appium session is not active. Ensure a session is opened before calling this keyword.")
+        return driver
 
     def _interpret_bitmask(self, status):
         # Bitwise AND is used to compare the bitmask and identify which connections are active.
@@ -39,7 +42,7 @@ class NetworkStatus:
             )
             return result.stdout.strip() == "1"
         except Exception as e:
-            self._builtin.log(f"Error checking airplane mode: {e}", level="WARN")
+            self._builtin.log(f"ADB check failed or not available; skipping airplane mode detection: {e}", level="WARN")
             return False
 
     def _get_network_status(self, wifi, data, airplane_mode, no_network):
@@ -117,6 +120,10 @@ class NetworkStatus:
         # Retrieves the network status as an integer (bitmask)
         driver = self._get_appium_driver()
         status = driver.network_connection
+        try:
+            status = int(status)
+        except Exception:
+            self._builtin.fail(f"Unexpected network_connection type: {type(status).__name__}. Expected int value.")
 
         # Logs the read bitmask and its binary representation for debugging
         self._builtin.log(f"Read bitmask: {status} (binary: {bin(status)})", level="INFO")
