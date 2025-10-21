@@ -5,7 +5,7 @@ Library     OperatingSystem
 Library     DateTime
 Library    ScreenshotComparisonKeywords.py
 Library     GesturePinch.py
-
+Library     ../clickElementV2/Appiumclick.py
 
 *** Variables ***
 

@@ -1,95 +1,103 @@
-from robot.api.deco import keyword
-from robot.api import logger
-from robot.libraries.BuiltIn import BuiltIn
 import cv2
-from skimage.metrics import structural_similarity as ssim
 import numpy as np
-import os
-
+import os.path
+from robot.api.deco import keyword
+from robot.libraries.BuiltIn import BuiltIn
 
 class ScreenshotComparisonKeywords:
-    """
-    Library for capturing and comparing screenshots using Appium and OpenCV.
-    Provides keywords to save screenshots and compare them visually using SSIM + pixel difference.
-    """
 
-    def __init__(self, default_path="screenshots"):
+    def __init__(self):
         self._builtin = BuiltIn()
-        self.default_path = default_path
-        os.makedirs(self.default_path, exist_ok=True)
 
     @property
     def driver(self):
         return self._builtin.get_library_instance('AppiumLibrary')._current_application()
 
-    @keyword("Capture Initial Screenshot As")
-    def capture_initial_screenshot(self, filename, path=None):
-        """
-        Captures a screenshot and saves it.
-        - filename: name of the screenshot (e.g. "home.png")
-        - path: optional path (default: screenshots/)
-        """
-        save_path = path or self.default_path
-        os.makedirs(save_path, exist_ok=True)
-        full_path = os.path.join(save_path, filename)
+    @keyword("Compare Screenshots")
+    def compare_images(self, img1, img2, expected="equal", tolerance=0.1):
+        """Compares two saved images and validates if they are equal or different based on pixel difference.
 
-        self.driver.save_screenshot(full_path)
-        logger.info(f"📸 Initial screenshot saved at: {full_path}")
+        [Arguments]
+        img1           Path to the first image file to compare
+        img2           Path to the second image file to compare
+        expected      Whether images should be 'equal' or 'different' (case-insensitive)
+        tolerance     Maximum allowed difference ratio between images (0.0 to 1.0)
 
-    @keyword("Compare Final Screenshot With")
-    def compare_final_screenshot(self, reference_file, tolerance=0.10, path=None):
+        [Return Values]
+        None. Passes if comparison matches expectation, fails otherwise.
+
+        [Raises]
+        ValueError    If img1/img2 are not strings
+                     If image files do not exist
+                     If images are corrupt or in invalid format
+                     If expected is not 'equal' or 'different'
+                     If tolerance is not a number between 0 and 1
+        AssertionError    If images are too different when expected='equal'
+                         If images are too similar when expected='different'
         """
-        Captures a final screenshot, compares it with reference image.
-        Uses SSIM + pixel difference.
-        - reference_file: path to reference image
-        - tolerance: max allowed difference (0-1). Default = 0.10 (10%)
-        - path: optional path (default: screenshots/)
-        """
-        save_path = path or self.default_path
-        os.makedirs(save_path, exist_ok=True)
+        # Validate tolerance parameter
+        try:
+            tolerance = float(tolerance)
+        except (TypeError, ValueError):
+            raise ValueError(f'Invalid value for "tolerance" parameter. Must be a number, got: {type(tolerance).__name__}')
+        
+        if not (0 <= tolerance <= 1):
+            raise ValueError(f'Invalid value for "tolerance" parameter. Must be between 0 and 1, got: {tolerance}')
 
-        final_image_path = os.path.join(save_path, "screenshot_final.png")
-        diff_path = os.path.join(save_path, "diff.png")
+        # Validate file paths
+        if not isinstance(img1, str) or not isinstance(img2, str):
+            raise ValueError(f"Image paths must be strings, got: img1={type(img1).__name__}, img2={type(img2).__name__}")
 
-        self.driver.save_screenshot(final_image_path)
-        logger.info(f"📸 Final screenshot saved at: {final_image_path}")
+        # Check if files exist
+        if not os.path.exists(img1):
+            raise ValueError(f"Image file does not exist: {img1}")
+        if not os.path.exists(img2):
+            raise ValueError(f"Image file does not exist: {img2}")
 
         # Load images
-        image1 = cv2.imread(reference_file)
-        image2 = cv2.imread(final_image_path)
+        image1 = cv2.imread(img1)
+        image2 = cv2.imread(img2)
 
-        if image1 is None or image2 is None:
-            raise ValueError("❌ Failed to load one or both images.")
+        if image1 is None:
+            raise ValueError(f"Could not read image (invalid format or corrupted): {img1}")
+        if image2 is None:
+            raise ValueError(f"Could not read image (invalid format or corrupted): {img2}")
 
+        # Resize if images have different sizes
         if image1.shape != image2.shape:
-            raise AssertionError("❌ Images have different sizes and cannot be compared.")
+            image2 = cv2.resize(image2, (image1.shape[1], image1.shape[0]))
 
-        # Convert to grayscale for SSIM
-        gray1 = cv2.cvtColor(image1, cv2.COLOR_BGR2GRAY)
-        gray2 = cv2.cvtColor(image2, cv2.COLOR_BGR2GRAY)
+        # Calculate absolute difference
+        diff = cv2.absdiff(image1, image2)
+        gray = cv2.cvtColor(diff, cv2.COLOR_BGR2GRAY)
+        non_zero = np.count_nonzero(gray)
+        total_pixels = gray.size
+        difference_percent = (non_zero / total_pixels) * 100
 
-        # SSIM score
-        score, diff = ssim(gray1, gray2, full=True)
-        percent_difference = 1 - score
+        # Set limit in %
+        limit = tolerance * 100
 
-        # Pixel diff (extra check)
-        pixel_diff = cv2.absdiff(gray1, gray2)
-        non_zero_count = np.count_nonzero(pixel_diff)
-        total_pixels = gray1.shape[0] * gray1.shape[1]
-        pixel_diff_ratio = non_zero_count / total_pixels
+        # Logging helper
+        def log(msg, level="INFO"):
+            self._builtin.log_to_console(msg)
+            self._builtin.log(msg, level)
 
-        # Save diff visualization
-        diff = (diff * 255).astype("uint8")
-        cv2.imwrite(diff_path, diff)
-        logger.info(f"📂 Visual diff saved: {diff_path}")
+        # Validate expected parameter
+        expected = expected.lower()
+        if expected not in ["equal", "different"]:
+            raise ValueError(f'Invalid value for "expected" parameter. Must be "equal" or "different", got: "{expected}"')
 
-        logger.info(f"🔍 SSIM similarity: {score:.4f} — Difference: {percent_difference:.2%}")
-        logger.info(f"🔍 Pixel difference ratio: {pixel_diff_ratio:.2%}")
+        # Evaluate as expected
+        if expected == "equal":
+            if difference_percent > limit:
+                log(f"❌ IMAGES ARE DIFFERENT. Difference: {difference_percent:.2f}% (limit {limit:.2f}%)", "ERROR")
+                raise AssertionError(f"Images are different. Difference {difference_percent:.2f}% > limit {limit:.2f}%")
+            else:
+                log(f"✅ IMAGES ARE EQUAL. Difference: {difference_percent:.2f}% (<= {limit:.2f}%)")
 
-        # Decision
-        final_difference = max(percent_difference, pixel_diff_ratio)
-
-        if final_difference > tolerance:
-            raise AssertionError(f"❌ Visual difference greater than tolerated: {final_difference:.2%}")
-
-        logger.info("✅ Images are visually similar within tolerance.")
+        else:  # expected == "different"
+            if difference_percent <= limit:
+                log(f"❌ IMAGES ARE TOO SIMILAR. Difference: {difference_percent:.2f}% (limit {limit:.2f}%)", "ERROR")
+                raise AssertionError(f"Images are too similar. Difference {difference_percent:.2f}% <= limit {limit:.2f}%")
+            else:
+                log(f"✅ IMAGES ARE DIFFERENT. Difference: {difference_percent:.2f}% (> {limit:.2f}%)")
