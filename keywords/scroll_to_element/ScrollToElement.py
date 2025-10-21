@@ -34,70 +34,9 @@ Notes:
     - The keyword stops as soon as the target element becomes visible.
     - If a container locator is provided, scrolling occurs only inside that element.
     - Uses the Appium "mobile: swipeGesture" command internally.
-Scroll To Element Library
-
-Custom Robot Framework library for scrolling until a target element is visible,
-using swipe gestures in mobile applications with Appium.
-
-Overview
---------
-- Supports locating target and container elements by multiple strategies: id, xpath,
-  accessibility_id, class_name.
-- Performs repeated swipe gestures until the element is visible or max attempts are reached.
-- Configurable maximum swipe attempts and swipe distance ratio.
-- Adjustable gesture duration (milliseconds).
-- Can restrict scrolling inside a container element.
-
-Requirements
-------------
-- Python 3.7+
-- Appium Server configured and running
-- Robot Framework:
-    pip install robotframework
-- AppiumLibrary:
-    pip install robotframework-appiumlibrary
-
-Import in Robot Framework
--------------------------
-Library    scroll_to_element.py
-Library    AppiumLibrary
-
-Usage
------
-Scroll To Element    <locator>    max_swipes=<int>    direction=<up|down|left|right>
-                     swipe_distance_ratio=<0.1-0.99>    duration=<ms>
-                     container_locator=<locator>
-
-Examples
---------
-Scroll To Element    id=login-button        max_swipes=7    direction=down   swipe_distance_ratio=0.4    duration=500
-Scroll To Element    xpath=//android.widget.TextView[@text="Settings"]   direction=up   max_swipes=5
-Scroll To Element    accessibility_id=NextButton   direction=right   container_locator=id=listContainer
-
-Parameters
-----------
-locator              (str)   Target element locator (required).
-max_swipes           (int)   Maximum number of swipes before failing. Default: 5.
-direction            (str)   Scroll direction: "down", "up", "left", "right". Default: "down".
-swipe_distance_ratio (float) Swipe fraction of screen or container size. Default: 0.4 (valid range: 0.1 to 0.99).
-duration             (int)   Duration of each swipe in milliseconds. Default: 500.
-container_locator    (str)   Locator of a container element (optional).
-
-Notes
------
-- Stops as soon as the target element is found and visible.
-- Throws exception if element is not found after max_swipes.
-- Uses Appium's `mobile: swipeGesture` internally.
-
-Errors/Exceptions
------------------
-- TimeoutError if element not found after max swipes.
-- ValueError if parameters are invalid.
 """
-
 import random
 import time
-
 from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
 from selenium.webdriver.common.action_chains import ActionChains
@@ -164,9 +103,6 @@ class ScrollToElement:
     @keyword("Scroll To Element")
     def scroll_into_element(self, locator, max_swipes=5, direction="down", swipe_distance_ratio=0.4,
                             duration=500, container_locator=None):
-    def scroll_into_element(
-        self, locator, max_swipes=5, direction="down", swipe_distance_ratio=0.4, duration=500, container_locator=None
-    ):
         """
         Swipes vertically or horizontally (optionally within a container element) until the target element is visible.
 
