@@ -1,14 +1,17 @@
+from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
+
 from VisibleElements import VisibleElements
-from selenium.common.exceptions import StaleElementReferenceException, NoSuchElementException
-import json
+
 
 # Create a fake BuiltIn to simulate .log() and .fail()
 class FakeBuiltIn:
     def log(self, msg, level=None):
         print(f"[{level}] {msg}")
+
     def fail(self, msg):
         raise Exception(msg)
-    
+
+
 # Mocked version of VisibleElements to inject the driver directly
 class MockVisibleElements(VisibleElements):
     def __init__(self, mock_driver):
@@ -21,13 +24,14 @@ class MockVisibleElements(VisibleElements):
 
 # Basic element mock to simulate screen elements
 class Element:
-    def __init__(self, displayed, rid, text="", cls="", clickable="false", raise_display=False):
+    def __init__(self, displayed, rid, text="", cls="", clickable="false", raise_display=False, content_desc=None):
         self.text = text
         self.attrs = {
             "resource-id": rid,
-            "content-desc": None,
+            "content-desc": content_desc,
             "class": cls,
-            "clickable": clickable
+            "clickable": clickable,
+            "text": text,
         }
         self.raise_display = raise_display
         self._displayed = displayed
@@ -57,58 +61,148 @@ if __name__ == "__main__":
     print("=== Manual tests: Get Visible Elements On Screen ===\n")
 
     cases = [
-        #VISIBILITY case
+        # DETERMINISM CASE — trigger StaleElementReferenceException on a specific item
         {
-            "desc": "Visible element with resource_id",
-            "elements": [Element(True, "btn_login", text="Login", cls="android.widget.Button", clickable="true")],
-            "filter_type": "all",
-            "debug": False,
-            "expected": ["btn_login"]
-        },
-        #(IN)VISIBILITY case
-        {
-            "desc": "Invisible element with resource_id",
-            "elements": [Element(False, "btn_cancel")],
-            "filter_type": "all",
-            "debug": False,
-            "expected": []
-        },
-        # FILTERED BY TYPE case
-        {
-            "desc": "Filter by button class",
+            "desc": "Stale element is ignored deterministically (middle item)",
             "elements": [
-                Element(True, "btn_ok", cls="android.widget.Button", clickable="true"),
-                Element(True, "txt_header", cls="android.widget.TextView")
+                Element(True, "btn1", text="One", cls="android.widget.Button", clickable="true"),
+                Element(True, "btn2", text="Two", cls="android.widget.Button", clickable="true", raise_display=True),
+                Element(True, "btn3", text="Three", cls="android.widget.Button", clickable="true"),
             ],
-            "filter_type": "button",
+            "filter_type": "all",
             "debug": False,
-            "expected": ["btn_ok"]
+            "expected": ["btn1", "btn3"],
         },
-        # DEBUG MODE case
+        # NORMALIZATION CASE 1 — content-desc '  null  ' becomes '' (keep resource-id to ensure inclusion)
         {
-            "desc": "Input elements with debug mode",
+            "desc": "Normalization: content-desc '  null  ' -> '' (debug payload)",
             "elements": [
-                Element(True, "inp_email", cls="android.widget.EditText"),
-                Element(True, "inp_senha", cls="android.widget.EditText")
+                Element(
+                    True,
+                    "inp_name",
+                    text="   ",
+                    cls="android.widget.EditText",
+                    clickable="false",
+                    content_desc="  null  ",
+                ),
             ],
             "filter_type": "input",
             "debug": True,
             "expected": [
-                {"resource_id": "inp_email", "accessibility_id": "null", "text": "", "class": "android.widget.EditText", "clickable": False},
-                {"resource_id": "inp_senha", "accessibility_id": "null", "text": "", "class": "android.widget.EditText", "clickable": False},
-            ]
+                {
+                    "identifier": {"value": "inp_name", "kind": "resource_id"},
+                    "resource_id": "inp_name",
+                    "accessibility_id": "",  # normalized from '  null  '
+                    "text": "",  # normalized blank text
+                    "class": "android.widget.EditText",
+                    "clickable": False,
+                }
+            ],
         },
-        # EXCEPTION case
+        # NORMALIZATION CASE 2 — missing content-desc (None) normalizes to ""
         {
-            "desc": "Element that raises exception (Stale)",
+            "desc": "Normalization: content-desc None -> '' (debug payload)",
             "elements": [
-                Element(True, "btn1"),
-                Element(True, "btn2", raise_display=True), # Simulate stale element
-                Element(True, "btn3")
+                Element(
+                    True, "inp_email", text="", cls="android.widget.EditText", clickable="false", content_desc=None
+                ),
+            ],
+            "filter_type": "input",
+            "debug": True,
+            "expected": [
+                {
+                    "identifier": {"value": "inp_email", "kind": "resource_id"},
+                    "resource_id": "inp_email",
+                    "accessibility_id": "",  # None -> ""
+                    "text": "",
+                    "class": "android.widget.EditText",
+                    "clickable": False,
+                }
+            ],
+        },
+        # IDENTIFIER CASE — auto prioritizes resource-id when both exist
+        {
+            "desc": "Identifier: auto prefers resource-id over content-desc (debug)",
+            "elements": [
+                Element(
+                    True,
+                    "btn_dual",
+                    text="OK",
+                    cls="android.widget.Button",
+                    clickable="true",
+                    content_desc="btn_dual_cd",
+                ),
+            ],
+            "filter_type": "all",
+            "debug": True,
+            "expected": [
+                {
+                    "identifier": {"value": "btn_dual", "kind": "resource_id"},
+                    "resource_id": "btn_dual",
+                    "accessibility_id": "btn_dual_cd",
+                    "text": "OK",
+                    "class": "android.widget.Button",
+                    "clickable": True,  # because we pass clickable="true"
+                }
+            ],
+        },
+        # DEDUP CASE — same (kind, value) for resource-id -> 1 item
+        {
+            "desc": "Dedup: same (kind,value) for resource-id collapses to one",
+            "elements": [
+                Element(True, "btn_dup", cls="android.widget.Button", clickable="true"),
+                Element(True, "btn_dup", cls="android.widget.Button", clickable="true"),
             ],
             "filter_type": "all",
             "debug": False,
-            "expected": ["btn1", "btn3"]
+            "expected": ["btn_dup"],
+        },
+        # DEDUP CASE — same value across different kinds results in 2 entries (normal output is strings)
+        {
+            "desc": "Dedup: same value across different kinds (rid vs accessibility_id) keeps both",
+            "elements": [
+                Element(True, "btn_same", text="OK", cls="android.widget.Button", clickable="true"),
+                Element(True, None, text="OK", cls="android.widget.Button", clickable="true", content_desc="btn_same"),
+            ],
+            "filter_type": "all",
+            "debug": False,
+            "expected": ["btn_same", "btn_same"],  # two items because (kind, value) differs
+        },
+        # LEGIT EMPTY CASE 1 — input with NO identifiers -> []
+        {
+            "desc": "Legit empty: input element without identifiers returns []",
+            "elements": [
+                Element(True, None, text="", cls="android.widget.EditText", clickable="false", content_desc=None),
+            ],
+            "filter_type": "input",
+            "debug": False,
+            "expected": [],
+        },
+        # LEGIT EMPTY CASE 2 (selector-strict) — require accessibility_id when only resource-id exists
+        {
+            "desc": "Legit empty (strict): id_mode=accessibility_id but element has only resource-id",
+            "elements": [
+                Element(
+                    True, "input_user", text="", cls="android.widget.EditText", clickable="true", content_desc=None
+                ),
+            ],
+            "filter_type": "input",
+            "id_mode": "accessibility_id",
+            "debug": False,
+            "expected": [],
+        },
+        # CONTROL CASE 3 (selector-strict) — require accessibility_id and element has only content-desc
+        {
+            "desc": "Strict selector returns value when content-desc exists",
+            "elements": [
+                Element(
+                    True, None, text="", cls="android.widget.EditText", clickable="true", content_desc="field_user"
+                ),
+            ],
+            "filter_type": "input",
+            "id_mode": "accessibility_id",
+            "debug": False,
+            "expected": ["field_user"],
         },
     ]
 
@@ -118,5 +212,8 @@ if __name__ == "__main__":
         visible = VisibleElements()
         visible = MockVisibleElements(driver)
 
-        result = visible.get_visible_elements_on_screen(filter_type=case["filter_type"], debug=case["debug"])
+        id_mode = case.get("id_mode", "auto")
+        result = visible.get_visible_elements_on_screen(
+            filter_type=case["filter_type"], id_mode=id_mode, debug=case["debug"]
+        )
         print("✅ PASSED\n" if result == case["expected"] else "❌ FAILED\n")

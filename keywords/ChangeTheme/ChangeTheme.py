@@ -1,212 +1,251 @@
-from robot.api.deco import keyword
-from robot.libraries.BuiltIn import BuiltIn
 import subprocess
 import time
 
+from robot.api.deco import keyword
+from robot.libraries.BuiltIn import BuiltIn
+
+
 class ChangeTheme:
-    ROBOT_LIBRARY_SCOPE = 'GLOBAL'
+    ROBOT_LIBRARY_SCOPE = "GLOBAL"
 
     def __init__(self):
         self._builtin = BuiltIn()
-        self.device_udid = None  
+        self.device_udid = None
 
     @property
     def appium(self):
         return self._builtin.get_library_instance("AppiumLibrary")
-    
+
     @keyword("Set Device UDID")
     def set_device_udid(self, udid):
-        """Define o UDID do dispositivo dinamicamente"""
+        """Set the device UDID dynamically.
+
+        Args:
+            udid (str): The unique device identifier.
+        """
         self.device_udid = udid
-        self._builtin.log(f"UDID definido para: {udid}", "INFO")
+        self._builtin.log(f"UDID set to: {udid}", "INFO")
 
     def _execute_adb_command(self, command):
-        """Executa comando ADB e retorna o resultado"""
+        """Execute an ADB command and return the result.
+
+        Args:
+            command (str): The ADB command to be executed.
+
+        Returns:
+            tuple: (success: bool, output: str) with command status and response.
+        """
         try:
             full_command = f"adb -s {self.device_udid} {command}"
-            result = subprocess.run(
-                full_command.split(),
-                capture_output=True,
-                text=True,
-                timeout=10
-            )
-            
+            result = subprocess.run(full_command.split(), capture_output=True, text=True, timeout=10)
+
             if result.returncode == 0:
-                self._builtin.log(f"Comando ADB executado: {full_command}", "INFO")
+                self._builtin.log(f"ADB command executed: {full_command}", "INFO")
                 return True, result.stdout.strip()
             else:
-                self._builtin.log(f"Erro no comando ADB: {result.stderr}", "ERROR")
+                self._builtin.log(f"ADB command error: {result.stderr}", "ERROR")
                 return False, result.stderr
-                
+
         except subprocess.TimeoutExpired:
-            self._builtin.log(f"Timeout no comando ADB: {command}", "ERROR")
+            self._builtin.log(f"ADB command timeout: {command}", "ERROR")
             return False, "Timeout"
         except Exception as e:
-            self._builtin.log(f"Erro ao executar comando ADB: {str(e)}", "ERROR")
+            self._builtin.log(f"Error executing ADB command: {str(e)}", "ERROR")
             return False, str(e)
 
     def _get_current_theme(self):
-        """Tenta deduzir o tema atual usando getprop + settings"""
+        """Retrieve the current system theme using `getprop` and `settings`.
+
+        Returns:
+            str | None: The current theme code (0=auto, 1=light, 2=dark), or None if unavailable.
+        """
         success, output = self._execute_adb_command("shell settings get secure ui_night_mode")
         if success:
             return output.strip()
         return None
 
     def _set_theme_via_adb(self, mode):
-        """Define o tema usando comandos ADB
+        """Set the system theme using ADB commands.
 
         Args:
-            mode (str): "dark" para tema escuro, "light" para tema claro
+            mode (str): "dark" for dark theme, "light" for light theme.
+
+        Raises:
+            RuntimeError: If the theme could not be applied.
+
+        Returns:
+            bool: True if applied successfully.
         """
         cmd_value = "yes" if mode == "dark" else "no"
         command = f"shell cmd uimode night {cmd_value}"
         success, output = self._execute_adb_command(command)
 
         if not success:
-            raise RuntimeError(f"Falha ao definir tema {mode}: {output}")
+            raise RuntimeError(f"Failed to set {mode} theme: {output}")
 
-        self._builtin.log(f"Tema {mode} aplicado via 'cmd uimode'", "INFO")
+        self._builtin.log(f"{mode.capitalize()} theme applied via 'cmd uimode'", "INFO")
         time.sleep(1)
         return True
 
     def _verify_theme_change(self, expected_mode):
-        """Verifica se o tema foi alterado corretamente"""
-        expected_values = {
-            "dark": "2",
-            "light": "1"
-        }
-        
+        """Verify if the theme has been changed correctly.
+
+        Args:
+            expected_mode (str): Expected theme, "dark" or "light".
+
+        Returns:
+            bool: True if verification passed, False otherwise.
+        """
+        expected_values = {"dark": "2", "light": "1"}
+
         current_theme = self._get_current_theme()
         if current_theme == expected_values[expected_mode]:
-            self._builtin.log(f"Tema {expected_mode} aplicado com sucesso (código: {current_theme})", "INFO")
+            self._builtin.log(
+                f"{expected_mode.capitalize()} theme successfully applied (code: {current_theme})", "INFO"
+            )
             return True
         else:
-            self._builtin.log(f"Tema não foi aplicado. Esperado: {expected_values[expected_mode]}, Atual: {current_theme}", "WARN")
+            self._builtin.log(
+                f"Theme not applied. Expected: {expected_values[expected_mode]}, Current: {current_theme}", "WARN"
+            )
             return False
 
     @keyword("Change To Dark Theme")
     def change_to_dark_theme(self, verify=True):
-        """Muda para tema escuro usando ADB
-        
+        """Switch system to dark theme using ADB.
+
         Args:
-            verify (bool): Se True, verifica se a mudança foi aplicada
+            verify (bool, optional): If True, verifies that the change was applied. Defaults to True.
+
+        Raises:
+            RuntimeError: If theme change fails.
+
+        Returns:
+            bool: True if the theme was set successfully.
         """
         try:
-            self._builtin.log("Iniciando mudança para tema escuro via ADB", "INFO")
-            
-            # Verifica tema atual
+            self._builtin.log("Starting dark theme switch via ADB", "INFO")
+
             current_theme = self._get_current_theme()
-            self._builtin.log(f"Tema atual: {current_theme}", "INFO")
-            
-            # Se já estiver no tema escuro, não faz nada
+            self._builtin.log(f"Current theme: {current_theme}", "INFO")
+
             if current_theme == "2":
-                self._builtin.log("Dispositivo já está no tema escuro", "INFO")
+                self._builtin.log("Device is already using dark theme", "INFO")
                 return True
-            
-            # Aplica tema escuro
+
             self._set_theme_via_adb("dark")
-            
-            # Verifica se foi aplicado corretamente
+
             if verify:
                 if not self._verify_theme_change("dark"):
-                    raise RuntimeError("Tema escuro não foi aplicado corretamente")
-            
-            self._builtin.log("Tema escuro aplicado com sucesso", "INFO")
+                    raise RuntimeError("Dark theme was not applied correctly")
+
+            self._builtin.log("Dark theme successfully applied", "INFO")
             return True
-            
+
         except Exception as e:
-            self._builtin.log(f"Erro ao mudar para tema escuro: {str(e)}", "ERROR")
-            raise RuntimeError(f"Falha ao mudar para tema escuro: {str(e)}")
+            self._builtin.log(f"Error switching to dark theme: {str(e)}", "ERROR")
+            raise RuntimeError(f"Failed to switch to dark theme: {str(e)}")
 
     @keyword("Change To Light Theme")
     def change_to_light_theme(self, verify=True):
-        """Muda para tema claro usando ADB
-        
+        """Switch system to light theme using ADB.
+
         Args:
-            verify (bool): Se True, verifica se a mudança foi aplicada
+            verify (bool, optional): If True, verifies that the change was applied. Defaults to True.
+
+        Raises:
+            RuntimeError: If theme change fails.
+
+        Returns:
+            bool: True if the theme was set successfully.
         """
         try:
-            self._builtin.log("Iniciando mudança para tema claro via ADB", "INFO")
-            
-            # Verifica tema atual
+            self._builtin.log("Starting light theme switch via ADB", "INFO")
+
             current_theme = self._get_current_theme()
-            self._builtin.log(f"Tema atual: {current_theme}", "INFO")
-            
-            # Se já estiver no tema claro, não faz nada
+            self._builtin.log(f"Current theme: {current_theme}", "INFO")
+
             if current_theme == "1":
-                self._builtin.log("Dispositivo já está no tema claro", "INFO")
+                self._builtin.log("Device is already using light theme", "INFO")
                 return True
-            
-            # Aplica tema claro
+
             self._set_theme_via_adb("light")
-            
-            # Verifica se foi aplicado corretamente
+
             if verify:
                 if not self._verify_theme_change("light"):
-                    raise RuntimeError("Tema claro não foi aplicado corretamente")
-            
-            self._builtin.log("Tema claro aplicado com sucesso", "INFO")
+                    raise RuntimeError("Light theme was not applied correctly")
+
+            self._builtin.log("Light theme successfully applied", "INFO")
             return True
-            
+
         except Exception as e:
-            self._builtin.log(f"Erro ao mudar para tema claro: {str(e)}", "ERROR")
-            raise RuntimeError(f"Falha ao mudar para tema claro: {str(e)}")
+            self._builtin.log(f"Error switching to light theme: {str(e)}", "ERROR")
+            raise RuntimeError(f"Failed to switch to light theme: {str(e)}")
 
     @keyword("Get Current Theme")
     def get_current_theme(self):
-        """Retorna o tema atual do sistema"""
+        """Get the current system theme.
+
+        Returns:
+            str: "auto", "light", "dark", or "unknown".
+        """
         try:
             theme_code = self._get_current_theme()
-            theme_map = {
-                "0": "auto",
-                "1": "light", 
-                "2": "dark"
-            }
-            
+            theme_map = {"0": "auto", "1": "light", "2": "dark"}
+
             theme_name = theme_map.get(theme_code, "unknown")
-            self._builtin.log(f"Tema atual: {theme_name} (código: {theme_code})", "INFO")
+            self._builtin.log(f"Current theme: {theme_name} (code: {theme_code})", "INFO")
             return theme_name
-            
+
         except Exception as e:
-            self._builtin.log(f"Erro ao obter tema atual: {str(e)}", "ERROR")
-            raise RuntimeError(f"Falha ao obter tema atual: {str(e)}")
+            self._builtin.log(f"Error getting current theme: {str(e)}", "ERROR")
+            raise RuntimeError(f"Failed to get current theme: {str(e)}")
 
     @keyword("Toggle Theme")
     def toggle_theme(self):
-        """Alterna entre tema claro e escuro"""
+        """Toggle between light and dark themes.
+
+        If current theme is auto, defaults to dark.
+        """
         try:
             current_theme = self.get_current_theme()
-            
+
             if current_theme == "dark":
                 self.change_to_light_theme()
             elif current_theme == "light":
                 self.change_to_dark_theme()
             else:
-                # Se estiver em auto, define como escuro
                 self.change_to_dark_theme()
-                
-            self._builtin.log("Tema alternado com sucesso", "INFO")
+
+            self._builtin.log("Theme successfully toggled", "INFO")
             return True
-            
+
         except Exception as e:
-            self._builtin.log(f"Erro ao alternar tema: {str(e)}", "ERROR")
-            raise RuntimeError(f"Falha ao alternar tema: {str(e)}")
+            self._builtin.log(f"Error toggling theme: {str(e)}", "ERROR")
+            raise RuntimeError(f"Failed to toggle theme: {str(e)}")
 
     @keyword("Reset Theme To Auto")
     def reset_theme_to_auto(self):
-        """Reseta o tema para automático (modo padrão do sistema)"""
+        """Reset the system theme to automatic mode.
+
+        Raises:
+            RuntimeError: If reset fails.
+
+        Returns:
+            bool: True if reset successfully.
+        """
         try:
-            self._builtin.log("Resetando tema para automático (modo auto)", "INFO")
+            self._builtin.log("Resetting theme to auto mode", "INFO")
 
             command = "shell settings put secure ui_night_mode 0"
             success, output = self._execute_adb_command(command)
 
             if not success:
-                raise RuntimeError(f"Falha ao resetar tema: {output}")
+                raise RuntimeError(f"Failed to reset theme: {output}")
 
-            self._builtin.log("Tema resetado para automático com sucesso", "INFO")
+            self._builtin.log("Theme reset to auto successfully", "INFO")
             return True
 
         except Exception as e:
-            self._builtin.log(f"Erro ao resetar tema: {str(e)}", "ERROR")
-            raise RuntimeError(f"Falha ao resetar tema: {str(e)}")
+            self._builtin.log(f"Error resetting theme: {str(e)}", "ERROR")
+            raise RuntimeError(f"Failed to reset theme: {str(e)}")

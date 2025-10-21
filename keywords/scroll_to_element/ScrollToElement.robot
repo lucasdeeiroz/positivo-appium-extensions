@@ -25,3 +25,11 @@ Finding an application icon on home screen by scrolling using a container locato
     
     Wait Until Element Is Visible     //android.widget.TextView[@content-desc="Gmail"]
 
+Error message when element is not found 
+    [Documentation]    Should get an error message when element is not found in the max attempts
+
+    Open Home Screen
+    Press Keycode     3
+     Scroll To Element    locator=//android.widget.TextView[@content-desc="Gmai"]
+    ...    max_swipes=5    swipe_distance_ratio=0.8    direction=right
+       
