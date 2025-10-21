@@ -1,82 +1,17 @@
 """
-Swipe Element Library
-=====================
+Swipe Element Library — Robot Framework + Appium 
 
-Custom Robot Framework + Appium library for performing swipe (dragGesture) actions
-on mobile application elements with configurable direction, distance, and speed.
-Implements safe margins to avoid edge interactions.
-
-Overview
---------
-- Locates elements using: id, xpath, accessibility_id, class_name,
-  android_uiautomator, ios_predicate, ios_class_chain, name.
-- Supported directions: up, down, left, right.
-- Adjustable swipe distance via `percent` (0.01 to 2.0), allowing gestures beyond
-  the element's size.
-- Fixed start margin of 5% to avoid touches near edges.
-- Adjustable gesture speed via `speed` (milliseconds).
-
-Requirements
-------------
-- Python 3.7+
-- Appium Server running and configured
-- Robot Framework:
-    pip install robotframework
-- AppiumLibrary:
-    pip install robotframework-appiumlibrary
-
-Import in Robot Framework
--------------------------
-Library    swipe.py
-Library    AppiumLibrary
-
-Syntax
-------
-Swipe Element    <locator>    direction=<up|down|left|right>    percent=<0.01-2.0>    speed=<ms>
-
-Supported Locator Formats
--------------------------
-- id=com.example:id/my_element
-- xpath=//android.widget.TextView[@text="Example"]
-- accessibility_id=MyElement
-- class_name=android.widget.Button
-- android_uiautomator=new UiSelector().text("Example")
-- ios_predicate=name == "Example"
-- ios_class_chain=**/XCUIElementTypeButton[`name == "Example"`]
-
-Parameters
-----------
-locator   (str)   Target element locator (required).
-direction (str)   Swipe direction. Default: "right".
-percent   (float) Swipe distance as a percentage. Default: 0.5.
-speed     (int)   Gesture speed in milliseconds. Default: 800.
-
-Examples
---------
-*** Settings ***
-Library    swipe.py
-Library    AppiumLibrary
-
-*** Test Cases ***
-Swipe Right
-    Swipe Element    xpath=//android.widget.TextView[@text="Example"]    direction=right    percent=0.8    speed=500
-
-Swipe Down
-    Swipe Element    id=com.example:id/list    direction=down    percent=1.5    speed=800
-
-Notes
------
-- A `percent` value greater than 1.0 allows swipes beyond the element's bounds.
-- Requires Appium driver support for `mobile: dragGesture` (W3C Actions).
+Performs swipes (`mobile: dragGesture`) on elements with configurable `direction`,
+`percent` (0.01-2.0) and `speed` (ms). Applies a fixed 5% start margin.
+Reuses the active AppiumLibrary session.
 """
 
 from appium.webdriver.common.appiumby import AppiumBy
 from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
 
-
-class swipe:
-    ROBOT_LIBRARY_SCOPE = "GLOBAL"
+class Swipe:
+    ROBOT_LIBRARY_SCOPE = 'GLOBAL'
 
     def __init__(self):
         # Access to Robot Framework's built-in library
@@ -90,11 +25,24 @@ class swipe:
     @keyword("Swipe Element")
     def swipe_element(self, *args, **kwargs):
         """
-        Performs a drag gesture (swipe) on a UI element.
+        Perform a directional swipe on a single UI element using `mobile: dragGesture` with a fixed 5% start margin.
 
-        Supported locator formats:
-        - Swipe Element    xpath=//example    direction=right    percent=0.8    speed=500
-        - Swipe Element    ${element_locator} direction=down     percent=0.8    speed=500
+        [Arguments]
+        - locator: (str) Target element locator. Can be a single positional string like `xpath=//...`
+          or a named argument using one of: `id`, `xpath`, `accessibility_id`, `class_name`,
+          `android_uiautomator`, `ios_predicate`, `ios_class_chain`, `name`.
+        - direction: (str) One of `up`, `down`, `left`, `right`. Default: `right`.
+        - percent: (float) Distance as a fraction of the element size in `0.01..2.0`.
+          Values > 1.0 allow movement beyond the element bounds. Default: `0.5`.
+        - speed: (int) Gesture speed in milliseconds for `mobile: dragGesture`. Must be positive. Default: `800`.
+
+        [Return Values]
+        - None
+
+        [Raises]
+        - ValueError: Invalid locator, unsupported direction, or percent out of range.
+        - TypeError: Parameters that cannot be converted to expected types.
+        - RuntimeError: Driver/runtime failures may propagate from the underlying call.
         """
 
         # Mapping of supported locator strategies

@@ -1,6 +1,6 @@
 *** Settings ***
 Library    AppiumLibrary
-Library    swipe.py
+Library    Swipe.py
 
 *** Keywords ***
 Start session Rgb
