@@ -28,7 +28,7 @@ class AppiumLongPressExtensions:
 
         Locates an element using the given locator strategy and value, then
         performs a long press gesture on it for the specified duration.
-        
+
         [Arguments]
         locator    Element locator in format 'strategy=value'. Supported strategies:
                   id, xpath, accessibility_id, class name, css selector, name
@@ -46,17 +46,17 @@ class AppiumLongPressExtensions:
                       If gesture cannot be performed
         """
         driver = self._driver
-        
+
         locator_parts = locator.split('=', 1)
         if len(locator_parts) != 2:
             raise ValueError("Locator must be in 'strategy=value' format")
-        
+
         strategy, value = locator_parts
-        
-       
+
+
         element = driver.find_element(strategy, value)
-        
-      
+
+
         actions = ActionChains(driver)
         actions.click_and_hold(element).pause(duration/1000).release().perform()
 

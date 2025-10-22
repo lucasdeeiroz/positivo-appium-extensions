@@ -7,7 +7,7 @@
 
         [Arguments]
         -----------
-        - ``locator``: Locator of the element to perform the zoom gesture on. 
+        - ``locator``: Locator of the element to perform the zoom gesture on.
           Supports ``id``, ``xpath``, ``accessibility_id`` and ``class_name``.
           If omitted, the gesture is applied at the screen center.
         - ``scale``: Zoom scale factor (must be greater than 1.0). Defines the

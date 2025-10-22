@@ -154,13 +154,10 @@ class GesturePinch:
         if steps < 1:
             raise ValueError("Steps must be greater than or equal to 1.")
 
-        return direction 
+        return direction
 
     @keyword("Perform Pinch Gesture")
     def perform_pinch_gesture(self,locator=None,scale=0.5,duration=500,direction="vertical",movement=400,pause=0.1,steps=50):
-    def perform_pinch_gesture(
-        self, locator=None, scale=0.5, duration=500, direction="vertical", movement=400, pause=0.1, steps=50
-    ):
         """
         Performs a realistic pinch gesture with perturbation.
 

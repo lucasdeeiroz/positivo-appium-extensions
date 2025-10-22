@@ -40,7 +40,7 @@ class ScreenshotComparisonKeywords:
             tolerance = float(tolerance)
         except (TypeError, ValueError):
             raise ValueError(f'Invalid value for "tolerance" parameter. Must be a number, got: {type(tolerance).__name__}')
-        
+
         if not (0 <= tolerance <= 1):
             raise ValueError(f'Invalid value for "tolerance" parameter. Must be between 0 and 1, got: {tolerance}')
 
