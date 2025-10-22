@@ -68,20 +68,11 @@ class NetworkStatus:
         """
             Returns a readable string representing the current network connection type.
 
-            This keyword combines Appium's connection bitmask with ADB airplane-mode state to classify
-            the device connection in a stable, test-friendly string.
+            [Arguments]
+            - (none)
 
-            - Reads Appium `driver.network_connection` (integer bitmask):
-              - 0: no network
-              - 2: Wi-Fi
-              - 4: Mobile data
-              - 6: Wi-Fi + Mobile data
-            - Reads `adb shell settings get global airplane_mode_on` ("1" enabled, "0" disabled).
-            - Applies precedence to resolve the final label.
-
-        Returns:
-            str:
-                One of:
+            [Return Values]
+            - str: one of:
                 - "WIFI_AND_DATA"
                 - "WIFI_ONLY"
                 - "DATA_ONLY"
@@ -89,32 +80,15 @@ class NetworkStatus:
                 - "NONE"
                 - "UNKNOWN"
 
-        Examples:
-            | *** Test Cases ***                                                                     |
-            | Should Return WIFI_ONLY When Only Wi-Fi Is On                                          |
-            |     # Example: set bitmask to Wi-Fi (2) depending on your setup                        |
-            |     ${status}=    Get Readable Network Status                                          |
-            |     Should Be Equal    ${status}    WIFI_ONLY                                          |
-            |                                                                                        |
-            | Should Return AIRPLANE_MODE When Airplane Mode Is Enabled                              |
-            |     Run Process    adb    shell    settings    put    global    airplane_mode_on    1  |
-            |     ${status}=    Get Readable Network Status                                          |
-            |     Should Be Equal    ${status}    AIRPLANE_MODE                                      |
-            |     # Cleanup                                                                          |
-            |     Run Process    adb    shell    settings    put    global    airplane_mode_on    0  |
+            [Failure Conditions]:
+            - No active Appium session → keyword fails with a descriptive message.
+            - Unexpected non-integer value in driver.network_connection → keyword fails.
 
-        Raises:
-            WebDriverException:
-                If fetching the bitmask from the Appium driver fails.
-            subprocess.TimeoutExpired:
-                If the ADB call to read airplane mode times out.
-
-        Notes:
-            - Requires ADB available on PATH and exactly one device/emulator connected.
-            - Android-only; `network_connection` is not supported on iOS.
-            - Precedence used:
-                AIRPLANE_MODE > NONE > WIFI_AND_DATA > WIFI_ONLY > DATA_ONLY; otherwise "UNKNOWN".
-            - Logs both the raw bitmask (decimal & binary) and the interpreted flags to aid debugging.
+            [Details]
+            - Classification precedence: AIRPLANE_MODE > NONE > WIFI_AND_DATA > WIFI_ONLY > DATA_ONLY; otherwise "UNKNOWN".
+            - Bitmask reference (Appium network_connection):
+                0 = no network, 2 = Wi-Fi, 4 = Mobile data, 6 = Wi-Fi + Mobile data.
+            - If ADB is unavailable or the command fails, airplane-mode detection is skipped (assumed disabled) and a WARN is logged.
         """
 
         # Retrieves the network status as an integer (bitmask)
