@@ -131,26 +131,30 @@ class VisibleElements:
         Returns the list of visible UI elements currently rendered on the screen.
 
         [Arguments]
-            filter_type: type of elements to include in the result. Options are:
-                all (default) | clickable | text | button | input
-            id_mode: identifier selection strategy. Options are:
-                auto (default: prefer resource-id; if empty, fallback to content-desc)
-                | resource_id (only return resource-id values)
-                | accessibility_id (only return content-desc values)
-            debug: if False (default), returns only a list of identifiers (strings); If True, returns a list of dictionaries
+        - filter_type: type of elements to include in the result. Options are:
+        all (default) | clickable | text | button | input
+        - id_mode: identifier selection strategy. Options are:
+        auto (default: prefer resource-id; if empty, fallback to content-desc)
+        | resource_id (only return resource-id values)
+        | accessibility_id (only return content-desc values)
+        - debug: if False (default), returns only a list of identifiers (strings);
+        If True, returns a list of dictionaries
 
         [Return Values]
-            - debug=False: list[str]
-            A list of identifier strings (resource-id or accessibility_id).
+        - debug=False: list[str]
+        A list of identifier strings (resource-id or accessibility_id).
+        - debug=True: list[dict]
+        A list of dictionaries with extended element information:
+            identifier: { value: <str>, kind: resource_id|accessibility_id }
+            resource_id: <str>
+            accessibility_id: <str>
+            text: <str>
+            class: <str>
+            clickable: <bool>
 
-            - debug=True: list[dict]
-            A list of dictionaries with extended element information:
-                identifier: { value: <str>, kind: resource_id|accessibility_id }
-                resource_id: <str>
-                accessibility_id: <str>
-                text: <str>
-                class: <str>
-                clickable: <bool>
+        [Failure Conditions]
+        - Invalid value for filter_type or id_mode → keyword fails with a descriptive message.
+        - No active Appium session or driver retrieval failure → keyword fails.
 
         [Notes]
             - On Android, "accessibility_id" is an alias for the "content-desc" attribute.
