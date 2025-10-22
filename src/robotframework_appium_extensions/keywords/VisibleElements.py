@@ -152,14 +152,14 @@ class VisibleElements:
             class: <str>
             clickable: <bool>
 
-        [Raises]
+        [Failure Conditions]
         - Invalid value for filter_type or id_mode → keyword fails with a descriptive message.
         - No active Appium session or driver retrieval failure → keyword fails.
 
         [Notes]
-        - On Android, "accessibility_id" is an alias for the "content-desc" attribute.
-        - In auto mode, elements without either resource-id or content-desc are excluded.
-        - Duplicates are automatically removed based on (kind, value) pairs.
+            - On Android, "accessibility_id" is an alias for the "content-desc" attribute.
+            - In auto mode, elements without either resource-id or content-desc are excluded.
+            - Duplicates are automatically removed based on (kind, value) pairs.
         """
 
         valid_filters = {"all", "clickable", "text", "button", "input"}
