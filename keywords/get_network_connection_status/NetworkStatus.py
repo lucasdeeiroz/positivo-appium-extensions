@@ -66,29 +66,29 @@ class NetworkStatus:
     @keyword("Get Readable Network Status")
     def get_readable_network_status(self):
         """
-            Returns a readable string representing the current network connection type.
+        Returns a readable string representing the current network connection type.
 
-            [Arguments]
-            - (none)
+        [Arguments]
+        - (none)
 
-            [Return Values]
-            - str: one of:
-                - "WIFI_AND_DATA"
-                - "WIFI_ONLY"
-                - "DATA_ONLY"
-                - "AIRPLANE_MODE"
-                - "NONE"
-                - "UNKNOWN"
+        [Return Values]
+        - str: one of:
+            - "WIFI_AND_DATA"
+            - "WIFI_ONLY"
+            - "DATA_ONLY"
+            - "AIRPLANE_MODE"
+            - "NONE"
+            - "UNKNOWN"
 
-            [Failure Conditions]:
-            - No active Appium session → keyword fails with a descriptive message.
-            - Unexpected non-integer value in driver.network_connection → keyword fails.
+        [Raises]
+        - No active Appium session → keyword fails with a descriptive message.
+        - Unexpected non-integer value in driver.network_connection → keyword fails.
 
-            [Details]
-            - Classification precedence: AIRPLANE_MODE > NONE > WIFI_AND_DATA > WIFI_ONLY > DATA_ONLY; otherwise "UNKNOWN".
-            - Bitmask reference (Appium network_connection):
-                0 = no network, 2 = Wi-Fi, 4 = Mobile data, 6 = Wi-Fi + Mobile data.
-            - If ADB is unavailable or the command fails, airplane-mode detection is skipped (assumed disabled) and a WARN is logged.
+        [Notes]
+        - Classification precedence: AIRPLANE_MODE > NONE > WIFI_AND_DATA > WIFI_ONLY > DATA_ONLY; otherwise "UNKNOWN".
+        - Bitmask reference (Appium network_connection):
+            0 = no network, 2 = Wi-Fi, 4 = Mobile data, 6 = Wi-Fi + Mobile data.
+        - If ADB is unavailable or the command fails, airplane-mode detection is skipped (assumed disabled) and a WARN is logged.
         """
 
         # Retrieves the network status as an integer (bitmask)
