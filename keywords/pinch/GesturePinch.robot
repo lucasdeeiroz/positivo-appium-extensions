@@ -1,6 +1,6 @@
 *** Settings ***
 
-Resource    GesturePinchResource.robot
+Resource    PerformPinchResource.robot
 
 *** Test Cases ***
 
@@ -9,7 +9,7 @@ Pinch on Google Maps using a locator
     [Tags]    maps
     Start session Google Maps
     Sleep    10    
-    Perform Pinch Gesture    locator=xpath=//android.widget.ScrollView 
+    Perform Pinch    locator=xpath=//android.widget.ScrollView 
     Sleep    5
 
 Pinch on Google Maps without a locator
@@ -18,7 +18,7 @@ Pinch on Google Maps without a locator
     [Tags]    maps
     Start session Google Maps
     Sleep    10
-    Perform Pinch Gesture
+    Perform Pinch
     Sleep    5
 
 Error message when element doesnt exist or path is invalid
@@ -27,7 +27,7 @@ Error message when element doesnt exist or path is invalid
     [Tags]    maps
     Start session Google Maps
     Sleep    10
-    Perform Pinch Gesture    locator=//android.widget.ScrollView
+    Perform Pinch    locator=//android.widget.ScrollView
     Sleep    5
 
 Error message when Pinch Scale is invalid
@@ -36,7 +36,7 @@ Error message when Pinch Scale is invalid
     [Tags]     maps
     Start session Google Maps
     Sleep    10
-    Perform Pinch Gesture    locator=xpath=//android.widget.ScrollView    scale=1.5
+    Perform Pinch    locator=xpath=//android.widget.ScrollView    scale=1.5
     Sleep    5
 
 Error message when Duration is invalid
@@ -45,6 +45,6 @@ Error message when Duration is invalid
     [Tags]     maps
     Start session Google Maps
     Sleep    10
-    Perform Pinch Gesture    locator=xpath=//android.widget.ScrollView    duration=999999
-    Perform Pinch Gesture    locator=xpath=//android.widget.ScrollView    duration=99.99
+    Perform Pinch    locator=xpath=//android.widget.ScrollView    duration=999999
+    Perform Pinch    locator=xpath=//android.widget.ScrollView    duration=99.99
     Sleep    5

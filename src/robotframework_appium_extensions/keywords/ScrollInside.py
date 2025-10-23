@@ -1,5 +1,5 @@
 """
-Scroll Element Library — Robot Framework + Appium
+Scroll Inside Library — Robot Framework + Appium
 
 Performs scroll/swipe gestures (`mobile: swipeGesture`) inside a scrollable element.
 Configurable `direction`, `percent` (0.01–1.0) and `speed` (ms). Reuses AppiumLibrary session.
@@ -10,7 +10,7 @@ from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
 
 # Defines the custom keyword class
-class Scroll:
+class ScrollInside:
     # Defines the library scope as GLOBAL (same instance will be reused across all tests)
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
 
@@ -24,7 +24,7 @@ class Scroll:
         return self._builtin.get_library_instance("AppiumLibrary")._current_application()
 
     @keyword("Scroll Inside")
-    def scroll_element(self, *args, **kwargs):
+    def scroll_inside(self, *args, **kwargs):
         """
         Perform a scroll/swipe gesture inside a single scrollable element using `mobile: swipeGesture`.
 
