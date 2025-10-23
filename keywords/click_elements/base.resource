@@ -1,20 +1,4 @@
 *** Settings ***
-
-Library     AppiumLibrary
-Library     ./ClickElements.py
-
-*** Keywords ***
-Start session Calculator
-    Open Application            http://localhost:4723
-    ...                         automationName=UIAutomator2
-    ...                         platformName=Android
-    ...                         DeviceName=Emulator
-    ...                         udid=emulator-5554
-    ...                         autoGrantPermissions=true
-    ...                         appPackage=com.google.android.calculator
-    ...                         appActivity=com.android.calculator2.Calculator
-    ...                         noReset=true
-
-
-Close session
-    Close Application
+# DEPRECATED SHIM — forwards to new base resource during reorg.
+# TODO: update suites to use ../../resources/base_click_elements.resource and remove this file.
+Resource    ../../resources/base_click_elements.resource
