@@ -1,4 +1,4 @@
-"""Perform Zoom Gesture
+"""Perform Zoom
         =======================
 
         Performs a realistic zoom-in (pinch-out) gesture on a specific element or at the
@@ -35,9 +35,9 @@
 
         [Examples]
         ----------
-        | Perform Zoom Gesture | locator=id=map_view | scale=1.8 | duration=700 | direction=vertical | movement=280 |
-        | Perform Zoom Gesture | scale=2.0 | direction=horizontal | movement=300 | steps=60 |
-        | Perform Zoom Gesture | locator=xpath=//android.view.View[@content-desc="photo"] | scale=1.6 |
+        | Perform Zoom | locator=id=map_view | scale=1.8 | duration=700 | direction=vertical | movement=280 |
+        | Perform Zoom | scale=2.0 | direction=horizontal | movement=300 | steps=60 |
+        | Perform Zoom | locator=xpath=//android.view.View[@content-desc="photo"] | scale=1.6 |
 
         [Notes]
         -------
@@ -57,7 +57,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.actions.mouse_button import MouseButton
 
 
-class GestureZoom:
+class PerformZoom:
     """Custom Gesture Extension Class for AppiumLibrary with enhanced zoom gesture."""
 
     ROBOT_LIBRARY_SCOPE = "GLOBAL"
@@ -168,8 +168,8 @@ class GestureZoom:
 
         return direction  # Return normalized direction for reuse
 
-    @keyword("Perform Zoom Gesture")
-    def perform_zoom_gesture(
+    @keyword("Perform Zoom")
+    def perform_zoom(
         self, locator=None, scale=1.5, duration=500, direction="vertical", movement=300, pause=0.1, steps=50
     ):
         """

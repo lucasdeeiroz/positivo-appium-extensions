@@ -1,6 +1,6 @@
 *** Settings ***
 
-Resource    GestureZoomResource.robot
+Resource    PerformZoomResource.robot
 
 *** Test Cases ***
 
@@ -9,7 +9,7 @@ Zoom on Google Maps using a locator
     [Tags]    maps
     Start session Google Maps
     Sleep    10    
-    Perform Zoom Gesture    locator=xpath=//android.widget.ScrollView 
+    Perform Zoom    locator=xpath=//android.widget.ScrollView 
     Sleep    5
 
 Zoom on Google Maps without a locator
@@ -18,7 +18,7 @@ Zoom on Google Maps without a locator
     [Tags]    maps
     Start session Google Maps
     Sleep    10
-    Perform Zoom Gesture
+    Perform Zoom
     Sleep    5
 
 
@@ -28,7 +28,7 @@ Error message when element doesnt exist or path is invalid
     [Tags]    maps
     Start session Google Maps
     Sleep    10
-    Perform Zoom Gesture    locator=//android.widget.ScrollView
+    Perform Zoom    locator=//android.widget.ScrollView
     Sleep    5
 
 Error message when Zoom Scale is invalid
@@ -37,7 +37,7 @@ Error message when Zoom Scale is invalid
     [Tags]     maps
     Start session Google Maps
     Sleep    10
-    Perform Zoom Gesture    locator=xpath=//android.widget.ScrollView    scale=0.5
+    Perform Zoom    locator=xpath=//android.widget.ScrollView    scale=0.5
     Sleep    5
 
 Error message when Duration is invalid
@@ -46,7 +46,7 @@ Error message when Duration is invalid
     [Tags]     maps
     Start session Google Maps
     Sleep    10
-    Perform Zoom Gesture    locator=xpath=//android.widget.ScrollView    duration=999999
-    Perform Zoom Gesture    locator=xpath=//android.widget.ScrollView    duration=99.99
+    Perform Zoom    locator=xpath=//android.widget.ScrollView    duration=999999
+    Perform Zoom    locator=xpath=//android.widget.ScrollView    duration=99.99
     Sleep    5
 
