@@ -1,6 +1,5 @@
 *** Settings ***
 Resource    base_scroll.resource
-Resource    elementos.resource
 
 
 *** Test Cases ***
