@@ -1,5 +1,5 @@
 """
-    Perform Pinch Gesture
+    Perform Pinch
     =====================
 
     Performs a pinch gesture on the specified element or at the screen center if no locator is provided.
@@ -9,8 +9,8 @@
     Optional pause and step interpolation can be used to adjust the smoothness of the gesture.
 
     Example:
-        | Perform Pinch Gesture | id=imagePreview | scale=0.6 | duration=800 | direction=vertical | movement=350 |
-        | Perform Pinch Gesture | xpath=//android.widget.ImageView | direction=horizontal | movement=300 | steps=40 |
+        | Perform Pinch | id=imagePreview | scale=0.6 | duration=800 | direction=vertical | movement=350 |
+        | Perform Pinch | xpath=//android.widget.ImageView | direction=horizontal | movement=300 | steps=40 |
 
     [Arguments]
         | locator   | (string) Element locator in the format strategy=value. Optional; if not provided, gesture occurs at screen center. |
@@ -70,7 +70,7 @@ class PerformPinch:
         width, height = size["width"], size["height"]
         return x + width / 2, y + height / 2, element
 
-    def _calculate_finger_inicial_positions(self, x, y, scale, movement, direction):
+    def _calculate_finger_initial_positions(self, x, y, scale, movement, direction):
         # Defines the initial finger positions based on gesture center, scale, and movement range
         displacement = scale * movement
         if direction == "vertical":
@@ -85,9 +85,6 @@ class PerformPinch:
             new_x = max(0, min(x, screen_width))
             new_y = max(0, min(y, screen_height))
             if (x, y) != (new_x, new_y):
-                warnings.warn(
-                    f"Finger position ({x}, {y}) adjusted to ({new_x}, {new_y}) to fit within screen bounds."
-                )
                 warnings.warn(f"Finger position ({x}, {y}) adjusted to ({new_x}, {new_y}) to fit within screen bounds.")
             adjusted_positions.append((new_x, new_y))
         return adjusted_positions
@@ -173,7 +170,6 @@ class PerformPinch:
 
         # Validate arguments with type and range enforcement
         direction = self._validate_pinch_args(locator, scale, duration, direction, movement, pause, steps)
-        self._validate_pinch_args(locator, scale, duration, direction, movement)
 
         try:
             driver = self.driver
@@ -192,10 +188,7 @@ class PerformPinch:
                 center_x, center_y, _ = self._get_element_center(locator)
                 self._builtin.log(f"Element center at ({center_x}, {center_y})", "INFO")
 
-            f1_start, f2_start = self._calculate_finger_inicial_positions(center_x, center_y, scale, movement, direction)
-            f1_start, f2_start = self._calculate_finger_inicial_positions(
-                center_x, center_y, scale, movement, direction
-            )
+            f1_start, f2_start = self._calculate_finger_initial_positions(center_x, center_y, scale, movement, direction)
 
             offset = 10
             if direction == "vertical":
