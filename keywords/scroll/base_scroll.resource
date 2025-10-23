@@ -1,3 +1,3 @@
 *** Settings ***
-# DEPRECATED SHIM — forwards to new base resource during reorg.
-Resource    ../../resources/base_scroll.resource
+# DEPRECATED SHIM — forwards to new unified base resource.
+Resource    ../../resources/base_scroll_inside.resource
