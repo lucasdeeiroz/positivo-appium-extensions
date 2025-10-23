@@ -22,7 +22,7 @@ class WaitMultipleElements:
     @property
     def _driver(self):
         return self._builtin.get_library_instance("AppiumLibrary")._current_application()
-        
+
     def _validate_locator(self, locator):
         """
         Validates if a locator is in the format strategy=value and uses a valid strategy.
@@ -36,14 +36,14 @@ class WaitMultipleElements:
         match = re.match(r'^([a-zA-Z_\s]+)=(.+)$', locator)
         if not match:
             raise ValueError(f"Invalid locator format: {locator}. Must be 'strategy=value' or start with '//'")
-            
+
         strategy = match.group(1).lower().strip()
         if strategy not in self.VALID_STRATEGIES:
             valid_strategies_str = ', '.join(self.VALID_STRATEGIES)
             raise ValueError(f"Invalid strategy in locator '{locator}'. Valid strategies are: {valid_strategies_str}")
-            
+
         return True
-        
+
     def _check_elements_visibility(self, elements_list, appium_lib):
         """
         Checks the visibility of each element in the list.
@@ -57,7 +57,7 @@ class WaitMultipleElements:
         """
         results = {}
         visible_count = 0
-        
+
         for locator in elements_list:
             try:
                 element = appium_lib._element_find(locator, True, False)
@@ -77,7 +77,7 @@ class WaitMultipleElements:
             except Exception as e:
                 results[locator] = False
                 self._builtin.log(f"Element not found or error: {locator} - {str(e)}", level='DEBUG')
-                
+
         return results, visible_count
 
     def _format_element_list(self, elements, limit=None):
@@ -87,40 +87,40 @@ class WaitMultipleElements:
         """
         if limit is None:
             limit = self.MAX_LOG_ELEMENTS
-            
+
         if len(elements) <= limit:
             return str(elements)
-        
+
         displayed = elements[:limit]
         return f"{displayed} and {len(elements) - limit} more element(s)..."
 
     @keyword("Wait Multiple Elements")
     def wait_multiple_elements(self, elements_list, timeout=10, wait_for_all=True, polling_interval=0.5):
         """Waits for multiple elements to be visible with configurable strategies.
-        
+
         Continuously polls for element visibility using the provided locators
         and applies different waiting strategies based on the wait_for_all parameter.
-        
+
         [Arguments]
         - ``elements_list``: List of element locators in format 'strategy=value' or XPath starting with '//'
         - ``timeout``: Maximum time to wait in seconds (1-300)
         - ``wait_for_all``: If True, waits until ALL elements are visible; if False, waits until ANY element is visible
         - ``polling_interval``: Time between visibility checks in seconds (must be less than timeout)
-        
+
         [Return Values]
         Dictionary with locator strings as keys and boolean visibility status as values:
         - True: Element is visible
         - False: Element is not visible
-        
+
         [Examples]
         | @{locators}=    Create List    id=button1    xpath=//android.widget.TextView[@text="Submit"]
         | ${result}=      Wait Multiple Elements    ${locators}    timeout=15    wait_for_all=True
         | Should Be True  ${result['id=button1']}
-        
+
         | @{locators}=    Create List    id=loading    id=error
         | ${result}=      Wait Multiple Elements    ${locators}    wait_for_all=False
         | Log             ${result}
-        
+
         [Raises]
         - ``ValueError``: If parameters are invalid (empty list, malformed locators, invalid timeout values)
         - ``TimeoutError``: If elements do not become visible within the timeout period
@@ -132,7 +132,7 @@ class WaitMultipleElements:
         
         if not elements_list:
             raise ValueError("The elements list cannot be empty")
-            
+
         # Validate each locator format
         for idx, locator in enumerate(elements_list):
             try:
@@ -191,7 +191,7 @@ class WaitMultipleElements:
             
             start_time = time.monotonic()
             attempt_count = 0
-            
+
             while time.monotonic() - start_time < timeout:
                 attempt_count += 1
                 
@@ -224,11 +224,11 @@ class WaitMultipleElements:
                 
                 visible_str = self._format_element_list(visible_locators)
                 missing_str = self._format_element_list(missing_locators)
-                
+
                 error_msg = f"Timeout waiting for all elements to be visible. Found {visible_count}/{len(elements_list)} visible elements after {attempt_count} attempts in {elapsed_time:.2f}s.\n"
                 error_msg += f"Visible: {visible_str}\n"
                 error_msg += f"Missing: {missing_str}"
-                
+
                 raise TimeoutError(error_msg)
             else:
                 if visible_count == 0:
@@ -236,7 +236,7 @@ class WaitMultipleElements:
                     raise TimeoutError(error_msg)
                 else:
                     return final_results
-                    
+
         except WebDriverException as wde:
             raise RuntimeError(f"WebDriver error: {str(wde)}")
         except Exception as e:
