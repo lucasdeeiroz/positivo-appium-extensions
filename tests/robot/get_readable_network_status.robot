@@ -1,5 +1,5 @@
 *** Settings ***
-Resource    NetworkStatusResource.robot
+Resource    ../../resources/base_network_status.resource
 
 Suite Setup       Initialize Appium Connection
 

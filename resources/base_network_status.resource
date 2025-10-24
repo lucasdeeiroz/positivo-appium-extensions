@@ -1,6 +1,6 @@
 *** Settings ***
 Library    AppiumLibrary
-Library    NetworkStatus.py
+Library    ../src/robotframework_appium_extensions/keywords/NetworkStatus.py
 
 *** Variables ***
 ${REMOTE_URL}           http://localhost:4723
