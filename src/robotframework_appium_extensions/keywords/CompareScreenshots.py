@@ -4,7 +4,7 @@ import os.path
 from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
 
-class ScreenshotComparisonKeywords:
+class CompareScreenshots:
 
     def __init__(self):
         self._builtin = BuiltIn()
@@ -14,7 +14,7 @@ class ScreenshotComparisonKeywords:
         return self._builtin.get_library_instance('AppiumLibrary')._current_application()
 
     @keyword("Compare Screenshots")
-    def compare_images(self, img1, img2, expected="equal", tolerance=0.1):
+    def compare_screenshots(self, img1, img2, expected="equal", tolerance=0.1):
         """Compares two saved images and validates if they are equal or different based on pixel difference.
 
         [Arguments]

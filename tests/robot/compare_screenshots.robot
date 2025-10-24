@@ -1,6 +1,6 @@
 *** Settings ***
 Library     AppiumLibrary
-Resource    ./base.resource
+Resource    ../../resources/base_compare_screenshots.resource
 
 *** Variables ***
 ${PATH}      ${EXECDIR}/screenshots/testes

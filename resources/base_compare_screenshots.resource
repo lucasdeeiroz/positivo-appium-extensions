@@ -3,8 +3,8 @@
 Library     AppiumLibrary
 Library     OperatingSystem
 Library     DateTime
-Library    ScreenshotComparisonKeywords.py
-Library     GesturePinch.py
+Library    ../src/robotframework_appium_extensions/keywords/CompareScreenshots.py
+Library    ../src/robotframework_appium_extensions/keywords/PerformPinch.py
 Library     ../clickElementV2/Appiumclick.py
 
 *** Variables ***
