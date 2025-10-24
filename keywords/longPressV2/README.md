@@ -11,7 +11,7 @@ Library    AppiumLongPressExtensions.py
 
 *** Test Cases ***
 Long Press Example
-    Long-Press    id=button_id    2000    # Press for 2 seconds
+    Perform Long Press    id=button_id    2000    # Press for 2 seconds
 ```
 
 ## Arguments
@@ -26,13 +26,13 @@ Long Press Example
 
 ```robotframework
 # Press button for 8 seconds
-Long-Press    id=com.app.example:id/menu_button    8000
+Perform Long Press    id=com.app.example:id/menu_button    8000
 
 # Press text element for 5 seconds
-LongLong-Press P    xpath=//android.widget.TextView[@text="Options"]    5000
+Perform Long Press    xpath=//android.widget.TextView[@text="Options"]    5000
 
 # Press using default duration (1 second)
-Long-Press    accessibility_id=menu_button
+Perform Long Press    accessibility_id=menu_button
 ```
 
 ## How to Run Tests

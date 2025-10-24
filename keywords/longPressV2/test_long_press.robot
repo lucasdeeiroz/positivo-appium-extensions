@@ -13,7 +13,7 @@ Long press test clicking an icon
     Start session
 
 
-    Long-Press        xpath=//android.widget.TextView[@content-desc="Gmail"]     8000
+    Perform Long Press        xpath=//android.widget.TextView[@content-desc="Gmail"]     8000
     Capture Page Screenshot
 
 
@@ -24,7 +24,7 @@ Long press test with calculator
     Start session 1
 
 
-    Long-Press     id=com.google.android.calculator:id/digit_8     8000
+    Perform Long Press     id=com.google.android.calculator:id/digit_8     8000
     Capture Page Screenshot
 
 
@@ -38,7 +38,7 @@ Long press test
     Navigate to                 Button Clicks
     Go to item                  Long Click                               Long Click Button
 
-    Long-Press                     id=com.qaxperience.yodapp:id/long_click    
+    Perform Long Press                     id=com.qaxperience.yodapp:id/long_click    
 
     Wait Until Page Contains    This is a long click
     Capture Page Screenshot
@@ -65,7 +65,7 @@ Expected error when using LongP on missing element
     ${error}=    Set Variable    No error
 
     TRY
-        Long-Press    id=non_existent_button    8000
+        Perform Long Press    id=non_existent_button    8000
     EXCEPT    ${error}
         ${error_line}=    Evaluate    str($error).splitlines()[0]
         Log    ${error_line}
@@ -81,7 +81,7 @@ Expected error when using LongP with invalid locator
     Start session 
 
     Run Keyword And Expect Error     Invalid locator syntax
-    ...    Long-Press    invalid-locator    8000
+    ...    Perform Long Press    invalid-locator    8000
 
     Capture Page Screenshot
     Close session
@@ -91,7 +91,7 @@ Expected error when using LongP without duration
     Start session 
 
     Run Keyword And Expect Error     Missing required argument 'duration'
-    ...    Long-Press    id=com.qaxperience.yodapp:id/long_click
+    ...    Perform Long Press    id=com.qaxperience.yodapp:id/long_click
 
     Capture Page Screenshot
     Close session
@@ -101,7 +101,7 @@ Expected error when using LongP on unsupported element
     Start session 
 
     Run Keyword And Expect Error     Element does not support long press
-    ...    Long-Press    id=com.qaxperience.yodapp:id/unsupported_element    8000
+    ...    Perform Long Press    id=com.qaxperience.yodapp:id/unsupported_element    8000
 
     Capture Page Screenshot
     Close session

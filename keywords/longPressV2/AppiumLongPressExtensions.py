@@ -3,7 +3,7 @@ from robot.libraries.BuiltIn import BuiltIn
 from selenium.webdriver.common.action_chains import ActionChains
 
 
-class AppiumLongPressExtensions:
+class PerformLongPress:
     """
     Library for performing long press actions on elements using Appium.
     Provides keywords for mobile automation requiring long press gestures.
@@ -22,8 +22,8 @@ class AppiumLongPressExtensions:
         """
         return self._builtin.get_library_instance('AppiumLibrary')._current_application()
 
-    @keyword('Long-Press')
-    def long_press(self, locator, duration=1000):
+    @keyword("Perform Long Press")
+    def perform_long_press(self, locator, duration=1000):
         """Perform a long press gesture on a mobile element.
 
         Locates an element using the given locator strategy and value, then
