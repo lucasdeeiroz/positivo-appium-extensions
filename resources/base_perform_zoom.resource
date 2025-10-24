@@ -1,7 +1,7 @@
 *** Settings ***
 
 Library     AppiumLibrary
-Library     GestureZoom.py
+Library    ../src/robotframework_appium_extensions/keywords/PerformZoom.py
 Library     OperatingSystem
 Library     DateTime
 

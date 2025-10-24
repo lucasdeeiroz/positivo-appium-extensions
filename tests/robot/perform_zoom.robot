@@ -1,6 +1,6 @@
 *** Settings ***
 
-Resource    PerformZoomResource.robot
+Resource    ../../resources/base_perform_zoom.resource
 
 *** Test Cases ***
 
