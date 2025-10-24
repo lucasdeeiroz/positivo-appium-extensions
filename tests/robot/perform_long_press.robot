@@ -2,7 +2,7 @@
 
 Library     AppiumLibrary
 
-Resource    ./base.resource
+Resource    ../../resources/base_perform_long_press.resource
 
 
 

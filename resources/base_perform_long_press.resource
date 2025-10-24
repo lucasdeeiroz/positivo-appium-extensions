@@ -1,7 +1,7 @@
 *** Settings ***
 
 Library     AppiumLibrary
-Library     ./AppiumLongPressExtensions.py
+Library    ../src/robotframework_appium_extensions/keywords/PerformLongPress.py
 Library     OperatingSystem
 Library     DateTime
 
