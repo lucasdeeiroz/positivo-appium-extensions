@@ -1,7 +1,7 @@
 *** Settings ***
 
 Library     AppiumLibrary
-Library     ./WaitMultipleElements.py
+Library    ../src/robotframework_appium_extensions/keywords/WaitMultipleElements.py
 
 *** Keywords ***
 Start Session Store

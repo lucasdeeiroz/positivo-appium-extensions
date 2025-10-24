@@ -1,6 +1,6 @@
 *** Settings ***
 Library    AppiumLibrary
-Resource   ./base.resource
+Resource    ../../resources/base_wait_multiple_elements.resource
 
 *** Test Cases ***
 Should wait for multiple elements to become visible in the Play Store (all)
