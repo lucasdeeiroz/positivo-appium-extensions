@@ -62,8 +62,8 @@ exclude = ["__pycache__", "build", "dist"]
 lint.select = ["E","F","W","I","B","UP"]
 
 [project.urls]
-Homepage = "incluir https do repositório"
-Documentation = "incluir https do readme"
+Homepage = "https://github.com/restic36/robotframework-appium-extensions"
+Documentation = "https://github.com/restic36/robotframework-appium-extensions/blob/develop/README.md"
 Changelog = "incluir https do changelog"
 
 [tool.setuptools]
