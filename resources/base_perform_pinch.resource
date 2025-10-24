@@ -1,7 +1,7 @@
 *** Settings ***
 
 Library     AppiumLibrary
-Library     GesturePinch.py
+Library    ../src/robotframework_appium_extensions/keywords/PerformPinch.py
 Library     OperatingSystem
 Library     DateTime
 

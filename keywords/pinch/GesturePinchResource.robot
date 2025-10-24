@@ -1,3 +1,3 @@
 *** Settings ***
 # DEPRECATED SHIM — forwards to new base resource during reorg.
-Resource    ../../resources/base_pinch.resource
+Resource    ../../resources/base_perform_pinch.resource

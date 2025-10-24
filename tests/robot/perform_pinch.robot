@@ -1,6 +1,6 @@
 *** Settings ***
 
-Resource    PerformPinchResource.robot
+Resource    ../../resources/base_perform_pinch.resource
 
 *** Test Cases ***
 
