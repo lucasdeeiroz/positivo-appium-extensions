@@ -1,7 +1,7 @@
 *** Settings ***
 Library    AppiumLibrary
 Library    ./TapAtPercentage.py    
-Resource   ./base.resource
+Resource    ../../resources/base_tap_at_percentage.resource
 
 *** Test Cases ***
 Should tap at number 0 successfully

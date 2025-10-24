@@ -1,7 +1,7 @@
 *** Settings ***
 
 Library     AppiumLibrary
-Library     ./TapAtPercentage.py
+Library    ../src/robotframework_appium_extensions/keywords/TapAtPercentage.py
 
 *** Keywords ***
 Start Session Calculator
