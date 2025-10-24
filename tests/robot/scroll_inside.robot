@@ -1,5 +1,5 @@
 *** Settings ***
-Resource    base_scroll.resource
+Resource    ../../resources/base_scroll_inside.resource
 
 
 *** Test Cases ***
