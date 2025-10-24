@@ -1,7 +1,7 @@
 *** Settings ***
 
 Library     AppiumLibrary
-Library     ./ClickElements.py
+Library    ../src/robotframework_appium_extensions/keywords/ClickElements.py
 
 *** Keywords ***
 Start session Calculator

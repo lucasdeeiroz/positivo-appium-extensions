@@ -3,7 +3,7 @@ Documentation    Test suite for multiple elements click functionality
 
 Library     AppiumLibrary
 
-Resource    ./base.resource
+Resource    ../../resources/base_click_elements.resource
 
 *** Test Cases ***
 Should click multiple calculator buttons using ID locators
