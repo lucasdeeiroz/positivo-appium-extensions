@@ -1,6 +1,6 @@
 *** Settings ***
 Library    AppiumLibrary
-Library    SwipeElement.py
+Library    ../src/robotframework_appium_extensions/keywords/SwipeElement.py
 
 *** Variables ***
 ${rgb_elemento_xpath}    xpath=//android.widget.SeekBar[@resource-id="henry.rgb.color.picker:id/red_seekbar"]

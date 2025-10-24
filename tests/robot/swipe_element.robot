@@ -1,5 +1,5 @@
 *** Settings ***
-Resource    base_swipe.resource
+Resource    ../../resources/base_swipe_element.resource
 
 *** Test Cases ***
 Deve realizar swipe no Rgb
