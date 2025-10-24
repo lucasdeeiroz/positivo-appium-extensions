@@ -2,7 +2,7 @@
 Resource    ../../resources/base_swipe_element.resource
 
 *** Test Cases ***
-Deve realizar swipe no Rgb
+Should swipe on RGB
     [Tags]    swipe
     Start session Rgb
     Sleep    10
@@ -20,7 +20,7 @@ Deve realizar swipe no Rgb
     ...    percent=0.75
     ...    speed=500
     Sleep    2
-Deve realizar swipe down no Timer
+Should swipe down on Timer
     [Tags]    swipe
     Start session Timer
     Sleep    10
@@ -33,8 +33,8 @@ Deve realizar swipe down no Timer
     ...    speed=500
     Sleep    2
 
-#TESTE PARA RETORNO DE ERRO (Element locator '//android.widget.TextView[@text="imer"]' did not match any elements)
-Deve realizar swipe down no Timer com erro
+# TEST FOR ERROR RETURN  (Element locator '//android.widget.TextView[@text="imer"]' did not match any elements)
+Should swipe down on Timer with error
     [Tags]    swipe
     Start session Timer
     Sleep    10
