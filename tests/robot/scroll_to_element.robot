@@ -1,6 +1,6 @@
 *** Settings ***
 
-Resource    ScrollToElement.resource
+Resource    ../../resources/base_scroll_to_element.resource
 *** Test Cases ***
 
 Finding an application icon on home screen by scrolling without using a container locator

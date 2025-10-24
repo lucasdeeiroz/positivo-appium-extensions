@@ -1,7 +1,7 @@
 *** Settings ***
 
 Library     AppiumLibrary
-Library     ScrollToElement.py
+Library    ../src/robotframework_appium_extensions/keywords/ScrollToElement.py
 Library     OperatingSystem
 Library     DateTime
 
