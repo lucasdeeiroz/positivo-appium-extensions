@@ -1,1 +1,1 @@
-# Intencionalmente vazio. Cada módulo de keyword é importado diretamente.
+# Intentionally empty. Each keyword module is imported directly.

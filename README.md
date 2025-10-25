@@ -2,9 +2,10 @@
 
 Custom keywords extending [Robot Framework’s AppiumLibrary](https://github.com/serhatbolsu/robotframework-appiumlibrary), optimized for **mobile automation on Android**.
 
-These extensions include **15 new or restructured keywords** for gestures, UI interactions, network checks, image comparison, and utility operations.
+This library enhances the native AppiumLibrary with new gestures, UI utilities, and validation features designed for **QA teams automating Android applications**.  
+It aims to serve as an open-source reference for improving test reliability, coverage, and maintainability in mobile test automation.
 
-[![PyPI](https://img.shields.io/pypi/v/robotframework-appium-extensions.svg)]( incluir url)
+[![PyPI version](https://img.shields.io/pypi/v/robotframework-appium-extensions.svg)](https://pypi.org/project/robotframework-appium-extensions/)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.9%2B-3776AB.svg?logo=python&logoColor=white)](https://www.python.org/downloads/)
 
@@ -39,13 +40,42 @@ Individual documentation are in keyword docstrings.
 
 ---
 
+## Technology Stack
+
+- **Python 3.9+**
+- **Robot Framework 4.0+**
+- **Appium Server 2.0**
+- **UiAutomator2 driver (Android)**
+- **Appium-Python-Client 5.1.1+**
+- **Selenium W3C Actions**
+- **OpenCV + scikit-image + NumPy** (for visual comparison)
+- **ADB + Android SDK tools**
+
+---
+
+## Prerequisites and Requirements
+
+- Android device or emulator connected with ADB
+- Dependencies listed in `requirements.txt`
+- Appium Server running (`appium` or `appium --allow-cors`)
+    ```bash
+  npm install -g appium
+    ```
+- UiAutomator2 driver installed (`appium driver install uiautomator2`)
+    ```bash
+  appium driver install uiautomator2
+    ```
+
+---
+
 ## Installation
 
-- Install Python and dependencies
-- Intall Appium via npm (npm install -g appium)
-- Install UiAutomator2 for Android driver (appium driver install uiautomator2)
-- Clone repository and install project dependencies
+You can install the package directly from **PyPI** (recommended):
+```bash
+pip install robotframework-appium-extensions
+```
 
+Or, if you prefer to work with the latest development version:
 ```bash
 git clone https://github.com/<....>.git
 cd robotframework-appium-extensions
@@ -54,26 +84,28 @@ pip install .
 
 ---
 
-## Requirements
+## How To Run Tests
 
-- Python 3.9+
-- Robot Framework 4.0+
-- Appium Server 2.0 with UiAutomator2 driver
-- Appium-Python-Client 5.1.1+
-- ADB and Android SDK tools
-- OpenCV, NumPy, scikit-image for Compare Images
+Run any .robot test suite using Robot Framework’s CLI:
+```bash
+robot -d results tests/robot/zoom.robot
+```
+- `-d results` saves logs, reports, and screenshots in a dedicated folder.
+- You can adapt paths for your test files or custom resources.
+
+---
 
 ## Usage Example
 
 ```robot
 *** Settings ***
 Library    AppiumLibrary
-Library    keywords/
+Library    robotframework_appium_extensions.keywords.PerformPinch
 
 *** Test Cases ***
 Pinch Example
     Open Application    http://localhost:4723    platformName=Android    automationName=UiAutomator2
-    Perform Pinch Gesture    locator=id=map_view    scale=0.6
+    Perform Pinch    locator=id=map_view    scale=0.6
 ```
 
 ---
