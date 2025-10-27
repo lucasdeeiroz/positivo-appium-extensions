@@ -24,9 +24,10 @@ All keywords were validated on both **physical devices** and **Android emulators
 ####  Interaction and Gestures
 
 - **Click Elements** — Executes tap actions based on locators, improving flexibility in element interaction.  
-- **Tap at Percentage** — Performs tap actions at specific screen coordinates defined as percentages, useful for dynamic layouts.  
-- **Perform Long Press** — Simulates long-press gestures on elements or coordinates.  
-- **Swipe Element** — Executes swipe gestures in any direction with configurable distance and duration.  
+- **Tap at Percentage** — Performs tap actions at specific screen coordinates defined as percentages, useful for dynamic layouts.
+- **Tap Element At Coordinates** — Performs a tap action on a target element at specific relative coordinates (percentage or pixel offsets), enabling precise interactions with dynamic or non-standard UI components.
+- **Perform Long Press** — Simulates long-press gestures on elements or coordinates.
+- **Swipe Element** — Executes swipe gestures in any direction with configurable distance and duration.
 - **Scroll Inside** — Enables controlled vertical scrolling across the screen.  
 - **Scroll to Element** — Scrolls until the specified element becomes visible.  
 - **Perform Pinch** — Performs a two-finger pinch gesture for zoom-out interactions.  
@@ -49,7 +50,7 @@ All keywords were validated on both **physical devices** and **Android emulators
 - Added a complete **user guide** with syntax, arguments, and practical examples for each keyword.  
 - Structured **repository layout** including scripts, resources, and automated test suites.  
 - Added **contribution guidelines** to support open collaboration.  
-- Included **CHANGELOG**, **README**, and **usage manual** following Robot Framework conventions.
+- Included **CHANGELOG** and **README**, following Robot Framework conventions, consolidating installation, environment setup, and usage documentation.
 
 ---
 

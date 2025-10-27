@@ -14,27 +14,27 @@ It aims to serve as an open-source reference for improving test reliability, cov
 ## Available Keywords
 
 - Gestures:
-    - Long Press
-    - Pinch
-    - Scroll
+    - Scroll Inside
     - Scroll To Element
-    - Swipe
-    - Zoom
+    - Swipe Element
+    - Perform Long Press
+    - Perform Pinch
+    - Perform Zoom
 
 - Touch utilities:
-    - Click Element
     - Click Elements
     - Tap At Percentage
+    - Tap Element At Coordinates
 
 - Visibility & Lookup:
-    - Compare Images
+    - Compare Screenshots
     - Get Visible Elements On Screen
     - Wait Multiple Elements
 
 - System/App:
-    - ChangeTheme
-    - Get Network Connection Status
-    - TerminateApplication
+    - Change Theme
+    - Get Readable Network Status
+    - Terminate Application Extension
 
 Individual documentation are in keyword docstrings.
 

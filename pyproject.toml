@@ -64,7 +64,7 @@ lint.select = ["E","F","W","I","B","UP"]
 [project.urls]
 Homepage = "https://github.com/restic36/robotframework-appium-extensions"
 Documentation = "https://github.com/restic36/robotframework-appium-extensions/blob/develop/README.md"
-Changelog = "incluir https do changelog"
+Changelog = "https://github.com/restic36/robotframework-appium-extensions/blob/develop/docs/CHANGELOG.md"
 
 [tool.setuptools]
 include-package-data = true
