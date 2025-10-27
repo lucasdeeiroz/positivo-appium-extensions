@@ -1,44 +1,77 @@
-
-# --- Node / Front-end ---
+# ============================
+# Node.js / Frontend
+# ============================
 node_modules/
+package-lock.json
+npm-debug.log*
+yarn-error.log*
 
-# --- Python ---
-*.pyc
+# ============================
+# Python / Virtualenv
+# ============================
 __pycache__/
+*.py[cod]
 .venv/
+.venv*/
 .env
-*.pyo
-*.pyd
+.env.*/
 *.so
-
-# --- Robot Framework outputs ---
-log.html
-output.xml
-report.html
-interactive_console_output.xml
-
-# --- Build & distribution ---
-build/
-dist/
+*.pyd
+*.pyo
 *.egg-info/
 .eggs/
 
-# --- Tooling & caches ---
+# ============================
+# Robot Framework Outputs
+# ============================
+log.html
+report.html
+output.xml
+interactive_console_output.xml
+*.png
+*.jpg
+*.jpeg
+*.mp4
+
+# ============================
+# Build & Distribution
+# ============================
+build/
+dist/
+pip-wheel-metadata/
+
+# ============================
+# Tooling & Caches
+# ============================
 .cache/
 .pytest_cache/
 .tox/
 .mypy_cache/
 .coverage
+coverage.xml
 htmlcov/
 
-# --- Editors / IDEs ---
+# ============================
+# Editors / IDEs
+# ============================
 .vscode/
 .idea/
+*.swp
+*.swo
 
-# --- Logs ---
+# ============================
+# Logs & Temp Files
+# ============================
 logs/
 *.log
+tmp/
+temp/
+*.tmp
 
-# --- OS files ---
+# ============================
+# OS Files
+# ============================
 .DS_Store
 Thumbs.db
+ehthumbs.db
+desktop.ini
