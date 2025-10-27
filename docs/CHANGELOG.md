@@ -47,7 +47,7 @@ All keywords were validated on both **physical devices** and **Android emulators
 
 ### Documentation
 
-- Added a complete **user guide** with syntax, arguments, and practical examples for each keyword.  
+- Expanded documentation with syntax, arguments, and practical examples for each keyword in the **README**.  
 - Structured **repository layout** including scripts, resources, and automated test suites.  
 - Added **contribution guidelines** to support open collaboration.  
 - Included **CHANGELOG** and **README**, following Robot Framework conventions, consolidating installation, environment setup, and usage documentation.
