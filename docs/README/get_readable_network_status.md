@@ -1,4 +1,4 @@
-# Network Status — AppiumLibrary Extension
+# Get Readable Network Status — AppiumLibrary Extension
 
 `NetworkStatus` is a custom keyword designed to simplify and standardize network status detection in Android devices during tests using Appium and Robot Framework. It leverages the `driver.network_connection` property to interpret the device's network status and return a readable, meaningful result.
 
@@ -45,7 +45,7 @@ Result mapping:
 To execute all test cases:  
 
 ```bash
-robot NetworkStatus.robot
+robot get_readable_network_status.robot
 ```
 
 Make sure that:
@@ -64,7 +64,7 @@ Make sure that:
 
 ## Code Structure
 
-- Implemented as a class (`NetworkStatusitmask`) with `ROBOT_LIBRARY_SCOPE = GLOBAL`
+- Implemented as a class (`NetworkStatus`) with `ROBOT_LIBRARY_SCOPE = GLOBAL`
 - Modular architecture with helper methods  (`interpretar_bitmask`, `definir_status_rede`, etc.)
 - Requires no input arguments and contains no complex validation logic
 - Leverages ADB to detect airplane mode for more accurate status

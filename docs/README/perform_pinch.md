@@ -1,6 +1,6 @@
-# Perform Pinch Gesture — AppiumLibrary Extension
+# Perform Pinch — AppiumLibrary Extension
 
-**Perform Pinch Gesture** is a custom keyword designed to simulate a realistic pinch-in gesture (zoom out) on Android devices during tests using **Appium** and **Robot Framework**.  
+**Perform Pinch** is a custom keyword designed to simulate a realistic pinch-in gesture (zoom out) on Android devices during tests using **Appium** and **Robot Framework**.  
 It supports both element-targeted pinching and full-screen gestures, with adjustable parameters for scale, duration, and movement direction.
 
 ---
@@ -57,14 +57,14 @@ The keyword uses **W3C Touch Actions** through Selenium’s `ActionChains` API t
 
 ```robot
 *** Settings ***
-Library    GesturePinch.py
+Library    PerformPinch.py
 
 *** Test Cases ***
 Pinch On Element
-    Perform Pinch Gesture    locator=id=map_view    scale=0.6    duration=800    direction=vertical
+    Perform Pinch    locator=id=map_view    scale=0.6    duration=800    direction=vertical
 
 Pinch On Screen Center
-    Perform Pinch Gesture    scale=0.7    direction=horizontal    movement=300
+    Perform Pinch    scale=0.7    direction=horizontal    movement=300
 
 ```
 
@@ -74,7 +74,7 @@ Run your Robot Framework test file:
 
 ```bash
 
-robot PinchGesture.robot
+robot perform_pinch.robot
 
 ```
 Make sure:

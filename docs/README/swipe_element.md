@@ -42,10 +42,10 @@ The `Swipe Element` keyword is a wrapper for the **`mobile: dragGesture`** Appiu
 ---
 
 ## Installation
-1. Add the `swipe.py` file to your test project directory.
+1. Add the `SwipeElement.py` file to your test project directory.
 2. Import the library into your `.robot` file:
    ```robot
-   Library    swipe.py
+   Library    SwipeElement.py
    Library    AppiumLibrary
    ```
 
@@ -81,7 +81,7 @@ Swipe Element    <locator>    direction=<up|down|left|right>    percent=<0.01-2.
 ## Usage Examples
 ```robot
 *** Settings ***
-Library    swipe.py
+Library    SwipeElement.py
 Library    AppiumLibrary
 
 *** Test Cases ***

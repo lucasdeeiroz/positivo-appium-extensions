@@ -1,4 +1,4 @@
-# Click Elements — AppiumLibrary Extension
+# Tap Element At Coordinates — AppiumLibrary Extension
 
 ClickC is a custom keyword that performs precise clicks on elements during tests with Appium and Robot Framework, using the W3C Actions API to control the exact touch position on the screen.
 It offers flexibility in click positioning, allowing you to define absolute offsets (in pixels) or relative offsets (as a percentage of the element size).
@@ -35,27 +35,27 @@ Execution flow:
 ## How To Execute
 To run all tests:
 ```shell
-robot clickelement.robot
+robot tap_element_at_coordinates.robot
 ```
 
 Prerequisites:
 - AppiumLibrary imported and configured.
 - Device/emulator connected to the Appium server.
-- ClickC keyword imported.
+- Tap Element At Coordinates keyword imported.
 
 Example usage in a `.robot` file:
 ```robotframework
 *** Settings ***
 Library    AppiumLibrary
-Library    Appiumclick.py
+Library    TapElementAtCoordinates.py
 
 *** Test Cases ***
 Click In The Center Of The Button
 		Open Application    http://localhost:4723/wd/hub    platformName=Android    deviceName=emulator-5554    appPackage=com.example    appActivity=.MainActivity
-		Click Elements    id=com.app.example:id/botao_confirmar
+		Tap Element At Coordinates    id=com.app.example:id/botao_confirmar
 
 Click At Specific Point
-		Click Elements    xpath=//android.widget.TextView[@text="OK"]    10    25
+		Tap Element At Coordinates    xpath=//android.widget.TextView[@text="OK"]    10    25
 ```
 
 ## Technical Details
@@ -66,10 +66,10 @@ Click At Specific Point
 - Works on Android and iOS (as long as Appium supports W3C Actions for the driver used).
 
 ## Code Structure
-Class: `Appiumclick`
+Class: `TapElementAtCoordinates`
 - Methods:
 	- `_driver`: returns the current driver instance.
-	- `clickC(locator, xoffset, yoffset)`: performs the precise click.
+	- `Tap Element At Coordinates(locator, xoffset, yoffset)`: performs the precise click.
 - Scope: Global (loaded as a Robot Framework library).
 - Detailed logging of each process step for easier debugging.
 

@@ -1,4 +1,4 @@
-# Long Press (Long-Press) - AppiumLibrary Extension
+# Perform Long Press - AppiumLibrary Extension
 
 A keyword for performing long press gestures on Android or iOS app elements during automated testing with Appium and Robot Framework.
 
@@ -7,7 +7,7 @@ A keyword for performing long press gestures on Android or iOS app elements duri
 ```robotframework
 *** Settings ***
 Library    AppiumLibrary
-Library    AppiumLongPressExtensions.py
+Library    PerformLongPress.py
 
 *** Test Cases ***
 Long Press Example
@@ -40,7 +40,7 @@ Perform Long Press    accessibility_id=menu_button
 Run all test cases with:
 
 ```shell
-robot test_long_press.robot
+robot perform_long_press.robot
 ```
 
 ### Requirements
@@ -64,4 +64,4 @@ robot test_long_press.robot
 - Activating features that require long press
 - Custom gestures on interface elements
 
-For complete usage examples, including error handling, see [`test_long_press.robot`](./test_long_press.robot).
+For complete usage examples, including error handling, see [`perform_long_press.robot`](./perform_long_press.robot).

@@ -69,7 +69,7 @@ Return Text Fields in Debug Mode
 To run the tests:
 
 ```bash
-robot VisibleElements.robot
+robot visible_elements.robot
 ```
 
 Make sure that:

@@ -47,7 +47,7 @@ Tap At Percentage    x=0.5    y=0.5    duration=200
 To execute all test cases:
 
 ```bash
-robot test_tap_at_percentage.robot
+robot tap_at_percentage.robot
 ```
 
 Make sure that:
