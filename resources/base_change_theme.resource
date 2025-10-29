@@ -17,7 +17,7 @@ ${THEME_CHANGE_DELAY}   3
 
 *** Keywords ***
 Setup Test Environment
-    [Documentation]    Configura ambiente de teste inicial
+    [Documentation]    Configure environment before test execution
     Open Application  ${APPIUM_URL}
     ...    platformName=${PLATFORM_NAME}
     ...    deviceName=${DEVICE_NAME}
@@ -30,11 +30,11 @@ Setup Test Environment
     Sleep    2s
    
 Teardown Test Environment
-    [Documentation]    Limpa ambiente após teste
+    [Documentation]    Clean up after test execution
     Close Application
 
 Verify Theme Change
-    [Documentation]    Verifica se o tema foi alterado corretamente
+    [Documentation]    Verify if the current theme matches the expected theme
     [Arguments]    ${expected_theme}
     ${current_theme}=    Get Current Theme
     Should Be Equal As Strings    ${current_theme}    ${expected_theme}
