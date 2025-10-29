@@ -1,4 +1,4 @@
-# Terminate Application — AppiumLibrary Extension
+# Terminate Application Extension — AppiumLibrary Extension
 
 `TerminateApplicationExtension` is a custom keyword library built to extend AppiumLibrary with functionality for terminating Android applications during automated testing using Robot Framework. It provides utilities to close apps and adictionaly retrieve the current app package ID in active Appium sessions.
 
@@ -23,7 +23,7 @@ The `Get Current App Id` keyword reads the `appPackage` from the current session
 To run the tests:
 
 ```bash
-robot TerminateApplicationTest.robot
+robot terminate_application_extension.robot
 ```
 
 Make sure that:
@@ -37,7 +37,7 @@ Make sure that:
 
 - Built using Robot Framework and AppiumLibrary
 - Implemented as a Python class with `ROBOT_LIBRARY_SCOPE = GLOBAL`
-- `terminate_application` takes an app ID (e.g., `com.example.myapp`) and closes it
+- `terminate_application_extension` takes an app ID (e.g., `com.example.myapp`) and closes it
 - `get_current_app_id` accesses the current session and retrieves the running app's package name
 
 ---
@@ -46,13 +46,13 @@ Make sure that:
 
 ### Python Library
 - **`TerminateApplicationExtension.py`**
-  - `terminate_application(app_id)` — terminates the given app via Appium
+  - `terminate_application_extension(app_id)` — terminates the given app via Appium
   - `get_current_app_id()` — retrieves the `appPackage` from current session
 
 ### Robot Framework Files
-- **`TerminateApplicationTest.robot`**
+- **`terminate_application_extension.robot`**
   - Test suite using the custom keywords
-- **`base.resource`**
+- **`base_terminate_appliction_extension.resource`**
   - Shared resource file with reusable keyword logic
 
 ---

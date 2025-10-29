@@ -1,6 +1,6 @@
-# Perform Zoom Gesture — AppiumLibrary Extension
+# Perform Zoom — AppiumLibrary Extension
 
-**Perform Zoom Gesture** is a custom keyword designed to simulate a realistic pinch-out (zoom in) gesture on Android devices during tests using Appium and Robot Framework. It supports both element-targeted zooming and full-screen gestures, with adjustable parameters for scale, duration, and movement direction.
+**Perform Zoom** is a custom keyword designed to simulate a realistic pinch-out (zoom in) gesture on Android devices during tests using Appium and Robot Framework. It supports both element-targeted zooming and full-screen gestures, with adjustable parameters for scale, duration, and movement direction.
 
 ---
 
@@ -55,11 +55,11 @@ The keyword uses **W3C Touch Actions** through Selenium’s **ActionChains API**
 
 ```robotframework
 *** Settings ***
-Library    GestureZoom.py
+Library    PerformZoom.py
 
 *** Test Cases ***
 Zoom On Element
-    Perform Zoom Gesture    locator=id=map_view    scale=2.0    duration=800    direction=vertical
+    Perform Zoom    locator=id=map_view    scale=2.0    duration=800    direction=vertical
 
 Zoom On Screen Center
-    Perform Zoom Gesture    scale=1.8    direction=horizontal    movement=250
+    Perform Zoom    scale=1.8    direction=horizontal    movement=250

@@ -1,4 +1,4 @@
-# Scroll Element Library
+# Scroll Inside Library
 
 A custom library for **Robot Framework** and **Appium**, designed to execute *scroll/swipe* gestures **inside specific UI elements** of mobile applications.  
 It provides **precise control over direction, distance, and speed**, ensuring reliable interactions even within internal areas of complex elements.
@@ -43,10 +43,10 @@ This approach prevents imprecise full-screen scrolls by interacting **only with 
 ---
 
 ## Installation
-1. Add the `scroll.py` file to your test project directory.
+1. Add the `ScrollInside.py` file to your test project directory.
 2. Import the library into your `.robot` file:
    ```robot
-   Library    scroll.py
+   Library    ScrollInside.py
    Library    AppiumLibrary
    ```
 
@@ -84,7 +84,7 @@ You can also pass just `//my/xpath`, which will be automatically interpreted as 
 ## Usage Examples
 ```robot
 *** Settings ***
-Library    scroll.py
+Library    ScrollInside.py
 Library    AppiumLibrary
 
 *** Test Cases ***

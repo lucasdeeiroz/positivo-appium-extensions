@@ -49,7 +49,7 @@ ${result}=    Wait Multiple Elements    ${locators}    timeout=15    wait_for_al
 To execute all test cases:
 
 ```bash
-robot test_wait_multiple_elements.robot
+robot wait_multiple_elements.robot
 ```
 
 Make sure that:

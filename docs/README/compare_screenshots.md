@@ -1,4 +1,4 @@
-# Screenshot Comparison — AppiumLibrary Extension
+# Compare Screenshots — AppiumLibrary Extension
 
 `Capture Initial Screenshot As` and `Compare Final Screenshot With` are custom keywords designed to capture and compare screenshots during automated tests with Appium and Robot Framework.
 They use OpenCV and SSIM (Structural Similarity Index) to detect visual differences between a reference image and the current app screen.
@@ -46,7 +46,7 @@ Example in `.robot`:
 ```robotframework
 *** Settings ***
 Library    AppiumLibrary
-Library    ScreenshotComparisonKeywords.py
+Library    CompareScreenshots.py
 
 *** Test Cases ***
 Capture And Compare Screens
@@ -65,6 +65,20 @@ Run with:
 ```shell
 robot ScreenshotComparison.robot
 ```
+
+## Requirements
+This keyword requires additional dependencies that are **not installed by default**.
+To use it, install the package with the `images` extra:
+
+```bash
+pip install robotframework-appium-extensions[images]
+```
+
+This will automatically include:
+- `opencv-python-headless>=4.8.0`
+- `numpy>=1.26.0`
+
+	- If these libraries are not installed, the image comparison keyword will not work and may raise an ImportError.
 
 ## Technical Details
 - Uses cv2 (OpenCV) for image processing.
