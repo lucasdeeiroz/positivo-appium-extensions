@@ -1,7 +1,7 @@
 {
   "name": "robotframework-appium-extensions",
   "version": "1.0.0",
-  "description": "Extensões da AppiumLibrary para automação mobile Android com Robot Framework e Appium (2.x ou 3.x).",
+  "description": "Extensões da AppiumLibrary para automação mobile Android com Robot Framework e Appium 2.x.",
   "main": "index.js",
   "scripts": {
     "test": "robot -d ./results ./tests/robot"
@@ -9,12 +9,19 @@
   "author": "Equipe de QA - CEPEDI / RESTIC36",
   "license": "Apache-2.0",
   "dependencies": {
-    "appium": ">=2.0.0 <4.0.0"
+    "appium": "^2.19.0",
+    "appium-uiautomator2-driver": "^4.2.9"
   },
   "devDependencies": {
-    "appium-uiautomator2-driver": ">=4.0.0 <7.0.0"
+    "appium": "^2.19.0",
+    "appium-uiautomator2-driver": "^4.2.9"
   },
   "engines": {
     "node": ">=18.0.0"
-  }
+  },
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "keywords": []
 }
