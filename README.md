@@ -88,10 +88,20 @@ pip install .
 
 Run any .robot test suite using Robot Framework’s CLI:
 ```bash
-robot -d results tests/robot/zoom.robot
+robot -d results tests/robot/perform_zoom.robot
 ```
 - `-d results` saves logs, reports, and screenshots in a dedicated folder.
 - You can adapt paths for your test files or custom resources.
+
+---
+
+## Emulator / Device Setup
+
+To successfully run the automated tests included in this repository, ensure that the test environment (emulator or physical device) meets the following conditions:
+- Use an **Android device or emulator** running **Android 11 or higher**.  
+- Before executing the test suites, **verify which applications are required** by the selected tests and ensure they are **properly installed** on the device.  
+  > For example: some suites may require system apps such as Calculator, Google Maps, or Play Store.
+- Using a **Google APIs emulator image** is recommended, as minimal system images may lack these default apps.
 
 ---
 
