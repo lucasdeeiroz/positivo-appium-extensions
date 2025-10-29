@@ -29,7 +29,7 @@ Deve realizar scroll down no Timer
     ...    speed=300
     Sleep    2
     
-#TESTE PARA RETORNO DE ERRO (ValueError: percent must be between 0.01 and 1.0)
+# TEST FOR ERROR RETURN  (ValueError: percent must be between 0.01 and 1.0)
 Deve realizar scroll down no Timer com erro
     [Tags]    scroll
     Start session Timer
