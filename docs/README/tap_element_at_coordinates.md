@@ -1,6 +1,6 @@
 # Tap Element At Coordinates — AppiumLibrary Extension
 
-ClickC is a custom keyword that performs precise clicks on elements during tests with Appium and Robot Framework, using the W3C Actions API to control the exact touch position on the screen.
+Tap Element At Coordinates is a custom keyword that performs precise clicks on elements during tests with Appium and Robot Framework, using the W3C Actions API to control the exact touch position on the screen.
 It offers flexibility in click positioning, allowing you to define absolute offsets (in pixels) or relative offsets (as a percentage of the element size).
 
 ## Purpose
