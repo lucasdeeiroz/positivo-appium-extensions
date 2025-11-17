@@ -44,7 +44,7 @@ Individual documentation are in keyword docstrings.
 
 - **Python 3.9+**
 - **Robot Framework 4.0+**
-- **Appium Server 2.0**
+- **Appium Server 2.0+**
 - **UiAutomator2 driver (Android)**
 - **Appium-Python-Client 5.1.1+**
 - **Selenium W3C Actions**

@@ -4,10 +4,10 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "robotframework-appium-extensions"
-version = "1.0.0"
+version = "1.0.2"
 description = "Additional keywords for Robot Framework's AppiumLibrary. Developed within the Technology Residency Program executed by CEPEDI, coordinated by SOFTEX, and supported by MCTI, with the participation of Positivo Tecnologia as the partner company that proposed the development challenge."
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.9, <3.15"
 license = "Apache-2.0"
 
 authors = [
@@ -21,7 +21,8 @@ maintainers = [
   { name = "Geovane Glória", email = "geovaneglorialima@gmail.com" },
   { name = "Henio Pedro", email = "henioslv@gmail.com" },
   { name = "Marya Fernandes", email = "marya_matos@hotmail.com" },
-  { name = "Thalles Cardoso", email = "thallescard@gmail.com" }
+  { name = "Thalles Cardoso", email = "thallescard@gmail.com" },
+  { name = "Lucas de Eiroz Rodrigues", email = "lucas.de.eiroz@gmail.com" }
 ]
 
 keywords = ["robotframework", "appium", "mobile", "automation", "android", "testing"]
@@ -41,8 +42,8 @@ classifiers = [
 
 dependencies = [
   "robotframework>=7.0",
-  "robotframework-appiumlibrary>=2.0.0,<2.11.4",
-  "Appium-Python-Client>=3.1.0,<5.0.0",
+  "robotframework-appiumlibrary>=2.0.0,<4.0.0",
+  "Appium-Python-Client>=3.1.0,<6.0.0",
   "selenium>=4.14.0,<5.0.0",
   "kitchen>=1.2.6",
   "geopy>=2.4.1",
@@ -84,6 +85,6 @@ target-version = ["py312", "py313"]
 
 [tool.ruff]
 line-length = 120
-target-version = "py312"
+target-version = "py313"
 exclude = ["__pycache__", "build", "dist"]
 lint.select = ["E", "F", "W", "I", "B", "UP"]

@@ -1,6 +1,6 @@
 {
   "name": "robotframework-appium-extensions",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Extensões da AppiumLibrary para automação mobile Android com Robot Framework e Appium 2.x.",
   "main": "index.js",
   "scripts": {

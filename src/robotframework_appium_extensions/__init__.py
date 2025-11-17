@@ -1,5 +1,5 @@
 """
-RobotFramework Appium Extensions
+robotframework-appium-extensions
 ================================
 Additional keywords for Robot Framework's AppiumLibrary.
 
@@ -15,20 +15,15 @@ This package can be imported in two ways:
   → Loads only the desired keyword module.
 """
 
-import importlib
-import pkgutil
-from pathlib import Path
+__version__ = "1.0.2"
+
+from .keywords import get_all_keyword_classes
 
 
-_keywords_path = Path(__file__).parent / "keywords"
-
-
-for _, module_name, _ in pkgutil.iter_modules([str(_keywords_path)]):
-    module = importlib.import_module(f"robotframework_appium_extensions.keywords.{module_name}")
-    globals().update(vars(module))
-
-
-__all__ = [
-    module_name
-    for _, module_name, _ in pkgutil.iter_modules([str(_keywords_path)])
-]
+class robotframework_appium_extensions(*get_all_keyword_classes()):
+    """
+    A biblioteca `robotframework_appium_extensions` agrega um conjunto de keywords customizadas
+    para automação mobile com Appium e Robot Framework.
+    """
+    ROBOT_LIBRARY_SCOPE = 'GLOBAL'
+    ROBOT_LIBRARY_VERSION = __version__
