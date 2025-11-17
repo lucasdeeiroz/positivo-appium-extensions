@@ -22,8 +22,8 @@ from .keywords import get_all_keyword_classes
 
 class robotframework_appium_extensions(*get_all_keyword_classes()):
     """
-    A biblioteca `robotframework_appium_extensions` agrega um conjunto de keywords customizadas
-    para automação mobile com Appium e Robot Framework.
+    The `robotframework_appium_extensions` library provides a set of custom keywords
+    for mobile automation with Appium and Robot Framework.
     """
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
     ROBOT_LIBRARY_VERSION = __version__

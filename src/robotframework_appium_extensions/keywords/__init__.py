@@ -6,8 +6,8 @@ from typing import List, Type
 
 def get_all_keyword_classes() -> List[Type]:
     """
-    Descobre e retorna dinamicamente uma lista de todas as classes de keyword
-    presentes neste diretório.
+    Dynamically discovers and returns a list of all keyword classes
+    present in this directory.
     """
     keyword_classes = []
     package_dir = os.path.dirname(__file__)
@@ -17,7 +17,7 @@ def get_all_keyword_classes() -> List[Type]:
             module_name = filename[:-3]
             module = importlib.import_module(f".{module_name}", package=__name__)
 
-            # Assumindo que o nome da classe da keyword é o mesmo que o nome do módulo.
+            # Assuming the keyword class name is the same as the module name.
             if hasattr(module, module_name):
                 keyword_class = getattr(module, module_name)
                 if inspect.isclass(keyword_class):
