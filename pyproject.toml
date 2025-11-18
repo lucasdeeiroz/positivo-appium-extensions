@@ -3,8 +3,8 @@ requires = ["setuptools>=73", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "robotframework-appium-extensions"
-version = "1.0.2"
+name = "positivo-appium-extensions"
+version = "1.1.0"
 description = "Additional keywords for Robot Framework's AppiumLibrary. Developed within the Technology Residency Program executed by CEPEDI, coordinated by SOFTEX, and supported by MCTI, with the participation of Positivo Tecnologia as the partner company that proposed the development challenge."
 readme = "README.md"
 requires-python = ">=3.9, <3.15"
@@ -74,10 +74,10 @@ Changelog = "https://github.com/restic36/robotframework-appium-extensions/blob/d
 [tool.setuptools]
 include-package-data = true
 package-dir = {"" = "src"}
-packages = ["robotframework_appium_extensions"]
+packages = ["positivo_appium_extensions"]
 
 [tool.setuptools.package-data]
-"robotframework_appium_extensions" = ["keywords/*.py"]
+"positivo_appium_extensions" = ["keywords/*.py"]
 
 [tool.black]
 line-length = 120

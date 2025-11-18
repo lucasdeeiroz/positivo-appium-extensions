@@ -8,21 +8,21 @@ coordinated by SOFTEX, and supported by MCTI, with the participation
 of Positivo Tecnologia as the partner company that proposed the development challenge.
 
 This package can be imported in two ways:
-- Full import:     `Library    robotframework_appium_extensions`
+- Full import:     `Library    positivo_appium_extensions`
   → Loads all keywords automatically.
 
-- Specific import: `Library    robotframework_appium_extensions.keywords.ClickElements`
+- Specific import: `Library    positivo_appium_extensions.keywords.ClickElements`
   → Loads only the desired keyword module.
 """
 
-__version__ = "1.0.2"
+__version__ = "1.1.0"
 
 from .keywords import get_all_keyword_classes
 
 
-class robotframework_appium_extensions(*get_all_keyword_classes()):
+class positivo_appium_extensions(*get_all_keyword_classes()):
     """
-    The `robotframework_appium_extensions` library provides a set of custom keywords
+    The `positivo_appium_extensions` library provides a set of custom keywords
     for mobile automation with Appium and Robot Framework.
     """
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
