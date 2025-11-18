@@ -67,9 +67,9 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/restic36/robotframework-appium-extensions"
-Documentation = "https://github.com/restic36/robotframework-appium-extensions/blob/develop/README.md"
-Changelog = "https://github.com/restic36/robotframework-appium-extensions/blob/develop/docs/CHANGELOG.md"
+Homepage = "https://github.com/lucasdeeiroz/positivo-appium-extensions"
+Documentation = "https://github.com/lucasdeeiroz/positivo-appium-extensions/blob/develop/README.md"
+Changelog = "https://github.com/lucasdeeiroz/positivo-appium-extensions/blob/develop/docs/CHANGELOG.md"
 
 [tool.setuptools]
 include-package-data = true

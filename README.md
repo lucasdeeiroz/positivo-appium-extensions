@@ -5,7 +5,7 @@ Custom keywords extending [Robot Framework’s AppiumLibrary](https://github.com
 This library enhances the native AppiumLibrary with new gestures, UI utilities, and validation features designed for **QA teams automating Android applications**.  
 It aims to serve as an open-source reference for improving test reliability, coverage, and maintainability in mobile test automation.
 
-[![PyPI version](https://img.shields.io/pypi/v/robotframework-appium-extensions.svg)](https://pypi.org/project/robotframework-appium-extensions/)
+[![PyPI version](https://img.shields.io/pypi/v/positivo-appium-extensions.svg)](https://pypi.org/project/positivo-appium-extensions/)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.9%2B-3776AB.svg?logo=python&logoColor=white)](https://www.python.org/downloads/)
 
@@ -72,7 +72,7 @@ Individual documentation are in keyword docstrings.
 
 You can install the package directly from **PyPI** (recommended):
 ```bash
-pip install robotframework-appium-extensions
+pip install positivo-appium-extensions
 ```
 
 Or, if you prefer to work with the latest development version:
