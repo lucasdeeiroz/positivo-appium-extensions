@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "positivo-appium-extensions"
-version = "1.1.0"
+version = "1.2.0"
 description = "Additional keywords for Robot Framework's AppiumLibrary. Developed within the Technology Residency Program executed by CEPEDI, coordinated by SOFTEX, and supported by MCTI, with the participation of Positivo Tecnologia as the partner company that proposed the development challenge."
 readme = "README.md"
 requires-python = ">=3.9, <3.15"

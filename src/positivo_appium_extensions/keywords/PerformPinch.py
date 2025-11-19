@@ -37,38 +37,19 @@
 """
 
 import random
-import warnings
 
 from robot.api.deco import keyword
-from robot.libraries.BuiltIn import BuiltIn
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.actions.mouse_button import MouseButton
+from ._BaseKeyword import _BaseKeyword
+from . import utils
+from . import validators
 
 
-class PerformPinch:
+class PerformPinch(_BaseKeyword):
     """Custom Gesture Extension Class for AppiumLibrary with enhanced pinch gesture."""
 
     ROBOT_LIBRARY_SCOPE = "GLOBAL"
-
-    def __init__(self):
-        self._builtin = BuiltIn()
-
-    @property
-    def driver(self):
-        # Retrieves the current Appium driver instance from AppiumLibrary
-        return self._builtin.get_library_instance("AppiumLibrary")._current_application()
-
-    def _get_element_center(self, locator):
-        # Identifies the element and calculates its center point
-        appium_lib = self._builtin.get_library_instance("AppiumLibrary")
-        element = appium_lib._element_find(locator, True, True)
-        if not element:
-            raise RuntimeError(f"Element not found for locator: {locator}")
-        location = element.location
-        size = element.size
-        x, y = location["x"], location["y"]
-        width, height = size["width"], size["height"]
-        return x + width / 2, y + height / 2, element
 
     def _calculate_finger_initial_positions(self, x, y, scale, movement, direction):
         # Defines the initial finger positions based on gesture center, scale, and movement range
@@ -78,78 +59,34 @@ class PerformPinch:
         else:
             return (x - displacement, y), (x + displacement, y)
 
-    def _adjust_to_screen_bounds(self, positions, screen_width, screen_height):
-        # Ensures finger coordinates are within screen bounds
-        adjusted_positions = []
-        for x, y in positions:
-            new_x = max(0, min(x, screen_width))
-            new_y = max(0, min(y, screen_height))
-            if (x, y) != (new_x, new_y):
-                warnings.warn(f"Finger position ({x}, {y}) adjusted to ({new_x}, {new_y}) to fit within screen bounds.")
-            adjusted_positions.append((new_x, new_y))
-        return adjusted_positions
-
     def _validate_pinch_args(self, locator, scale, duration, direction, movement, pause, steps):
         # Validates gesture arguments for correctness, types, and safety
-        valid_strategies = ["id", "xpath", "accessibility_id", "class_name"]
-
-        # --- Locator validation ---
         if locator is not None:
-            if not isinstance(locator, str) or not locator.strip():
-                raise TypeError("The 'locator' must be a non-empty string.")
-            if '=' not in locator:
-                raise ValueError(f"Locator '{locator}' must be in the format 'strategy=value'.")
-            strategy, value = locator.split('=', 1)
-            if strategy.strip() != strategy or value.strip() != value:
-                raise ValueError(f"Locator '{locator}' must not contain spaces around '='.")
-            if strategy not in valid_strategies:
-                raise ValueError(f"Unsupported locator strategy '{strategy}'. Use one of: {valid_strategies}.")
+            validators.validate_locator(locator)
 
-        # --- Scale validation ---
-        if not isinstance(scale, (int, float)):
-            raise TypeError("Scale must be a numeric value (float).")
-        if not (0.1 <= float(scale) < 1.0):
-            raise ValueError("Scale must be between 0.1 and less than 1.0.")
+        scale = float(scale)
+        validators.validate_type(scale, "scale", float)
+        validators.validate_range(scale, "scale", 0.1, 0.999)
 
-        # --- Duration validation ---
-        if not isinstance(duration, int):
-            raise TypeError("Duration must be an integer (milliseconds).")
-        if duration <= 0 or duration > 5000:
-            raise ValueError("Duration must be positive and less than or equal to 5000 ms.")
+        duration = int(duration)
+        validators.validate_type(duration, "duration", int)
+        validators.validate_range(duration, "duration", 1, 5000)
 
-        # --- Direction normalization and validation ---
-        if not isinstance(direction, str):
-            raise TypeError("Direction must be a string: 'vertical' or 'horizontal'.")
+        validators.validate_type(direction, "direction", str)
         direction = direction.lower()
-        if direction not in ["vertical", "horizontal"]:
-            if not isinstance(locator, str) or not locator:
-                raise ValueError("The 'locator' must be a non-empty string.")
-            if "=" not in locator:
-                raise ValueError(f"Locator '{locator}' must be in the format 'strategy=value'")
-        if not (0.1 <= scale < 1.0):
-            raise ValueError("Scale must be between 0.1 and less than 1.0")
-        if duration <= 0:
-            raise ValueError("Duration must be a positive integer.")
-        if direction.lower() not in ["vertical", "horizontal"]:
-            raise ValueError("Direction must be 'vertical' or 'horizontal'.")
+        validators.validate_string_choice(direction, "direction", ["vertical", "horizontal"])
 
-        # --- Movement validation ---
-        if not isinstance(movement, (int, float)):
-            raise TypeError("Movement must be a numeric value (int or float).")
-        if movement <= 0:
-            raise ValueError("Movement must be positive.")
+        movement = float(movement)
+        validators.validate_type(movement, "movement", (int, float))
+        validators.validate_range(movement, "movement", min_val=1)
 
-        # --- Pause validation ---
-        if not isinstance(pause, (int, float)):
-            raise TypeError("Pause must be a numeric value (int or float).")
-        if pause < 0:
-            raise ValueError("Pause must be greater than or equal to zero.")
+        pause = float(pause)
+        validators.validate_type(pause, "pause", (int, float))
+        validators.validate_range(pause, "pause", min_val=0)
 
-        # --- Steps validation ---
-        if not isinstance(steps, int):
-            raise TypeError("Steps must be an integer.")
-        if steps < 1:
-            raise ValueError("Steps must be greater than or equal to 1.")
+        steps = int(steps)
+        validators.validate_type(steps, "steps", int)
+        validators.validate_range(steps, "steps", min_val=1)
 
         return direction
 
@@ -176,16 +113,15 @@ class PerformPinch:
             if not driver:
                 raise RuntimeError("The Appium driver is not available.")
 
-            screen_size = driver.get_window_size()
-            screen_width = screen_size["width"]
-            screen_height = screen_size["height"]
+            screen_width, screen_height = utils.get_screen_size(driver)
 
             if locator is None:
                 center_x = screen_width / 2
                 center_y = screen_height / 2
                 self._builtin.log("No locator provided. Using center of the screen.", "INFO")
             else:
-                center_x, center_y, _ = self._get_element_center(locator)
+                element = utils.find_element(self.appium_lib, locator)
+                center_x, center_y = utils.get_element_center(element)
                 self._builtin.log(f"Element center at ({center_x}, {center_y})", "INFO")
 
             f1_start, f2_start = self._calculate_finger_initial_positions(center_x, center_y, scale, movement, direction)
@@ -198,7 +134,7 @@ class PerformPinch:
                 f1_end = (center_x - offset, center_y)
                 f2_end = (center_x + offset, center_y)
 
-            f1_start, f1_end, f2_start, f2_end = self._adjust_to_screen_bounds(
+            f1_start, f1_end, f2_start, f2_end = utils.adjust_to_screen_bounds(
                 [f1_start, f1_end, f2_start, f2_end], screen_width, screen_height
             )
 

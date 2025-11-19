@@ -1,17 +1,12 @@
+import os.path
 import cv2
 import numpy as np
-import os.path
 from robot.api.deco import keyword
-from robot.libraries.BuiltIn import BuiltIn
+from ._BaseKeyword import _BaseKeyword
+from . import validators
 
-class CompareScreenshots:
 
-    def __init__(self):
-        self._builtin = BuiltIn()
-
-    @property
-    def driver(self):
-        return self._builtin.get_library_instance('AppiumLibrary')._current_application()
+class CompareScreenshots(_BaseKeyword):
 
     @keyword("Compare Screenshots")
     def compare_screenshots(self, img1, img2, expected="equal", tolerance=0.1):
@@ -36,17 +31,13 @@ class CompareScreenshots:
                          If images are too similar when expected='different'
         """
         # Validate tolerance parameter
-        try:
-            tolerance = float(tolerance)
-        except (TypeError, ValueError):
-            raise ValueError(f'Invalid value for "tolerance" parameter. Must be a number, got: {type(tolerance).__name__}')
-
-        if not (0 <= tolerance <= 1):
-            raise ValueError(f'Invalid value for "tolerance" parameter. Must be between 0 and 1, got: {tolerance}')
+        tolerance = float(tolerance)
+        validators.validate_type(tolerance, "tolerance", float)
+        validators.validate_range(tolerance, "tolerance", 0.0, 1.0)
 
         # Validate file paths
-        if not isinstance(img1, str) or not isinstance(img2, str):
-            raise ValueError(f"Image paths must be strings, got: img1={type(img1).__name__}, img2={type(img2).__name__}")
+        validators.validate_type(img1, "img1", str)
+        validators.validate_type(img2, "img2", str)
 
         # Check if files exist
         if not os.path.exists(img1):
@@ -84,8 +75,7 @@ class CompareScreenshots:
 
         # Validate expected parameter
         expected = expected.lower()
-        if expected not in ["equal", "different"]:
-            raise ValueError(f'Invalid value for "expected" parameter. Must be "equal" or "different", got: "{expected}"')
+        validators.validate_string_choice(expected, "expected", ["equal", "different"])
 
         # Evaluate as expected
         if expected == "equal":

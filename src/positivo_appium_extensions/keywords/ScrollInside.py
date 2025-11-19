@@ -7,21 +7,14 @@ Configurable `direction`, `percent` (0.01–1.0) and `speed` (ms). Reuses Appium
 
 
 from robot.api.deco import keyword
-from robot.libraries.BuiltIn import BuiltIn
+from ._BaseKeyword import _BaseKeyword
+from . import utils
+from . import validators
 
 # Defines the custom keyword class
-class ScrollInside:
+class ScrollInside(_BaseKeyword):
     # Defines the library scope as GLOBAL (same instance will be reused across all tests)
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
-
-    def __init__(self):
-        # Access to Robot Framework's BuiltIn library (for functions like Log, Set Test Variable, etc.)
-        self._builtin = BuiltIn()
-
-    @property
-    def _driver(self):
-        # Retrieves the current Appium driver instance from AppiumLibrary
-        return self._builtin.get_library_instance("AppiumLibrary")._current_application()
 
     @keyword("Scroll Inside")
     def scroll_inside(self, *args, **kwargs):
@@ -45,34 +38,13 @@ class ScrollInside:
         - Exception: Driver/runtime failures propagated from the underlying Appium call.
         """
 
-        locator = None  # Will hold the final locator string
-
-        # List of supported locator strategies
-        locator_keys = [
-            "id", "xpath", "accessibility_id", "class_name",
-            "android_uiautomator", "ios_predicate", "ios_class_chain", "name"
-        ]
-
-        # Attempt to extract locator from keyword arguments (e.g., xpath=..., id=...)
-        for key in kwargs:
-            if key.lower() in locator_keys:
-                locator = f"{key.lower()}={kwargs[key]}"
-                break
-
-        # If no locator found from kwargs, check positional argument
-        if not locator and args:
-            locator = args[0].strip()
-            # Check if already in valid format (e.g., id=..., xpath=...)
-            if not any(locator.startswith(f"{prefix}=") for prefix in locator_keys):
-                # If starts with //, assume it’s a raw XPath
-                if locator.startswith("//"):
-                    locator = f"xpath={locator}"
-                else:
-                    locator = None  # Invalid format
+        locator = self.appium_lib._parse_locator(args[0] if args else kwargs)
 
         # If still no valid locator, raise an error
         if not locator:
-            raise ValueError("You must provide a valid locator: 'xpath=...', 'id=...', 'accessibility_id=...', or just '//...'.")
+            raise ValueError(
+                "Locator not provided. Use a positional argument like 'id=my_id' or a named argument like 'xpath=//button'."
+            )
 
         # Read optional parameters
         direction = kwargs.get("direction", "down")       # Scroll direction
@@ -80,22 +52,18 @@ class ScrollInside:
         speed = int(kwargs.get("speed", 800))             # Gesture speed in milliseconds
 
         # Validate direction and limits
-        if direction not in ["up", "down", "left", "right"]:
-            raise ValueError("direction must be one of: 'up', 'down', 'left', or 'right'")
-        if not (0.01 <= percent <= 1.0):
-            raise ValueError("percent must be between 0.01 and 1.0")
-        if speed <= 0:
-            raise ValueError("speed must be a positive integer")
+        validators.validate_string_choice(direction, "direction", ["up", "down", "left", "right"])
+        validators.validate_range(percent, "percent", 0.01, 1.0)
+        validators.validate_range(speed, "speed", min_val=1)
 
         try:
             # Get driver and AppiumLibrary instance
-            driver = self._driver
-            appium_lib = self._builtin.get_library_instance("AppiumLibrary")
+            driver = self.driver
+            if not driver:
+                raise RuntimeError("Appium driver is not available.")
 
             # Find the element on screen using the provided locator
-            element = appium_lib._element_find(locator, True, True)
-            if not element:
-                raise Exception(f"Element not found using locator: {locator}")
+            element = utils.find_element(self.appium_lib, locator)
 
             # Adjust only vertical directions (Appium interprets as finger movement)
             gesture_direction = direction

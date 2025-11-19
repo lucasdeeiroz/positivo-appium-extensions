@@ -1,16 +1,17 @@
 import json
 
 from robot.api.deco import keyword
-from robot.libraries.BuiltIn import BuiltIn
 from selenium.common.exceptions import (
     NoSuchElementException,
     StaleElementReferenceException,
     WebDriverException,
 )
 from selenium.webdriver.common.by import By
+from ._BaseKeyword import _BaseKeyword
+from . import validators
 
 
-class VisibleElements:
+class VisibleElements(_BaseKeyword):
     """
     Custom AppiumLibrary keyword that returns visible elements on the screen using either resource-id or
     content-desc (accessibility_id on Android), optionally filtered by type.
@@ -18,17 +19,6 @@ class VisibleElements:
     """
 
     ROBOT_LIBRARY_SCOPE = "GLOBAL"
-
-    def __init__(self):
-        self._builtin = BuiltIn()
-
-    def _get_appium_driver(self):
-        # Gets the current Appium driver instance
-        appium_lib = self._builtin.get_library_instance("AppiumLibrary")
-        driver = appium_lib._current_application()
-        if driver is None or not getattr(driver, "session_id", None):
-            self._builtin.fail("Appium session is not active. Ensure a session is opened before calling this keyword.")
-        return driver
 
     def _find_all_elements(self, driver):
         # Return all elements in the current screen using a generic XPath
@@ -165,19 +155,17 @@ class VisibleElements:
         valid_filters = {"all", "clickable", "text", "button", "input"}
         # Normalize input to lowercase (lower()) and strip (strip()) spaces to avoid typos
         filter_type = str(filter_type or "").strip().lower()
-        if filter_type not in valid_filters:
-            self._builtin.fail(f"Invalid filter '{filter_type}'. Options: {valid_filters}")
+        validators.validate_string_choice(filter_type, "filter_type", valid_filters)
 
         valid_ids = {"auto", "resource_id", "accessibility_id"}
         # Normalize input to lowercase (lower()) and strip (strip()) spaces to avoid typos
         id_mode = str(id_mode or "").strip().lower()
-        if id_mode not in valid_ids:
-            self._builtin.fail(f"Invalid id_mode '{id_mode}'. Options: {valid_ids}")
+        validators.validate_string_choice(id_mode, "id_mode", valid_ids)
 
         # Converts textual values like "True"/"False" to real booleans
         debug = self._builtin.convert_to_boolean(debug)
 
-        driver = self._get_appium_driver()
+        driver = self.driver
         try:
             elements = self._find_all_elements(driver)
         except WebDriverException as e:

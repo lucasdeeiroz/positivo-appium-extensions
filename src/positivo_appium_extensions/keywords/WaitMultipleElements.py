@@ -1,12 +1,13 @@
 import time
+import re
 
 from robot.api.deco import keyword
-from robot.libraries.BuiltIn import BuiltIn
-import time
-import re
 from selenium.common.exceptions import WebDriverException, StaleElementReferenceException
+from ._BaseKeyword import _BaseKeyword
+from . import validators
 
-class WaitMultipleElements:
+
+class WaitMultipleElements(_BaseKeyword):
     """Class to wait for multiple elements simultaneously."""
 
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
@@ -18,13 +19,6 @@ class WaitMultipleElements:
     # Limite para exibição de elementos em logs
     MAX_LOG_ELEMENTS = 10
 
-    def __init__(self):
-        self._builtin = BuiltIn()
-
-    @property
-    def _driver(self):
-        return self._builtin.get_library_instance("AppiumLibrary")._current_application()
-        
     def _validate_locator(self, locator):
         """
         Valida se um locator está no formato strategy=value e usa uma estratégia válida.
@@ -48,7 +42,7 @@ class WaitMultipleElements:
             
         return True
         
-    def _check_elements_visibility(self, elements_list, appium_lib):
+    def _check_elements_visibility(self, elements_list):
         """
         Verifica a visibilidade de cada elemento na lista.
         
@@ -64,7 +58,7 @@ class WaitMultipleElements:
         
         for locator in elements_list:
             try:
-                element = appium_lib._element_find(locator, True, False)
+                element = self.appium_lib._element_find(locator, True, False)
                 if element and element.is_displayed():
                     results[locator] = True
                     visible_count += 1
@@ -132,52 +126,32 @@ class WaitMultipleElements:
         - ``RuntimeError``: If Appium driver is unavailable or session is invalid
         """
         # Input validation
-        if not isinstance(elements_list, list):
-            raise ValueError("elements_list must be a list of locators")
-
+        validators.validate_type(elements_list, "elements_list", list)
         if not elements_list:
             raise ValueError("The elements list cannot be empty")
-            
-        # Validate each locator format
+
         for idx, locator in enumerate(elements_list):
             try:
                 self._validate_locator(locator)
             except ValueError as e:
                 raise ValueError(f"Invalid locator at position {idx}: {str(e)}")
 
-        # Timeout validation
-        try:
-            timeout = float(timeout)
-            if timeout <= 0:
-                raise ValueError("timeout must be a positive number")
-            if timeout > self.MAX_TIMEOUT:
-                raise ValueError(f"timeout cannot exceed {self.MAX_TIMEOUT} seconds")
-        except (ValueError, TypeError) as e:
-            raise ValueError("timeout must be a positive numeric value") from e
+        timeout = float(timeout)
+        validators.validate_type(timeout, "timeout", float)
+        validators.validate_range(timeout, "timeout", 0.001, self.MAX_TIMEOUT)
 
-        # Polling interval validation
-        try:
-            polling_interval = float(polling_interval)
-            if polling_interval <= 0:
-                raise ValueError("polling_interval must be a positive number")
-            if polling_interval >= timeout:
-                raise ValueError("polling_interval must be smaller than timeout")
-        except (ValueError, TypeError) as e:
-            raise ValueError("polling_interval must be a positive numeric value") from e
+        polling_interval = float(polling_interval)
+        validators.validate_type(polling_interval, "polling_interval", float)
+        validators.validate_range(polling_interval, "polling_interval", min_val=0.001)
+        if polling_interval >= timeout:
+            raise ValueError("polling_interval must be smaller than timeout")
 
-        # Wait_for_all validation
-        if not isinstance(wait_for_all, bool):
-            # Convert Robot Framework strings to boolean
-            if str(wait_for_all).lower() in ["true", "1", "yes"]:
-                wait_for_all = True
-            elif str(wait_for_all).lower() in ["false", "0", "no"]:
-                wait_for_all = False
-            else:
-                raise ValueError("wait_for_all must be a boolean value")
+        wait_for_all = self._builtin.convert_to_boolean(wait_for_all)
+        validators.validate_type(wait_for_all, "wait_for_all", bool)
 
         try:
             # Validar disponibilidade do driver
-            driver = self._driver
+            driver = self.driver
             if driver is None:
                 raise RuntimeError("Appium driver is not available - ensure Appium session is initialized")
                 
@@ -190,8 +164,6 @@ class WaitMultipleElements:
             except Exception as session_error:
                 raise RuntimeError(f"Failed to validate Appium driver session: {str(session_error)}")
 
-            appium_lib = self._builtin.get_library_instance("AppiumLibrary")
-            
             # Log uma versão limitada da lista para evitar poluição visual
             log_elements = self._format_element_list(elements_list)
             self._builtin.log(f"Starting wait for {len(elements_list)} elements to be visible: {log_elements} (wait_for_all={wait_for_all}, timeout={timeout}s)", level='INFO')
@@ -204,7 +176,7 @@ class WaitMultipleElements:
                 attempt_count += 1
                 
                 # Usar o método auxiliar para verificar visibilidade
-                results, visible_elements = self._check_elements_visibility(elements_list, appium_lib)
+                results, visible_elements = self._check_elements_visibility(elements_list)
                 
                 # Check success conditions
                 if wait_for_all and visible_elements == len(elements_list):
@@ -229,7 +201,7 @@ class WaitMultipleElements:
             
             # Timeout reached - use método auxiliar para resultado final
             elapsed_time = time.monotonic() - start_time
-            final_results, visible_count = self._check_elements_visibility(elements_list, appium_lib)
+            final_results, visible_count = self._check_elements_visibility(elements_list)
             
             # More specific error messages
             if wait_for_all:

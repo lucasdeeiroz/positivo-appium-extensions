@@ -1,26 +1,15 @@
 from robot.api.deco import keyword
-from robot.libraries.BuiltIn import BuiltIn
 from selenium.webdriver.common.action_chains import ActionChains
+from ._BaseKeyword import _BaseKeyword
+from . import utils
+from . import validators
 
 
-class PerformLongPress:
+class PerformLongPress(_BaseKeyword):
     """
     Library for performing long press actions on elements using Appium.
     Provides keywords for mobile automation requiring long press gestures.
     """
-
-    def __init__(self):
-        """
-        Initializes the AppiumLongPressExtensions library and sets up the BuiltIn instance.
-        """
-        self._builtin = BuiltIn()
-
-    @property
-    def _driver(self):
-        """
-        Returns the current Appium driver instance from AppiumLibrary.
-        """
-        return self._builtin.get_library_instance('AppiumLibrary')._current_application()
 
     @keyword("Perform Long Press")
     def perform_long_press(self, locator, duration=1000):
@@ -45,18 +34,16 @@ class PerformLongPress:
         RuntimeError   If Appium driver is not initialized
                       If gesture cannot be performed
         """
-        driver = self._driver
+        validators.validate_locator(locator)
+        duration = int(duration)
+        validators.validate_type(duration, "duration", int)
+        validators.validate_range(duration, "duration", min_val=1)
 
-        locator_parts = locator.split('=', 1)
-        if len(locator_parts) != 2:
-            raise ValueError("Locator must be in 'strategy=value' format")
+        driver = self.driver
+        if not driver:
+            raise RuntimeError("Appium driver is not available.")
 
-        strategy, value = locator_parts
-
-
-        element = driver.find_element(strategy, value)
-
+        element = utils.find_element(self.appium_lib, locator)
 
         actions = ActionChains(driver)
         actions.click_and_hold(element).pause(duration/1000).release().perform()
-

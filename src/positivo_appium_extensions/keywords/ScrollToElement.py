@@ -35,26 +35,17 @@ Notes:
     - If a container locator is provided, scrolling occurs only inside that element.
     - Uses the Appium "mobile: swipeGesture" command internally.
 """
-import random
+import warnings
 import time
 from robot.api.deco import keyword
-from robot.libraries.BuiltIn import BuiltIn
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.common.actions.mouse_button import MouseButton
+from ._BaseKeyword import _BaseKeyword
+from . import utils
+from . import gestures
+from . import validators
 
 
-class ScrollToElement:
+class ScrollToElement(_BaseKeyword):
     ROBOT_LIBRARY_SCOPE = "GLOBAL"
-
-    def __init__(self):
-        self._builtin = BuiltIn()
-
-    @property
-    def driver(self):
-        return self._builtin.get_library_instance("AppiumLibrary")._current_application()
-
-    def _adjust_to_screen_bounds(self, x, y, screen_width, screen_height):
-        return max(0, min(x, screen_width)), max(0, min(y, screen_height))
 
     def _is_element_visible(self, locator):
         try:
@@ -63,42 +54,6 @@ class ScrollToElement:
             return element.is_displayed()
         except:
             return False
-
-    def _get_element_area_center(self, locator):
-        appium_lib = self._builtin.get_library_instance("AppiumLibrary")
-        element = appium_lib._element_find(locator, True, True)
-        if not element:
-            raise RuntimeError(f"Element not found for locator: {locator}")
-        location = element.location
-        size = element.size
-        x, y = location["x"], location["y"]
-        width, height = size["width"], size["height"]
-        center_x = x + width / 2
-        center_y = y + height / 2
-        return x, y, width, height, center_x, center_y
-
-    def _perform_scroll(self, start_x, start_y, end_x, end_y, duration=500, steps=20):
-        driver = self.driver
-        actions = ActionChains(driver)
-        actions.w3c_actions.devices = []
-        finger = actions.w3c_actions.add_pointer_input("touch", "finger1")
-
-        finger.create_pointer_move(x=start_x, y=start_y)
-        finger.create_pointer_down(button=MouseButton.LEFT)
-        finger.create_pause(0.05)
-
-        for i in range(1, steps + 1):
-            t = i / steps
-            interp_x = start_x + t * (end_x - start_x) + random.uniform(-0, 0)
-            interp_y = start_y + t * (end_y - start_y) + random.uniform(-0, 0)
-            interp_x, interp_y = self._adjust_to_screen_bounds(
-                interp_x, interp_y, driver.get_window_size()["width"], driver.get_window_size()["height"]
-            )
-            move_duration = int(duration / steps)
-            finger.create_pointer_move(x=interp_x, y=interp_y, duration=move_duration)
-
-        finger.create_pointer_up(button=MouseButton.LEFT)
-        actions.perform()
 
     @keyword("Scroll To Element")
     def scroll_into_element(self, locator, max_swipes=5, direction="down", swipe_distance_ratio=0.4,
@@ -115,70 +70,41 @@ class ScrollToElement:
             container_locator (str): Optional. Element within which the swipe should be confined.
         """
 
-
-        if not isinstance(locator, str) or "=" not in locator:
-            raise ValueError(
-                f"Invalid locator format: '{locator}'. Expected 'strategy=value' (e.g., 'id=elementId').")
-        supported_strategies = ["id", "xpath", "accessibility_id", "class_name"]
-        strategy = locator.split("=")[0].strip().lower()
-        if strategy not in supported_strategies:
-            raise ValueError(
-                f"Unsupported locator strategy '{strategy}'. Supported: {supported_strategies}.")
-
-
-        if not isinstance(max_swipes, int):
-            raise ValueError("Parameter 'max_swipes' must be an integer.")
-        if max_swipes <= 0:
-            raise ValueError("Parameter 'max_swipes' must be greater than 0.")
-
+        # --- Validation section ---
+        max_swipes = int(max_swipes)
+        validators.validate_type(max_swipes, "max_swipes", int)
+        validators.validate_range(max_swipes, "max_swipes", min_val=1)
 
         direction = direction.lower()
-        valid_directions = ["down", "up", "left", "right"]
-        if direction not in valid_directions:
-            raise ValueError(
-                f"Invalid direction '{direction}'. Must be one of {valid_directions}.")
+        validators.validate_string_choice(direction, "direction", ["down", "up", "left", "right"])
 
-        if not isinstance(swipe_distance_ratio, (int, float)):
-            raise ValueError(
-                "Parameter 'swipe_distance_ratio' must be numeric (float or int).")
-        if not (0.1 <= swipe_distance_ratio <= 0.99):
-            raise ValueError(
-                "Swipe distance ratio must be between 0.1 and 0.99.")
+        swipe_distance_ratio = float(swipe_distance_ratio)
+        validators.validate_type(swipe_distance_ratio, "swipe_distance_ratio", float)
+        validators.validate_range(swipe_distance_ratio, "swipe_distance_ratio", 0.01, 1.0)
+        if swipe_distance_ratio == 1.0:
+            swipe_distance_ratio = 0.99
 
-        # duration validation
-        if not isinstance(duration, int):
-            raise ValueError("Parameter 'duration' must be an integer (milliseconds).")
-        if duration <= 0:
-            raise ValueError("Parameter 'duration' must be greater than 0.")
+        duration = int(duration)
+        validators.validate_type(duration, "duration", int)
+        validators.validate_range(duration, "duration", min_val=1)
         if duration > 5000:
             warnings.warn(
                 f"Duration {duration}ms is unusually long; consider values below 5000ms for performance.")
 
-        # container_locator validation (optional)
+        container_element = None
         if container_locator:
-            if not isinstance(container_locator, str) or "=" not in container_locator:
-                raise ValueError(
-                    f"Invalid container locator format: '{container_locator}'. Expected 'strategy=value'.")
-            strategy_c = container_locator.split("=")[0].strip().lower()
-            if strategy_c not in supported_strategies:
-                raise ValueError(
-                    f"Unsupported container locator strategy '{strategy_c}'. Supported: {supported_strategies}.")
-            # Verifica existência
-            appium_lib = self._builtin.get_library_instance("AppiumLibrary")
-            container_element = appium_lib._element_find(container_locator, True, True)
-            if not container_element:
-                raise RuntimeError(f"Container element not found for locator: {container_locator}")
+            validators.validate_locator(container_locator)
+            container_element = utils.find_element(self.appium_lib, container_locator)
 
         # --- End of validation section ---
 
         driver = self.driver
-        screen_size = driver.get_window_size()
-        screen_width = screen_size["width"]
-        screen_height = screen_size["height"]
+        screen_width, screen_height = utils.get_screen_size(driver)
 
-        if container_locator:
+        if container_element:
             self._builtin.log(f"Using swipe area from container: {container_locator}", "INFO")
-            x, y, width, height, center_x, center_y = self._get_element_area_center(container_locator)
+            x, y, width, height = utils.get_element_area(container_element)
+            center_x, center_y = utils.get_element_center(container_element)
         else:
             self._builtin.log("Using entire screen for swipe", "INFO")
             x, y, width, height = 0, 0, screen_width, screen_height
@@ -187,6 +113,9 @@ class ScrollToElement:
 
         swipe_distance_x = swipe_distance_ratio * width
         swipe_distance_y = swipe_distance_ratio * height
+
+        start_x, start_y = 0, 0
+        end_x, end_y = 0, 0
 
         if direction == "down":
             start_x, end_x = center_x, center_x
@@ -216,7 +145,7 @@ class ScrollToElement:
                 return
 
             self._builtin.log(f"Swiping from ({start_x}, {start_y}) to ({end_x}, {end_y})", "DEBUG")
-            self._perform_scroll(start_x, start_y, end_x, end_y, duration=duration)
+            gestures.perform_w3c_scroll(driver, start_x, start_y, end_x, end_y, duration)
             time.sleep(0.5)
 
         raise RuntimeError(f"Element '{locator}' not found after {max_swipes} swipe attempts.")

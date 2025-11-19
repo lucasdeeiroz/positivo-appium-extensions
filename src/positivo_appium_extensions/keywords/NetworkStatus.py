@@ -1,27 +1,16 @@
 import subprocess
 
 from robot.api.deco import keyword
-from robot.libraries.BuiltIn import BuiltIn
+from ._BaseKeyword import _BaseKeyword
 
 
-class NetworkStatus:
+class NetworkStatus(_BaseKeyword):
     """
     Keyword that interprets the connection bitmask returned by Appium and identifies the network status
     of the Android device. Also considers airplane mode via ADB.
     """
 
     ROBOT_LIBRARY_SCOPE = "GLOBAL"
-
-    def __init__(self):
-        self._builtin = BuiltIn()
-
-    def _get_appium_driver(self):
-        # Gets the current Appium driver instance
-        appium_lib = self._builtin.get_library_instance("AppiumLibrary")
-        driver = appium_lib._current_application()
-        if driver is None or not getattr(driver, "session_id", None):
-            self._builtin.fail("Appium session is not active. Ensure a session is opened before calling this keyword.")
-        return driver
 
     def _interpret_bitmask(self, status):
         # Bitwise AND is used to compare the bitmask and identify which connections are active.
@@ -92,7 +81,10 @@ class NetworkStatus:
         """
 
         # Retrieves the network status as an integer (bitmask)
-        driver = self._get_appium_driver()
+        driver = self.driver
+        if driver is None or not getattr(driver, "session_id", None):
+            self._builtin.fail("Appium session is not active. Ensure a session is opened before calling this keyword.")
+
         status = driver.network_connection
         try:
             status = int(status)

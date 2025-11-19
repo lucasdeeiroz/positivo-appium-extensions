@@ -1,25 +1,19 @@
 import time
 
 from robot.api.deco import keyword
-from robot.libraries.BuiltIn import BuiltIn
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.common.actions.mouse_button import MouseButton
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, WebDriverException
-import time
+from ._BaseKeyword import _BaseKeyword
+from . import utils
+from . import gestures
+from . import validators
 
-class ClickElements:
+
+class ClickElements(_BaseKeyword):
     """Class to execute sequential clicks on multiple elements."""
 
     ROBOT_LIBRARY_SCOPE = "GLOBAL"
 
-    def __init__(self):
-        self._builtin = BuiltIn()
-
-    @property
-    def _driver(self):
-        return self._builtin.get_library_instance("AppiumLibrary")._current_application()
-    
-    def _click_element(self, appium_lib, locator, click_duration):
+    def _click_element(self, locator, click_duration):
         """
         Clicks on a specific element.
         
@@ -33,30 +27,14 @@ class ClickElements:
         """
         try:
             # Find element
-            element = appium_lib._element_find(locator, True, True)
-            if not element:
-                self._builtin.log(f"Element not found: {locator}", level='WARN')
-                return False
-            
-            # Get location and size
-            location = element.location
-            size = element.size
-            
+            element = utils.find_element(self.appium_lib, locator)
+
             # Calculate center coordinates
-            center_x = location['x'] + size['width'] / 2
-            center_y = location['y'] + size['height'] / 2
-            
+            center_x, center_y = utils.get_element_center(element)
+
             # Execute click
-            actions = ActionChains(self._driver)
-            touch = actions.w3c_actions.add_pointer_input('touch', 'finger')
-            
-            touch.create_pointer_move(x=center_x, y=center_y)
-            touch.create_pointer_down(button=0)
-            touch.create_pause(click_duration / 1000)
-            touch.create_pointer_up(button=0)
-            
-            actions.perform()
-            
+            gestures.perform_w3c_tap(self.driver, center_x, center_y, click_duration)
+
             return True
         except NoSuchElementException:
             self._builtin.log(f"Element not found in DOM: {locator}", level='WARN')
@@ -100,58 +78,28 @@ class ClickElements:
         - ``ValueError``: If parameter values are outside acceptable ranges (empty list, negative intervals)
         - ``RuntimeError``: If driver is unavailable or element operations fail
         """
-        # Validate elements_list type
-        if elements_list is None:
-            raise TypeError("elements_list cannot be None - a list of locator strings is required")
-        if not isinstance(elements_list, list):
-            raise TypeError(f"elements_list must be a list of locator strings, got {type(elements_list).__name__}")
-        
-        # Validate elements_list is not empty
+        # Validation
+        validators.validate_type(elements_list, "elements_list", list)
         if not elements_list:
             raise ValueError("The elements list cannot be empty - at least one locator is required")
+        for item in elements_list:
+            validators.validate_type(item, "element in elements_list", str)
 
-        # Validate each element in the list is a string
-        for idx, item in enumerate(elements_list):
-            if not isinstance(item, str):
-                raise TypeError(
-                    f"All elements in elements_list must be strings (locators). "
-                    f"Invalid item at position {idx}: {repr(item)} (type: {type(item).__name__})"
-                )
-                    
-        # Validate click_duration
-        if click_duration is None:
-            raise TypeError("click_duration cannot be None - a positive number is required")
-        if not isinstance(click_duration, (int, float)):
-            raise TypeError(f"click_duration must be a number (int or float), got {type(click_duration).__name__}")
-        if click_duration <= 0:
-            raise ValueError(f"click_duration must be positive, got {click_duration}")
-        if click_duration > 2000:
-            raise ValueError(f"click_duration cannot exceed 2000ms, got {click_duration}")
-            
-        # Validate interval_between_clicks
-        if interval_between_clicks is None:
-            raise TypeError("interval_between_clicks cannot be None - a non-negative number is required")
-        if not isinstance(interval_between_clicks, (int, float)):
-            raise TypeError(f"interval_between_clicks must be a number (int or float), got {type(interval_between_clicks).__name__}")
-        if interval_between_clicks < 0:
-            raise ValueError(f"interval_between_clicks cannot be negative, got {interval_between_clicks}")
-            
-        # Validate stop_on_fail
-        if not isinstance(stop_on_fail, bool):
-            # Convert Robot Framework strings to boolean
-            if str(stop_on_fail).lower() in ['true', '1', 'yes']:
-                stop_on_fail = True
-            elif str(stop_on_fail).lower() in ['false', '0', 'no']:
-                stop_on_fail = False
-            else:
-                raise TypeError(f"stop_on_fail must be a boolean value, got {stop_on_fail}")
-            
+        validators.validate_type(click_duration, "click_duration", (int, float))
+        validators.validate_range(click_duration, "click_duration", min_val=1, max_val=2000)
+
+        validators.validate_type(interval_between_clicks, "interval_between_clicks", (int, float))
+        validators.validate_range(interval_between_clicks, "interval_between_clicks", min_val=0)
+
+        stop_on_fail = self._builtin.convert_to_boolean(stop_on_fail)
+        validators.validate_type(stop_on_fail, "stop_on_fail", bool)
+
         try:
             # Validate driver existence
-            driver = self._driver
+            driver = self.driver
             if driver is None:
                 raise RuntimeError("Appium driver is not available - ensure a session is started")
-            
+
             # Validate driver session
             try:
                 session_id = driver.session_id
@@ -163,8 +111,6 @@ class ClickElements:
             except Exception as session_error:
                 raise RuntimeError(f"Failed to validate Appium driver session: {str(session_error)}")
 
-            appium_lib = self._builtin.get_library_instance("AppiumLibrary")
-            
             self._builtin.log(f"Starting sequential click on {len(elements_list)} elements", level='INFO')
             
             success_count = 0
@@ -173,8 +119,7 @@ class ClickElements:
             
             for i, locator in enumerate(elements_list, 1):
                 self._builtin.log(f"Clicking element {i}/{len(elements_list)}: {locator}", level='INFO')
-                
-                success = self._click_element(appium_lib, locator, click_duration)
+                success = self._click_element(locator, click_duration)
                 
                 if success:
                     success_count += 1

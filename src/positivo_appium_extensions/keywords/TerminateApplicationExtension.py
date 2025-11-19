@@ -1,11 +1,8 @@
-from appium.webdriver.extensions.applications import Applications
 from robot.api.deco import keyword
-from robot.libraries.BuiltIn import BuiltIn
-from appium.webdriver.extensions.applications import Applications
-import re
+from ._BaseKeyword import _BaseKeyword
+from . import validators
 
-
-class TerminateApplicationExtension:
+class TerminateApplicationExtension(_BaseKeyword):
     """
     Class to handle application termination in Appium
     This class provides keywords to terminate an application
@@ -16,19 +13,6 @@ class TerminateApplicationExtension:
     """
 
     ROBOT_LIBRARY_SCOPE = "GLOBAL"
-
-    def __init__(self):
-        self._builtin = BuiltIn()
-
-    @property
-    def driver(self):
-        """Returns the current Appium driver instance."""
-        try:
-            return self._builtin.get_library_instance("AppiumLibrary")._current_application()
-        except Exception as e:
-            raise RuntimeError(
-                f"Failed to get AppiumLibrary instance. Ensure AppiumLibrary is imported and a session is active. Error: {str(e)}"
-            )
 
     @keyword("Terminate Application Extension")
     def terminate_application_extension(self, app_id):
@@ -55,18 +39,13 @@ class TerminateApplicationExtension:
         | Should Be True | ${result} | Application should have been running |
         """
         # Validate app_id parameter
-        if not app_id:
-            raise ValueError("app_id parameter cannot be empty")
-
-        if not isinstance(app_id, str):
-            raise TypeError(f"app_id must be a string, got {type(app_id).__name__}")
+        validators.validate_type(app_id, "app_id", str)
 
         app_id = app_id.strip()
         if not app_id:
             raise ValueError("app_id parameter cannot be empty or whitespace only")
 
-        # Validate app_id format (basic Android package name validation)
-        if not self._is_valid_package_name(app_id):
+        if not validators.validate_android_package_name(app_id):
             raise ValueError(f"Invalid app_id format: '{app_id}'. Expected format: 'com.example.app'")
 
         try:
@@ -135,34 +114,3 @@ class TerminateApplicationExtension:
         finally:
             # Log completion of app ID retrieval attempt
             self._builtin.log("App ID retrieval attempt completed", level="DEBUG")
-
-    def _is_valid_package_name(self, package_name):
-        """
-        Validates if the package name follows Android package naming conventions.
-
-        Uses regex pattern based on Android conventions:
-        - Must start with a letter (a-z, A-Z)
-        - Can contain letters, digits, and underscores
-        - Must have at least two segments separated by dots
-        - Each segment must start with a letter
-        - Pattern: ^[a-zA-Z][a-zA-Z0-9_]*(\.[a-zA-Z][a-zA-Z0-9_]*)+$
-
-        [Arguments]
-        - package_name: The package name to validate
-
-        [Return Values]
-        - Returns True if valid, False otherwise
-
-        [Examples]
-        Valid: com.example.app, com.google.android.youtube, my.app.test_2
-        Invalid: com, 123.app, .com.app, com..app, com.123app
-        """
-        if not package_name or not isinstance(package_name, str):
-            return False
-
-        # Android package name regex pattern
-        # ^[a-zA-Z][a-zA-Z0-9_]* - First segment: starts with letter, followed by letters/digits/underscores
-        # (\.[a-zA-Z][a-zA-Z0-9_]*)+ - Additional segments: dot + letter + letters/digits/underscores (one or more)
-        android_package_pattern = r'^[a-zA-Z][a-zA-Z0-9_-]*(\.[a-zA-Z][a-zA-Z0-9_-]*)+$'
-
-        return bool(re.match(android_package_pattern, package_name))

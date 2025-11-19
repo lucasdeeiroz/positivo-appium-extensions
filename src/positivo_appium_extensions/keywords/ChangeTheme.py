@@ -2,19 +2,15 @@ import subprocess
 import time
 
 from robot.api.deco import keyword
-from robot.libraries.BuiltIn import BuiltIn
+from ._BaseKeyword import _BaseKeyword
 
 
-class ChangeTheme:
+class ChangeTheme(_BaseKeyword):
     ROBOT_LIBRARY_SCOPE = "GLOBAL"
 
     def __init__(self):
-        self._builtin = BuiltIn()
+        super().__init__()
         self.device_udid = None
-
-    @property
-    def appium(self):
-        return self._builtin.get_library_instance("AppiumLibrary")
 
     @keyword("Set Device UDID")
     def set_device_udid(self, udid):
