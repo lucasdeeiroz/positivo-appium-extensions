@@ -15,7 +15,7 @@ This package can be imported in two ways:
   → Loads only the desired keyword module.
 """
 
-__version__ = "1.2.0"
+__version__ = "1.2.1"
 
 from .keywords import get_all_keyword_classes
 

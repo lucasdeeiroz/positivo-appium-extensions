@@ -38,8 +38,8 @@ class SwipeElement(_BaseKeyword):
         - RuntimeError: Driver/runtime failures may propagate from the underlying call.
         """
 
-        # Use AppiumLibrary's internal locator parsing
-        locator = self.appium_lib._parse_locator(args[0] if args else kwargs)
+        # Use custom locator parsing
+        locator = utils.get_locator(args, kwargs)
 
         # Validate locator
         if not locator:
@@ -47,7 +47,7 @@ class SwipeElement(_BaseKeyword):
                 "Locator not provided. Use a positional argument like 'id=my_id' or a named argument like 'xpath=//button'."
             )
 
-        strategy, locator_value = self.appium_lib._get_strategy_and_value_from_locator(locator)
+
 
         # Read optional parameters
         direction = kwargs.get("direction", "right")

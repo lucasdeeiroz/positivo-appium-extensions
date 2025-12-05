@@ -38,7 +38,7 @@ class ScrollInside(_BaseKeyword):
         - Exception: Driver/runtime failures propagated from the underlying Appium call.
         """
 
-        locator = self.appium_lib._parse_locator(args[0] if args else kwargs)
+        locator = utils.get_locator(args, kwargs)
 
         # If still no valid locator, raise an error
         if not locator:

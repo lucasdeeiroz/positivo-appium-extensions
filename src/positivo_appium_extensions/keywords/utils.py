@@ -38,3 +38,40 @@ def adjust_to_screen_bounds(positions, screen_width, screen_height):
             warnings.warn(f"Finger position ({x}, {y}) adjusted to ({new_x}, {new_y}) to fit within screen bounds.")
         adjusted_positions.append((new_x, new_y))
     return adjusted_positions
+
+
+def get_locator(args, kwargs):
+    """
+    Extracts the locator from args or kwargs, supporting AppiumLibrary-style strategies.
+    
+    Strategies supported via kwargs:
+    - id
+    - xpath
+    - accessibility_id
+    - class_name
+    - android_uiautomator
+    - ios_predicate
+    - ios_class_chain
+    - name
+    
+    If a positional argument is provided, it is assumed to be the locator (e.g., "id=my_element").
+    """
+    if args:
+        return args[0]
+    
+    # Check known strategies in kwargs
+    strategies = [
+        "id", "xpath", "accessibility_id", "class_name", 
+        "android_uiautomator", "ios_predicate", "ios_class_chain", 
+        "name", "css", "link"
+    ]
+    
+    for strategy in strategies:
+        if strategy in kwargs:
+            return f"{strategy}={kwargs[strategy]}"
+            
+    # Fallback/Check for explicit 'locator' kwarg
+    if "locator" in kwargs:
+        return kwargs["locator"]
+        
+    return None
